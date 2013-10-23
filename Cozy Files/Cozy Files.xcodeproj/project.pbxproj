@@ -1,0 +1,510 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5C4F82DF1818125700CCA08E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C4F82DE1818125700CCA08E /* Foundation.framework */; };
+		5C4F82E11818125700CCA08E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C4F82E01818125700CCA08E /* CoreGraphics.framework */; };
+		5C4F82E31818125700CCA08E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C4F82E21818125700CCA08E /* UIKit.framework */; };
+		5C4F82E91818125700CCA08E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5C4F82E71818125700CCA08E /* InfoPlist.strings */; };
+		5C4F82EB1818125700CCA08E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C4F82EA1818125700CCA08E /* main.m */; };
+		5C4F82EF1818125700CCA08E /* CCAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C4F82EE1818125700CCA08E /* CCAppDelegate.m */; };
+		5C4F82F21818125700CCA08E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5C4F82F01818125700CCA08E /* Main.storyboard */; };
+		5C4F82F51818125700CCA08E /* CCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C4F82F41818125700CCA08E /* CCViewController.m */; };
+		5C4F82F71818125700CCA08E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5C4F82F61818125700CCA08E /* Images.xcassets */; };
+		5C4F82FE1818125700CCA08E /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C4F82FD1818125700CCA08E /* XCTest.framework */; };
+		5C4F82FF1818125700CCA08E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C4F82DE1818125700CCA08E /* Foundation.framework */; };
+		5C4F83001818125700CCA08E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C4F82E21818125700CCA08E /* UIKit.framework */; };
+		5C4F83081818125700CCA08E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5C4F83061818125700CCA08E /* InfoPlist.strings */; };
+		5C4F830A1818125700CCA08E /* Cozy_FilesTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C4F83091818125700CCA08E /* Cozy_FilesTests.m */; };
+		5C4F83141818136800CCA08E /* CouchbaseLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C4F83131818136800CCA08E /* CouchbaseLite.framework */; };
+		5C4F8316181813A400CCA08E /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C4F8315181813A400CCA08E /* CFNetwork.framework */; };
+		5C4F8318181813AB00CCA08E /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C4F8317181813AB00CCA08E /* Security.framework */; };
+		5C4F831A181813B900CCA08E /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C4F8319181813B900CCA08E /* SystemConfiguration.framework */; };
+		5C4F831C181813C400CCA08E /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C4F831B181813C400CCA08E /* libsqlite3.dylib */; };
+		5C4F831E181813D000CCA08E /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C4F831D181813D000CCA08E /* libz.dylib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		5C4F83011818125700CCA08E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5C4F82D31818125700CCA08E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5C4F82DA1818125700CCA08E;
+			remoteInfo = "Cozy Files";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		5C4F82DB1818125700CCA08E /* Cozy Files.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cozy Files.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5C4F82DE1818125700CCA08E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		5C4F82E01818125700CCA08E /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		5C4F82E21818125700CCA08E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		5C4F82E61818125700CCA08E /* Cozy Files-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Cozy Files-Info.plist"; sourceTree = "<group>"; };
+		5C4F82E81818125700CCA08E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		5C4F82EA1818125700CCA08E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		5C4F82EC1818125700CCA08E /* Cozy Files-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Cozy Files-Prefix.pch"; sourceTree = "<group>"; };
+		5C4F82ED1818125700CCA08E /* CCAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CCAppDelegate.h; sourceTree = "<group>"; };
+		5C4F82EE1818125700CCA08E /* CCAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CCAppDelegate.m; sourceTree = "<group>"; };
+		5C4F82F11818125700CCA08E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		5C4F82F31818125700CCA08E /* CCViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CCViewController.h; sourceTree = "<group>"; };
+		5C4F82F41818125700CCA08E /* CCViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CCViewController.m; sourceTree = "<group>"; };
+		5C4F82F61818125700CCA08E /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		5C4F82FC1818125700CCA08E /* Cozy FilesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Cozy FilesTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5C4F82FD1818125700CCA08E /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		5C4F83051818125700CCA08E /* Cozy FilesTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Cozy FilesTests-Info.plist"; sourceTree = "<group>"; };
+		5C4F83071818125700CCA08E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		5C4F83091818125700CCA08E /* Cozy_FilesTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Cozy_FilesTests.m; sourceTree = "<group>"; };
+		5C4F83131818136800CCA08E /* CouchbaseLite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CouchbaseLite.framework; sourceTree = "<group>"; };
+		5C4F8315181813A400CCA08E /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		5C4F8317181813AB00CCA08E /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		5C4F8319181813B900CCA08E /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		5C4F831B181813C400CCA08E /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		5C4F831D181813D000CCA08E /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5C4F82D81818125700CCA08E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5C4F831E181813D000CCA08E /* libz.dylib in Frameworks */,
+				5C4F831C181813C400CCA08E /* libsqlite3.dylib in Frameworks */,
+				5C4F831A181813B900CCA08E /* SystemConfiguration.framework in Frameworks */,
+				5C4F8318181813AB00CCA08E /* Security.framework in Frameworks */,
+				5C4F8316181813A400CCA08E /* CFNetwork.framework in Frameworks */,
+				5C4F82E11818125700CCA08E /* CoreGraphics.framework in Frameworks */,
+				5C4F82E31818125700CCA08E /* UIKit.framework in Frameworks */,
+				5C4F83141818136800CCA08E /* CouchbaseLite.framework in Frameworks */,
+				5C4F82DF1818125700CCA08E /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5C4F82F91818125700CCA08E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5C4F82FE1818125700CCA08E /* XCTest.framework in Frameworks */,
+				5C4F83001818125700CCA08E /* UIKit.framework in Frameworks */,
+				5C4F82FF1818125700CCA08E /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5C4F82D21818125700CCA08E = {
+			isa = PBXGroup;
+			children = (
+				5C4F82E41818125700CCA08E /* Cozy Files */,
+				5C4F83031818125700CCA08E /* Cozy FilesTests */,
+				5C4F82DD1818125700CCA08E /* Frameworks */,
+				5C4F82DC1818125700CCA08E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5C4F82DC1818125700CCA08E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5C4F82DB1818125700CCA08E /* Cozy Files.app */,
+				5C4F82FC1818125700CCA08E /* Cozy FilesTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5C4F82DD1818125700CCA08E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5C4F831D181813D000CCA08E /* libz.dylib */,
+				5C4F831B181813C400CCA08E /* libsqlite3.dylib */,
+				5C4F8319181813B900CCA08E /* SystemConfiguration.framework */,
+				5C4F8317181813AB00CCA08E /* Security.framework */,
+				5C4F8315181813A400CCA08E /* CFNetwork.framework */,
+				5C4F83131818136800CCA08E /* CouchbaseLite.framework */,
+				5C4F82DE1818125700CCA08E /* Foundation.framework */,
+				5C4F82E01818125700CCA08E /* CoreGraphics.framework */,
+				5C4F82E21818125700CCA08E /* UIKit.framework */,
+				5C4F82FD1818125700CCA08E /* XCTest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		5C4F82E41818125700CCA08E /* Cozy Files */ = {
+			isa = PBXGroup;
+			children = (
+				5C4F82ED1818125700CCA08E /* CCAppDelegate.h */,
+				5C4F82EE1818125700CCA08E /* CCAppDelegate.m */,
+				5C4F82F01818125700CCA08E /* Main.storyboard */,
+				5C4F82F31818125700CCA08E /* CCViewController.h */,
+				5C4F82F41818125700CCA08E /* CCViewController.m */,
+				5C4F82F61818125700CCA08E /* Images.xcassets */,
+				5C4F82E51818125700CCA08E /* Supporting Files */,
+			);
+			path = "Cozy Files";
+			sourceTree = "<group>";
+		};
+		5C4F82E51818125700CCA08E /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				5C4F82E61818125700CCA08E /* Cozy Files-Info.plist */,
+				5C4F82E71818125700CCA08E /* InfoPlist.strings */,
+				5C4F82EA1818125700CCA08E /* main.m */,
+				5C4F82EC1818125700CCA08E /* Cozy Files-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		5C4F83031818125700CCA08E /* Cozy FilesTests */ = {
+			isa = PBXGroup;
+			children = (
+				5C4F83091818125700CCA08E /* Cozy_FilesTests.m */,
+				5C4F83041818125700CCA08E /* Supporting Files */,
+			);
+			path = "Cozy FilesTests";
+			sourceTree = "<group>";
+		};
+		5C4F83041818125700CCA08E /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				5C4F83051818125700CCA08E /* Cozy FilesTests-Info.plist */,
+				5C4F83061818125700CCA08E /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5C4F82DA1818125700CCA08E /* Cozy Files */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5C4F830D1818125700CCA08E /* Build configuration list for PBXNativeTarget "Cozy Files" */;
+			buildPhases = (
+				5C4F82D71818125700CCA08E /* Sources */,
+				5C4F82D81818125700CCA08E /* Frameworks */,
+				5C4F82D91818125700CCA08E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Cozy Files";
+			productName = "Cozy Files";
+			productReference = 5C4F82DB1818125700CCA08E /* Cozy Files.app */;
+			productType = "com.apple.product-type.application";
+		};
+		5C4F82FB1818125700CCA08E /* Cozy FilesTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5C4F83101818125700CCA08E /* Build configuration list for PBXNativeTarget "Cozy FilesTests" */;
+			buildPhases = (
+				5C4F82F81818125700CCA08E /* Sources */,
+				5C4F82F91818125700CCA08E /* Frameworks */,
+				5C4F82FA1818125700CCA08E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5C4F83021818125700CCA08E /* PBXTargetDependency */,
+			);
+			name = "Cozy FilesTests";
+			productName = "Cozy FilesTests";
+			productReference = 5C4F82FC1818125700CCA08E /* Cozy FilesTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5C4F82D31818125700CCA08E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = CC;
+				LastUpgradeCheck = 0500;
+				ORGANIZATIONNAME = CozyCloud;
+				TargetAttributes = {
+					5C4F82FB1818125700CCA08E = {
+						TestTargetID = 5C4F82DA1818125700CCA08E;
+					};
+				};
+			};
+			buildConfigurationList = 5C4F82D61818125700CCA08E /* Build configuration list for PBXProject "Cozy Files" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5C4F82D21818125700CCA08E;
+			productRefGroup = 5C4F82DC1818125700CCA08E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5C4F82DA1818125700CCA08E /* Cozy Files */,
+				5C4F82FB1818125700CCA08E /* Cozy FilesTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5C4F82D91818125700CCA08E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5C4F82F71818125700CCA08E /* Images.xcassets in Resources */,
+				5C4F82E91818125700CCA08E /* InfoPlist.strings in Resources */,
+				5C4F82F21818125700CCA08E /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5C4F82FA1818125700CCA08E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5C4F83081818125700CCA08E /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5C4F82D71818125700CCA08E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5C4F82EF1818125700CCA08E /* CCAppDelegate.m in Sources */,
+				5C4F82EB1818125700CCA08E /* main.m in Sources */,
+				5C4F82F51818125700CCA08E /* CCViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5C4F82F81818125700CCA08E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5C4F830A1818125700CCA08E /* Cozy_FilesTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		5C4F83021818125700CCA08E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5C4F82DA1818125700CCA08E /* Cozy Files */;
+			targetProxy = 5C4F83011818125700CCA08E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		5C4F82E71818125700CCA08E /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5C4F82E81818125700CCA08E /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		5C4F82F01818125700CCA08E /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5C4F82F11818125700CCA08E /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		5C4F83061818125700CCA08E /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5C4F83071818125700CCA08E /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		5C4F830B1818125700CCA08E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		5C4F830C1818125700CCA08E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		5C4F830E1818125700CCA08E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/williamarchimede/Documents/iWorkspace/cozy-files-ios/Cozy\\ Files",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Cozy Files/Cozy Files-Prefix.pch";
+				INFOPLIST_FILE = "Cozy Files/Cozy Files-Info.plist";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		5C4F830F1818125700CCA08E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/williamarchimede/Documents/iWorkspace/cozy-files-ios/Cozy\\ Files",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Cozy Files/Cozy Files-Prefix.pch";
+				INFOPLIST_FILE = "Cozy Files/Cozy Files-Info.plist";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		5C4F83111818125700CCA08E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Cozy Files.app/Cozy Files";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Cozy Files/Cozy Files-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "Cozy FilesTests/Cozy FilesTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		5C4F83121818125700CCA08E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Cozy Files.app/Cozy Files";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Cozy Files/Cozy Files-Prefix.pch";
+				INFOPLIST_FILE = "Cozy FilesTests/Cozy FilesTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5C4F82D61818125700CCA08E /* Build configuration list for PBXProject "Cozy Files" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5C4F830B1818125700CCA08E /* Debug */,
+				5C4F830C1818125700CCA08E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5C4F830D1818125700CCA08E /* Build configuration list for PBXNativeTarget "Cozy Files" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5C4F830E1818125700CCA08E /* Debug */,
+				5C4F830F1818125700CCA08E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		5C4F83101818125700CCA08E /* Build configuration list for PBXNativeTarget "Cozy FilesTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5C4F83111818125700CCA08E /* Debug */,
+				5C4F83121818125700CCA08E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5C4F82D31818125700CCA08E /* Project object */;
+}
