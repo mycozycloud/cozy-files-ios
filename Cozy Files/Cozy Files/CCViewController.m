@@ -48,10 +48,10 @@
     return YES;
 }
 
+#pragma mark - Custom
+
 - (IBAction)okPressed:(id)sender
 {
-    NSLog(@"%@\n%@\n%@", self.cozyUrlTextField.text, self.cozyMDPTextField.text, self.remoteNameTextField.text);
-    
     [self sendGetCredentialsRequestWithCozyURLString:self.cozyUrlTextField.text cozyPassword:self.cozyMDPTextField.text remoteName:self.remoteNameTextField.text];
 }
 
@@ -82,6 +82,24 @@
     }
 }
 
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
+                        change:(NSDictionary *)change context:(void *)context
+{
+    CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    if (object == appDelegate.pull || object == appDelegate.push) {
+        unsigned completed = appDelegate.pull.completed + appDelegate.push.completed;
+        unsigned total = appDelegate.pull.total + appDelegate.push.total;
+        if (total > 0 && completed < total) {
+            [self.progressView setHidden:NO];
+            [self.progressView setProgress: (completed / (float)total)];
+            NSLog(@"completed : %f", (completed / (float)total));
+        } else {
+            [self.progressView setHidden:YES];
+        }
+    }
+}
+
 #pragma mark - Connection
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
@@ -102,7 +120,24 @@
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
-    NSLog(@"RESPONSE - %@", [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding]);
+    CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    NSError *error;
+    NSDictionary *resp = [NSJSONSerialization JSONObjectWithData:self.responseData options:0 error:&error];
+    if (error) {
+        [appDelegate showAlert:@"Une erreur s'est produite" error:error fatal:NO];
+    } else {
+        if ([resp valueForKey:@"error"]) {
+            error = [NSError errorWithDomain:@"Cozy" code:1 userInfo:nil];
+            [appDelegate showAlert:[resp valueForKey:@"msg"] error:error fatal:NO];
+        } else {
+            [appDelegate setupReplicationWithCozyURLString:self.cozyUrlTextField.text remoteLogin:[resp valueForKey:@"login"] remotePassword:[resp valueForKey:@"password"] error:&error];
+            if (!error) {
+                [appDelegate.push addObserver:self forKeyPath:@"completed" options:0 context:NULL];
+                [appDelegate.pull addObserver:self forKeyPath:@"completed" options:0 context:NULL];
+            }
+        }
+    }
 }
 
 @end

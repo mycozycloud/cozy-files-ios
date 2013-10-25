@@ -12,6 +12,10 @@
 
 #define kDatabaseName @"cozy"
 
+@interface CCAppDelegate ()
+
+@end
+
 @implementation CCAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -74,6 +78,61 @@
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
     exit(0);
+}
+
+#pragma mark - Database
+
+- (void)setupReplicationWithCozyURLString:(NSString *)cozyURL remoteLogin:(NSString *)remoteLogin remotePassword:(NSString *)remotePassword error:(NSError *__autoreleasing *)error
+{
+    NSURL *url = [NSURL URLWithString:cozyURL];
+    NSLog(@"%@ - %@ - %@", url.host, remoteLogin, remotePassword);
+    
+    // Set the credentials
+#warning CHANGE PERSISTENCE
+    NSURLCredential *cred = [NSURLCredential credentialWithUser:remoteLogin
+                                                       password:remotePassword
+                                                    persistence:NSURLCredentialPersistenceForSession];
+    NSURLProtectionSpace *space = [[NSURLProtectionSpace alloc] initWithHost:url.host
+                                        port:443
+                                        protocol:@"https"
+                                        realm:@"cozy"
+                                        authenticationMethod:NSURLAuthenticationMethodDefault];
+    [[NSURLCredentialStorage sharedCredentialStorage] setDefaultCredential:cred
+                                                        forProtectionSpace:space];
+    
+    // Actually set up the replication
+    NSString *newCozyURL = [NSString stringWithFormat:@"https://%@/cozy", url.host];
+    NSArray *repls = [self.database replicateWithURL:[NSURL URLWithString:newCozyURL] exclusively:YES];
+    self.pull = repls.firstObject;
+    self.pull.persistent = YES;
+    self.pull.continuous = YES;
+    
+    self.push = repls.lastObject;
+    self.push.persistent = YES;
+    self.push.continuous = YES;
+    
+    // Set the filters
+    self.pull.filter = @"filter/filesfilter";
+    
+    [self.database defineFilter:@"filesfilter"
+                    asBlock:FILTERBLOCK({
+        CBLDocument *doc = revision.document;
+        if ([[doc valueForKey:@"_deleted"] boolValue])
+            return true;
+        
+        if ([doc valueForKey:@"docType"] && ([[doc valueForKey:@"docType"] isEqualToString:@"File"]
+            || [[doc valueForKey:@"docType"] isEqualToString:@"Folder"])) {
+            return true;
+        }
+        
+        return false;
+    })];
+    
+    self.push.filter = @"filesfilter";
+    
+    // Start the replications
+    [self.pull start];
+    [self.push start];
 }
 
 @end

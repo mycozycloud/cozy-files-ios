@@ -13,6 +13,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *cozyUrlTextField;
 @property (weak, nonatomic) IBOutlet UITextField *cozyMDPTextField;
 @property (weak, nonatomic) IBOutlet UITextField *remoteNameTextField;
+@property (weak, nonatomic) IBOutlet UIProgressView *progressView;
 - (IBAction)okPressed:(id)sender;
 
 @end

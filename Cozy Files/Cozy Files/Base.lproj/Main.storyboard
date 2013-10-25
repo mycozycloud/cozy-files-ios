@@ -65,12 +65,17 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" returnKeyType="done"/>
                             </textField>
+                            <progressView hidden="YES" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" fixedFrame="YES" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="RbR-Cm-Lbj">
+                                <rect key="frame" x="0.0" y="20" width="320" height="2"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </progressView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <connections>
                         <outlet property="cozyMDPTextField" destination="Ghm-4Y-bwa" id="9Jv-zb-l4h"/>
                         <outlet property="cozyUrlTextField" destination="X8v-ci-sfQ" id="GwE-lr-uwD"/>
+                        <outlet property="progressView" destination="RbR-Cm-Lbj" id="Ksh-Iz-43H"/>
                         <outlet property="remoteNameTextField" destination="9Cr-Vb-icX" id="nR9-AT-cTk"/>
                     </connections>
                 </viewController>
