@@ -27,6 +27,7 @@
 		5C4F831A181813B900CCA08E /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C4F8319181813B900CCA08E /* SystemConfiguration.framework */; };
 		5C4F831C181813C400CCA08E /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C4F831B181813C400CCA08E /* libsqlite3.dylib */; };
 		5C4F831E181813D000CCA08E /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C4F831D181813D000CCA08E /* libz.dylib */; };
+		5C9D285C1820114400CA3A7C /* CCFileNavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C9D285B1820114400CA3A7C /* CCFileNavigationViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +66,8 @@
 		5C4F8319181813B900CCA08E /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		5C4F831B181813C400CCA08E /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		5C4F831D181813D000CCA08E /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		5C9D285A1820114400CA3A7C /* CCFileNavigationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCFileNavigationViewController.h; sourceTree = "<group>"; };
+		5C9D285B1820114400CA3A7C /* CCFileNavigationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCFileNavigationViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,6 +144,8 @@
 				5C4F82F01818125700CCA08E /* Main.storyboard */,
 				5C4F82F31818125700CCA08E /* CCViewController.h */,
 				5C4F82F41818125700CCA08E /* CCViewController.m */,
+				5C9D285A1820114400CA3A7C /* CCFileNavigationViewController.h */,
+				5C9D285B1820114400CA3A7C /* CCFileNavigationViewController.m */,
 				5C4F82F61818125700CCA08E /* Images.xcassets */,
 				5C4F82E51818125700CCA08E /* Supporting Files */,
 			);
@@ -274,6 +279,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5C9D285C1820114400CA3A7C /* CCFileNavigationViewController.m in Sources */,
 				5C4F82EF1818125700CCA08E /* CCAppDelegate.m in Sources */,
 				5C4F82EB1818125700CCA08E /* main.m in Sources */,
 				5C4F82F51818125700CCA08E /* CCViewController.m in Sources */,
@@ -495,6 +501,7 @@
 				5C4F830F1818125700CCA08E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		5C4F83101818125700CCA08E /* Build configuration list for PBXNativeTarget "Cozy FilesTests" */ = {
 			isa = XCConfigurationList;
@@ -503,6 +510,7 @@
 				5C4F83121818125700CCA08E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
