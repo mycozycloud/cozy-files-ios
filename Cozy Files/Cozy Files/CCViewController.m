@@ -25,6 +25,7 @@
     self.cozyUrlTextField.delegate = self;
     self.cozyMDPTextField.delegate = self;
     self.remoteNameTextField.delegate = self;
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -57,6 +58,8 @@
 
 - (void)sendGetCredentialsRequestWithCozyURLString:(NSString *)cozyURL cozyPassword:(NSString *)cozyPassword remoteName:(NSString *)remoteName
 {
+    CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication] delegate];
+    
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/apps/files/remotes", cozyURL]]];
     
     NSDictionary *requestData = [NSDictionary dictionaryWithObjectsAndKeys:remoteName, @"login", nil];
@@ -65,7 +68,7 @@
     NSData *postData = [NSJSONSerialization dataWithJSONObject:requestData options:0 error:&error];
     
     if (error) {
-        CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication] delegate];
+        
         [appDelegate showAlert:@"Une erreur s'est produite" error:error fatal:NO];
     } else {
         NSString *base64Auth = [[[NSString stringWithFormat:@"owner:%@", cozyPassword] dataUsingEncoding:NSUTF8StringEncoding] base64EncodedStringWithOptions:0];
@@ -93,7 +96,6 @@
         if (total > 0 && completed < total) {
             [self.progressView setHidden:NO];
             [self.progressView setProgress: (completed / (float)total)];
-            NSLog(@"completed : %f", (completed / (float)total));
         } else {
             [self.progressView setHidden:YES];
         }

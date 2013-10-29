@@ -10,7 +10,7 @@
 
 #import "CCAppDelegate.h"
 
-#define kDatabaseName @"cozy"
+#define kDatabaseName @"cozyios"
 
 @interface CCAppDelegate ()
 
@@ -85,24 +85,46 @@
 - (void)setupReplicationWithCozyURLString:(NSString *)cozyURL remoteLogin:(NSString *)remoteLogin remotePassword:(NSString *)remotePassword error:(NSError *__autoreleasing *)error
 {
     NSURL *url = [NSURL URLWithString:cozyURL];
-    NSLog(@"%@ - %@ - %@", url.host, remoteLogin, remotePassword);
     
     // Set the credentials
-#warning CHANGE PERSISTENCE
     NSURLCredential *cred = [NSURLCredential credentialWithUser:remoteLogin
                                                        password:remotePassword
-                                                    persistence:NSURLCredentialPersistenceForSession];
+                                                    persistence:NSURLCredentialPersistencePermanent];
     NSURLProtectionSpace *space = [[NSURLProtectionSpace alloc] initWithHost:url.host
                                         port:443
                                         protocol:@"https"
-                                        realm:@"cozy"
-                                        authenticationMethod:NSURLAuthenticationMethodDefault];
+                                        realm:nil
+                                        authenticationMethod:NSURLAuthenticationMethodHTMLForm]; // the only one that works
     [[NSURLCredentialStorage sharedCredentialStorage] setDefaultCredential:cred
                                                         forProtectionSpace:space];
     
+    // Define validation
+#warning FOR NOW
+    [self.database defineValidation:@"allok" asBlock:VALIDATIONBLOCK({
+        return YES;
+    })];
+    
+    // Define local filter
+    [self.database defineFilter:@"filesfilter"
+                        asBlock:FILTERBLOCK({
+        CBLDocument *doc = revision.document;
+        if ([[doc valueForKey:@"_deleted"] boolValue])
+            return YES;
+
+        if ([doc valueForKey:@"docType"] && ([[doc valueForKey:@"docType"] isEqualToString:@"File"]
+            || [[doc valueForKey:@"docType"] isEqualToString:@"Folder"])) {
+                return YES;
+        }
+        
+        return NO;
+    })];
+    
+    
     // Actually set up the replication
     NSString *newCozyURL = [NSString stringWithFormat:@"https://%@/cozy", url.host];
+//    NSString *newCozyURL = [NSString stringWithFormat:@"https://%@:%@@%@/cozy", remoteLogin, remotePassword, url.host]; // Test with lame authentication
     NSArray *repls = [self.database replicateWithURL:[NSURL URLWithString:newCozyURL] exclusively:YES];
+    
     self.pull = repls.firstObject;
     self.pull.persistent = YES;
     self.pull.continuous = YES;
@@ -113,26 +135,28 @@
     
     // Set the filters
     self.pull.filter = @"filter/filesfilter";
-    
-    [self.database defineFilter:@"filesfilter"
-                    asBlock:FILTERBLOCK({
-        CBLDocument *doc = revision.document;
-        if ([[doc valueForKey:@"_deleted"] boolValue])
-            return true;
-        
-        if ([doc valueForKey:@"docType"] && ([[doc valueForKey:@"docType"] isEqualToString:@"File"]
-            || [[doc valueForKey:@"docType"] isEqualToString:@"Folder"])) {
-            return true;
-        }
-        
-        return false;
-    })];
-    
     self.push.filter = @"filesfilter";
+    
+    // Monitor the progress
+    [self.pull addObserver:self forKeyPath:@"completed" options:0 context:NULL];
+    [self.push addObserver:self forKeyPath:@"completed" options:0 context:NULL];
     
     // Start the replications
     [self.pull start];
     [self.push start];
 }
+
+- (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
+                         change:(NSDictionary *)change context:(void *)context
+{
+    if (object == self.pull || object == self.push) {
+        unsigned completed = self.pull.completed + self.push.completed;
+        unsigned total = self.pull.total + self.push.total;
+        if (total > 0 && completed < total) {
+            NSLog(@"REPLICATION COMPLETED : %f%%", floorf((completed / (float)total)*100));
+        }
+    }
+}
+
 
 @end
