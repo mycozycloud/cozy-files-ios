@@ -12,7 +12,9 @@
 @interface CCViewController () <NSURLConnectionDataDelegate>
 @property (strong, nonatomic) NSMutableData *responseData;
 
-- (void)sendGetCredentialsRequestWithCozyURLString:(NSString *)cozyURL cozyPassword:(NSString *)cozyPassword remoteName:(NSString *)remoteName;
+- (void)sendGetCredentialsRequestWithCozyURLString:(NSString *)cozyURL
+                                      cozyPassword:(NSString *)cozyPassword
+                                        remoteName:(NSString *)remoteName;
 @end
 
 @implementation CCViewController
@@ -53,25 +55,37 @@
 
 - (IBAction)okPressed:(id)sender
 {
-    [self sendGetCredentialsRequestWithCozyURLString:self.cozyUrlTextField.text cozyPassword:self.cozyMDPTextField.text remoteName:self.remoteNameTextField.text];
+    [self sendGetCredentialsRequestWithCozyURLString:self.cozyUrlTextField.text
+                                        cozyPassword:self.cozyMDPTextField.text
+                                    remoteName:self.remoteNameTextField.text];
 }
 
-- (void)sendGetCredentialsRequestWithCozyURLString:(NSString *)cozyURL cozyPassword:(NSString *)cozyPassword remoteName:(NSString *)remoteName
+- (void)sendGetCredentialsRequestWithCozyURLString:(NSString *)cozyURL
+                                      cozyPassword:(NSString *)cozyPassword
+                                        remoteName:(NSString *)remoteName
 {
     CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/apps/files/remotes", cozyURL]]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:
+                                    [NSURL URLWithString:
+                                     [NSString stringWithFormat:
+                                      @"%@/apps/files/remotes", cozyURL]]];
     
-    NSDictionary *requestData = [NSDictionary dictionaryWithObjectsAndKeys:remoteName, @"login", nil];
+    NSDictionary *requestData = [NSDictionary dictionaryWithObjectsAndKeys:remoteName,
+                                 @"login", nil];
     
     NSError *error;
-    NSData *postData = [NSJSONSerialization dataWithJSONObject:requestData options:0 error:&error];
+    NSData *postData = [NSJSONSerialization dataWithJSONObject:requestData
+                                                       options:0
+                                                         error:&error];
     
     if (error) {
         
         [appDelegate showAlert:@"Une erreur s'est produite" error:error fatal:NO];
     } else {
-        NSString *base64Auth = [[[NSString stringWithFormat:@"owner:%@", cozyPassword] dataUsingEncoding:NSUTF8StringEncoding] base64EncodedStringWithOptions:0];
+        NSString *base64Auth = [[[NSString stringWithFormat:@"owner:%@", cozyPassword]
+                                 dataUsingEncoding:NSUTF8StringEncoding]
+                                base64EncodedStringWithOptions:0];
         NSString *authValue = [NSString stringWithFormat:@"Basic %@", base64Auth];
         
         [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
@@ -80,7 +94,8 @@
         [request setHTTPMethod:@"POST"];
         [request setHTTPBody:postData];
         
-        NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+        NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request
+                                                                      delegate:self];
         [connection start];
     }
 }
@@ -110,12 +125,14 @@
     [appDelegate showAlert:@"Une erreur s'est produite" error:error fatal:NO];
 }
 
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
+- (void)connection:(NSURLConnection *)connection
+didReceiveResponse:(NSURLResponse *)response
 {
     self.responseData = [NSMutableData data];
 }
 
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
+- (void)connection:(NSURLConnection *)connection
+    didReceiveData:(NSData *)data
 {
     [self.responseData appendData:data];
 }
@@ -125,18 +142,33 @@
     CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication] delegate];
     
     NSError *error;
-    NSDictionary *resp = [NSJSONSerialization JSONObjectWithData:self.responseData options:0 error:&error];
+    NSDictionary *resp = [NSJSONSerialization JSONObjectWithData:self.responseData
+                                                         options:0
+                                                           error:&error];
     if (error) {
-        [appDelegate showAlert:@"Une erreur s'est produite" error:error fatal:NO];
+        [appDelegate showAlert:@"Une erreur s'est produite"
+                         error:error
+                         fatal:NO];
     } else {
         if ([resp valueForKey:@"error"]) {
             error = [NSError errorWithDomain:@"Cozy" code:1 userInfo:nil];
-            [appDelegate showAlert:[resp valueForKey:@"msg"] error:error fatal:NO];
+            [appDelegate showAlert:[resp valueForKey:@"msg"]
+                             error:error
+                             fatal:NO];
         } else {
-            [appDelegate setupReplicationWithCozyURLString:self.cozyUrlTextField.text remoteLogin:[resp valueForKey:@"login"] remotePassword:[resp valueForKey:@"password"] error:&error];
+            [appDelegate setupReplicationWithCozyURLString:self.cozyUrlTextField.text
+                                        remoteLogin:[resp valueForKey:@"login"]
+                                remotePassword:[resp valueForKey:@"password"]
+                                                error:&error];
             if (!error) {
-                [appDelegate.push addObserver:self forKeyPath:@"completed" options:0 context:NULL];
-                [appDelegate.pull addObserver:self forKeyPath:@"completed" options:0 context:NULL];
+                [appDelegate.push addObserver:self
+                                   forKeyPath:@"completed"
+                                      options:0
+                                      context:NULL];
+                [appDelegate.pull addObserver:self
+                                   forKeyPath:@"completed"
+                                      options:0
+                                      context:NULL];
             }
         }
     }

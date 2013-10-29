@@ -18,14 +18,18 @@
 
 @implementation CCAppDelegate
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+- (BOOL)application:(UIApplication *)application
+    didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Get or create the database
     NSError *error;
-    self.database = [[CBLManager sharedInstance] createDatabaseNamed:kDatabaseName error:&error];
+    self.database = [[CBLManager sharedInstance] createDatabaseNamed:kDatabaseName
+                                                               error:&error];
     
     if (!self.database) {
-        [self showAlert:@"L'app n'a pas pu ouvrir la base de données." error:error fatal:YES];
+        [self showAlert:@"L'app n'a pas pu ouvrir la base de données."
+                  error:error
+                  fatal:YES];
     }
     
     return YES;
@@ -33,29 +37,47 @@
 							
 - (void)applicationWillResignActive:(UIApplication *)application
 {
-    // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-    // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
+    /* Sent when the application is about to move from active to inactive state. 
+     This can occur for certain types of temporary interruptions 
+     (such as an incoming phone call or SMS message) or when the user quits
+     the application and it begins the transition to the background state.
+    Use this method to pause ongoing tasks, disable timers, 
+     and throttle down OpenGL ES frame rates. Games should use this method 
+     to pause the game.
+     */
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
-    // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    /* Use this method to release shared resources, save user data, 
+     invalidate timers, and store enough application state information to restore 
+     your application to its current state in case it is terminated later.
+    If your application supports background execution, this method is called 
+     instead of applicationWillTerminate: when the user quits.
+     */
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
-    // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+    /* Called as part of the transition from the background to the inactive state; 
+     here you can undo many of the changes made on entering the background.
+     */
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    /* Restart any tasks that were paused (or not yet started) 
+     while the application was inactive. 
+     If the application was previously in the background, 
+     optionally refresh the user interface.
+     */
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
-    // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    /* Called when the application is about to terminate. 
+     Save data if appropriate. See also applicationDidEnterBackground:.
+     */
 }
 
 #pragma mark - Alerts
@@ -65,36 +87,42 @@
 - (void)showAlert:(NSString *)message error:(NSError *)error fatal:(BOOL)fatal
 {
     if (error) {
-        message = [NSString stringWithFormat:@"%@\n\n%@", message, error.localizedDescription];
+        message = [NSString stringWithFormat:@"%@\n\n%@", message,
+                   error.localizedDescription];
     }
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:(fatal ? @"Erreur Fatale" : @"Erreur")
-                                                        message:message
-                                                       delegate:(fatal ? self : nil)
-                                              cancelButtonTitle:(fatal ? @"Quitter" : @"Désolé")
-                                              otherButtonTitles:nil];
+    UIAlertView *alertView = [[UIAlertView alloc]
+                              initWithTitle:(fatal ? @"Erreur Fatale" : @"Erreur")
+                                    message:message
+                                    delegate:(fatal ? self : nil)
+                            cancelButtonTitle:(fatal ? @"Quitter" : @"Désolé")
+                                    otherButtonTitles:nil];
     [alertView show];
 }
 
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
+- (void)alertView:(UIAlertView *)alertView
+didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
     exit(0);
 }
 
 #pragma mark - Database
 
-- (void)setupReplicationWithCozyURLString:(NSString *)cozyURL remoteLogin:(NSString *)remoteLogin remotePassword:(NSString *)remotePassword error:(NSError *__autoreleasing *)error
+- (void)setupReplicationWithCozyURLString:(NSString *)cozyURL
+                              remoteLogin:(NSString *)remoteLogin
+                           remotePassword:(NSString *)remotePassword
+                                    error:(NSError *__autoreleasing *)error
 {
     NSURL *url = [NSURL URLWithString:cozyURL];
     
     // Set the credentials
     NSURLCredential *cred = [NSURLCredential credentialWithUser:remoteLogin
-                                                       password:remotePassword
-                                                    persistence:NSURLCredentialPersistencePermanent];
+                                    password:remotePassword
+                                persistence:NSURLCredentialPersistencePermanent];
     NSURLProtectionSpace *space = [[NSURLProtectionSpace alloc] initWithHost:url.host
                                         port:443
                                         protocol:@"https"
                                         realm:nil
-                                        authenticationMethod:NSURLAuthenticationMethodHTMLForm]; // the only one that works
+                        authenticationMethod:NSURLAuthenticationMethodHTMLForm]; // the only one that works
     [[NSURLCredentialStorage sharedCredentialStorage] setDefaultCredential:cred
                                                         forProtectionSpace:space];
     
@@ -111,7 +139,8 @@
         if ([[doc valueForKey:@"_deleted"] boolValue])
             return YES;
 
-        if ([doc valueForKey:@"docType"] && ([[doc valueForKey:@"docType"] isEqualToString:@"File"]
+        if ([doc valueForKey:@"docType"] &&
+            ([[doc valueForKey:@"docType"] isEqualToString:@"File"]
             || [[doc valueForKey:@"docType"] isEqualToString:@"Folder"])) {
                 return YES;
         }
@@ -119,11 +148,17 @@
         return NO;
     })];
     
+    // Define database views
+    CBLView* pathView = [self.database viewNamed: @"byPath"];
+    [pathView setMapBlock: MAPBLOCK({
+        id path = [doc objectForKey: @"path"];
+        if (path) emit(path, doc);
+    }) version: @"1.0"];
     
     // Actually set up the replication
     NSString *newCozyURL = [NSString stringWithFormat:@"https://%@/cozy", url.host];
-//    NSString *newCozyURL = [NSString stringWithFormat:@"https://%@:%@@%@/cozy", remoteLogin, remotePassword, url.host]; // Test with lame authentication
-    NSArray *repls = [self.database replicateWithURL:[NSURL URLWithString:newCozyURL] exclusively:YES];
+    NSArray *repls = [self.database replicateWithURL:[NSURL URLWithString:newCozyURL]
+                                         exclusively:YES];
     
     self.pull = repls.firstObject;
     self.pull.persistent = YES;
@@ -153,7 +188,8 @@
         unsigned completed = self.pull.completed + self.push.completed;
         unsigned total = self.pull.total + self.push.total;
         if (total > 0 && completed < total) {
-            NSLog(@"REPLICATION COMPLETED : %f%%", floorf((completed / (float)total)*100));
+            NSLog(@"REPLICATION COMPLETED : %f%%",
+                  floorf((completed / (float)total)*100));
         }
     }
 }

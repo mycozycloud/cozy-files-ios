@@ -20,6 +20,9 @@
 // Replications
 @property (strong, nonatomic) CBLReplication *push;
 @property (strong, nonatomic) CBLReplication *pull;
-- (void)setupReplicationWithCozyURLString:(NSString *)cozyURL remoteLogin:(NSString *)remoteLogin remotePassword:(NSString *)remotePassword error:(NSError **)error;
+- (void)setupReplicationWithCozyURLString:(NSString *)cozyURL
+                              remoteLogin:(NSString *)remoteLogin
+                           remotePassword:(NSString *)remotePassword
+                                    error:(NSError **)error;
 
 @end
