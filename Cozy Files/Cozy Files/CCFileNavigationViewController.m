@@ -30,12 +30,6 @@
     
     // TableView and TableSource setup
     CBLView *pathView = [appDelegate.database viewNamed:@"byPath"];
-    if (!pathView.mapBlock) { // set the map function
-        [pathView setMapBlock: MAPBLOCK({
-            id path = [doc objectForKey: @"path"];
-            if (path) emit(path, doc);
-        }) version: @"1.0"];
-    }
     CBLLiveQuery *query = [[pathView query] asLiveQuery];
     query.keys = self.path ? @[self.path] : @[@""]; // empty path is root
     self.tableSource = [[CBLUITableSource alloc] init];
@@ -53,6 +47,16 @@
                        forKeyPath:@"completed"
                           options:0
                           context:NULL];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication]
+                                                   delegate];
+    
+    if (!(appDelegate.push && appDelegate.pull)) {
+        [self performSegueWithIdentifier:@"ShowConnection" sender:nil];
+    }
 }
 
 - (void)didReceiveMemoryWarning

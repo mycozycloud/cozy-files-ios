@@ -69,7 +69,7 @@
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:
                                     [NSURL URLWithString:
                                      [NSString stringWithFormat:
-                                      @"%@/apps/files/remotes", cozyURL]]];
+                                      @"%@/device", cozyURL]]];
     
     NSDictionary *requestData = [NSDictionary dictionaryWithObjectsAndKeys:remoteName,
                                  @"login", nil];
@@ -90,7 +90,6 @@
         
         [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
         [request setValue:authValue forHTTPHeaderField:@"Authorization"];
-        [request setValue:cozyPassword forHTTPHeaderField:@"X-Auth-Token"];
         [request setHTTPMethod:@"POST"];
         [request setHTTPBody:postData];
         
@@ -113,6 +112,7 @@
             [self.progressView setProgress: (completed / (float)total)];
         } else {
             [self.progressView setHidden:YES];
+            [self dismissViewControllerAnimated:YES completion:nil]; // TEST
         }
     }
 }
@@ -156,9 +156,14 @@ didReceiveResponse:(NSURLResponse *)response
                              error:error
                              fatal:NO];
         } else {
+            NSLog(@"RESPONSE %@ - %@ - %@", [resp valueForKey:@"login"],
+                  [resp valueForKey:@"password"],
+                  [resp valueForKey:@"id"]);
+            
             [appDelegate setupReplicationWithCozyURLString:self.cozyUrlTextField.text
                                         remoteLogin:[resp valueForKey:@"login"]
                                 remotePassword:[resp valueForKey:@"password"]
+                                        remoteID:[resp valueForKey:@"id"]
                                                 error:&error];
             if (!error) {
                 [appDelegate.push addObserver:self

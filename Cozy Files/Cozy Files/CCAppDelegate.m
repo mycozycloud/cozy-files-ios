@@ -13,7 +13,7 @@
 #define kDatabaseName @"cozyios"
 
 @interface CCAppDelegate ()
-
+- (void)setDbFunctions;
 @end
 
 @implementation CCAppDelegate
@@ -30,6 +30,8 @@
         [self showAlert:@"L'app n'a pas pu ouvrir la base de données."
                   error:error
                   fatal:YES];
+    } else {
+        [self setDbFunctions];
     }
     
     return YES;
@@ -110,6 +112,7 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
 - (void)setupReplicationWithCozyURLString:(NSString *)cozyURL
                               remoteLogin:(NSString *)remoteLogin
                            remotePassword:(NSString *)remotePassword
+                                 remoteID:(NSString *)remoteID
                                     error:(NSError *__autoreleasing *)error
 {
     NSURL *url = [NSURL URLWithString:cozyURL];
@@ -126,34 +129,9 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
     [[NSURLCredentialStorage sharedCredentialStorage] setDefaultCredential:cred
                                                         forProtectionSpace:space];
     
-    // Define validation
-#warning FOR NOW
-    [self.database defineValidation:@"allok" asBlock:VALIDATIONBLOCK({
-        return YES;
-    })];
-    
-    // Define local filter
-    [self.database defineFilter:@"filesfilter"
-                        asBlock:FILTERBLOCK({
-        CBLDocument *doc = revision.document;
-        if ([[doc valueForKey:@"_deleted"] boolValue])
-            return YES;
-
-        if ([doc valueForKey:@"docType"] &&
-            ([[doc valueForKey:@"docType"] isEqualToString:@"File"]
-            || [[doc valueForKey:@"docType"] isEqualToString:@"Folder"])) {
-                return YES;
-        }
-        
-        return NO;
-    })];
-    
-    // Define database views
-    CBLView* pathView = [self.database viewNamed: @"byPath"];
-    [pathView setMapBlock: MAPBLOCK({
-        id path = [doc objectForKey: @"path"];
-        if (path) emit(path, doc);
-    }) version: @"1.0"];
+    // Remember remoteID
+    [[NSUserDefaults standardUserDefaults] setObject:remoteID forKey:@"cozyFilesRemoteID"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
     
     // Actually set up the replication
     NSString *newCozyURL = [NSString stringWithFormat:@"https://%@/cozy", url.host];
@@ -165,31 +143,86 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
     self.pull.continuous = YES;
     
     self.push = repls.lastObject;
+#warning Might change
     self.push.persistent = YES;
     self.push.continuous = YES;
     
-    // Set the filters
-    self.pull.filter = @"filter/filesfilter";
-    self.push.filter = @"filesfilter";
+    // Set the filter for the pull replication
+    self.pull.filter = [NSString stringWithFormat:@"%@/filter", remoteID];
+#warning Might change
+    self.push.filter = @"filter";
     
     // Monitor the progress
     [self.pull addObserver:self forKeyPath:@"completed" options:0 context:NULL];
     [self.push addObserver:self forKeyPath:@"completed" options:0 context:NULL];
     
-    // Start the replications
+    // Start the pull replication.
+    // The push replication will start when the pull replication ends.
     [self.pull start];
+#warning Might change
     [self.push start];
+}
+
+- (void)setDbFunctions
+{
+    // Define validation
+    [self.database defineValidation:@"allok" asBlock:VALIDATIONBLOCK({
+        return YES;
+    })];
+    
+    // Define database views
+    CBLView* pathView = [self.database viewNamed: @"byPath"];
+    [pathView setMapBlock: MAPBLOCK({
+        id path = [doc objectForKey: @"path"];
+        if (path) emit(path, doc);
+    }) version: @"1.0"];
+    
+    // Define filter for push replication
+    [self.database defineFilter:@"filter"
+                        asBlock:FILTERBLOCK({
+        CBLDocument *doc = revision.document;
+        if ([doc isDeleted])
+            return YES;
+        
+        if ([doc.properties valueForKey:@"docType"] &&
+            ([[doc.properties valueForKey:@"docType"] isEqualToString:@"File"]
+            || [[doc.properties valueForKey:@"docType"] isEqualToString:@"Folder"])) {
+            return YES;
+        }
+        
+        return NO;
+    })];
 }
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
                          change:(NSDictionary *)change context:(void *)context
 {
-    if (object == self.pull || object == self.push) {
-        unsigned completed = self.pull.completed + self.push.completed;
-        unsigned total = self.pull.total + self.push.total;
-        if (total > 0 && completed < total) {
-            NSLog(@"REPLICATION COMPLETED : %f%%",
-                  floorf((completed / (float)total)*100));
+    // PULL
+    if (object == self.pull && self.pull.total > 0) {
+        if (self.pull.completed < self.pull.total) {
+            NSLog(@"PULL REPLICATION COMPLETION : %f%%",
+                  floorf((self.pull.completed / (float)self.pull.total)*100));
+        }
+#warning Might change
+//        else {
+//            // Pull replication finished, then start push one.
+//            if (![self.push running]) {
+//                NSLog(@"START PUSH REPLICATION");
+//                self.push.persistent = YES;
+//                self.push.continuous = YES;
+//                
+//                // Set the filter for the push replication
+//                self.push.filter = @"filter";
+//                [self.push start];
+//            }
+//        }
+    }
+    
+    // PUSH
+    if (object == self.push && self.push.total > 0) {
+        if (self.push.completed < self.push.total) {
+            NSLog(@"PUSH REPLICATION COMPLETION : %f%%",
+                  floorf((self.push.completed / (float)self.push.total)*100));
         }
     }
 }

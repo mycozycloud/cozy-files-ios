@@ -23,6 +23,7 @@
 - (void)setupReplicationWithCozyURLString:(NSString *)cozyURL
                               remoteLogin:(NSString *)remoteLogin
                            remotePassword:(NSString *)remotePassword
+                                 remoteID:(NSString *)remoteID
                                     error:(NSError **)error;
 
 @end
