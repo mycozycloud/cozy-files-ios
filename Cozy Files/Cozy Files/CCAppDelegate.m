@@ -130,7 +130,7 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
                                                         forProtectionSpace:space];
     
     // Remember remoteID
-    [[NSUserDefaults standardUserDefaults] setObject:remoteID forKey:@"cozyFilesRemoteID"];
+    [[NSUserDefaults standardUserDefaults] setObject:remoteID forKey:kRemoteIDKey];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
     // Actually set up the replication

@@ -54,7 +54,8 @@
     CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication]
                                                    delegate];
     
-    if (!(appDelegate.push && appDelegate.pull)) {
+    NSString *remoteID = [[NSUserDefaults standardUserDefaults] objectForKey:kRemoteIDKey];
+    if (!remoteID) {
         [self performSegueWithIdentifier:@"ShowConnection" sender:nil];
     }
 }

@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import <CouchbaseLite/CouchbaseLite.h>
 
+#define kRemoteIDKey @"cozyFilesRemoteID"
+
 @interface CCAppDelegate : UIResponder <UIApplicationDelegate, UIAlertViewDelegate>
 
 @property (strong, nonatomic) UIWindow *window;

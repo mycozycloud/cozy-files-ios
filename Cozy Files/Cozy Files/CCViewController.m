@@ -15,6 +15,8 @@
 - (void)sendGetCredentialsRequestWithCozyURLString:(NSString *)cozyURL
                                       cozyPassword:(NSString *)cozyPassword
                                         remoteName:(NSString *)remoteName;
+
+- (void)enableForm:(BOOL)enabled;
 @end
 
 @implementation CCViewController
@@ -55,6 +57,9 @@
 
 - (IBAction)okPressed:(id)sender
 {
+    self.welcomeLabel.text = @"Synchronisation en cours";
+    [self enableForm:NO];
+    
     [self sendGetCredentialsRequestWithCozyURLString:self.cozyUrlTextField.text
                                         cozyPassword:self.cozyMDPTextField.text
                                     remoteName:self.remoteNameTextField.text];
@@ -80,8 +85,9 @@
                                                          error:&error];
     
     if (error) {
-        
         [appDelegate showAlert:@"Une erreur s'est produite" error:error fatal:NO];
+        self.welcomeLabel.text = @"Veuillez vous connecter";
+        [self enableForm:YES];
     } else {
         NSString *base64Auth = [[[NSString stringWithFormat:@"owner:%@", cozyPassword]
                                  dataUsingEncoding:NSUTF8StringEncoding]
@@ -117,12 +123,22 @@
     }
 }
 
+- (void)enableForm:(BOOL)enabled
+{
+    self.cozyUrlTextField.enabled = enabled;
+    self.cozyMDPTextField.enabled = enabled;
+    self.remoteNameTextField.enabled = enabled;
+    self.connectionButton.enabled = enabled;
+}
+
 #pragma mark - Connection
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
     CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication] delegate];
     [appDelegate showAlert:@"Une erreur s'est produite" error:error fatal:NO];
+    self.welcomeLabel.text = @"Veuillez vous connecter";
+    [self enableForm:YES];
 }
 
 - (void)connection:(NSURLConnection *)connection
@@ -149,12 +165,16 @@ didReceiveResponse:(NSURLResponse *)response
         [appDelegate showAlert:@"Une erreur s'est produite"
                          error:error
                          fatal:NO];
+        self.welcomeLabel.text = @"Veuillez vous connecter";
+        [self enableForm:YES];
     } else {
         if ([resp valueForKey:@"error"]) {
             error = [NSError errorWithDomain:@"Cozy" code:1 userInfo:nil];
             [appDelegate showAlert:[resp valueForKey:@"msg"]
                              error:error
                              fatal:NO];
+            self.welcomeLabel.text = @"Veuillez vous connecter";
+            [self enableForm:YES];
         } else {
             NSLog(@"RESPONSE %@ - %@ - %@", [resp valueForKey:@"login"],
                   [resp valueForKey:@"password"],
@@ -165,7 +185,10 @@ didReceiveResponse:(NSURLResponse *)response
                                 remotePassword:[resp valueForKey:@"password"]
                                         remoteID:[resp valueForKey:@"id"]
                                                 error:&error];
-            if (!error) {
+            if (error) {
+                self.welcomeLabel.text = @"Veuillez vous connecter";
+                [self enableForm:YES];
+            } else {
                 [appDelegate.push addObserver:self
                                    forKeyPath:@"completed"
                                       options:0

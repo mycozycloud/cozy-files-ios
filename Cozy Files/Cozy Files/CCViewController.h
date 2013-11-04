@@ -14,6 +14,8 @@
 @property (weak, nonatomic) IBOutlet UITextField *cozyMDPTextField;
 @property (weak, nonatomic) IBOutlet UITextField *remoteNameTextField;
 @property (weak, nonatomic) IBOutlet UIProgressView *progressView;
+@property (weak, nonatomic) IBOutlet UILabel *welcomeLabel;
 - (IBAction)okPressed:(id)sender;
+@property (weak, nonatomic) IBOutlet UIButton *connectionButton;
 
 @end
