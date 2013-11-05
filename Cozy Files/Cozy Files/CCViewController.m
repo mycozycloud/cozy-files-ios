@@ -17,6 +17,8 @@
                                         remoteName:(NSString *)remoteName;
 
 - (void)enableForm:(BOOL)enabled;
+
+- (void)setAppearance;
 @end
 
 @implementation CCViewController
@@ -30,6 +32,7 @@
     self.cozyMDPTextField.delegate = self;
     self.remoteNameTextField.delegate = self;
     
+    [self setAppearance];
 }
 
 - (void)didReceiveMemoryWarning
@@ -129,6 +132,46 @@
     self.cozyMDPTextField.enabled = enabled;
     self.remoteNameTextField.enabled = enabled;
     self.connectionButton.enabled = enabled;
+}
+
+- (void)setAppearance
+{
+    // Colors
+    UIColor *yellow = [UIColor colorWithRed:254/255.0
+                                      green:136/255.0
+                                       blue:0
+                                      alpha:1];
+    UIColor *blue = [UIColor colorWithRed:27/255.0
+                                    green:171/255.0
+                                     blue:244/255.0
+                                    alpha:1];
+    
+    // TextFields
+    [[UITextField appearance] setTextColor:yellow];
+    [[UITextField appearance] setTintColor:yellow];
+    
+    CGFloat borderWidth = 0.8;
+    CGFloat cornerRadius = 5.0;
+    
+    self.cozyUrlTextField.layer.borderColor = [yellow CGColor];
+    self.cozyUrlTextField.layer.borderWidth = borderWidth;
+    self.cozyUrlTextField.layer.cornerRadius = cornerRadius;
+    
+    self.cozyMDPTextField.layer.borderColor = [yellow CGColor];
+    self.cozyMDPTextField.layer.borderWidth = borderWidth;
+    self.cozyMDPTextField.layer.cornerRadius = cornerRadius;
+    
+    self.remoteNameTextField.layer.borderColor = [yellow CGColor];
+    self.remoteNameTextField.layer.borderWidth = borderWidth;
+    self.remoteNameTextField.layer.cornerRadius = cornerRadius;
+    
+    // Buttons
+    [[UIButton appearance] setBackgroundColor:blue];
+    [[UIButton appearance] setTintColor:[UIColor whiteColor]];
+    self.connectionButton.layer.cornerRadius = cornerRadius;
+    
+    // ProgressBar
+    [[UIProgressView appearance] setProgressTintColor:blue];
 }
 
 #pragma mark - Connection

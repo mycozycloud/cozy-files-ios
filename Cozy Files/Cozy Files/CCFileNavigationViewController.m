@@ -51,9 +51,6 @@
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication]
-                                                   delegate];
-    
     NSString *remoteID = [[NSUserDefaults standardUserDefaults] objectForKey:kRemoteIDKey];
     if (!remoteID) {
         [self performSegueWithIdentifier:@"ShowConnection" sender:nil];
