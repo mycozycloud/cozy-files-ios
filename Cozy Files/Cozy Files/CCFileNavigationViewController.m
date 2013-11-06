@@ -52,6 +52,9 @@
     [self.menuButton setTarget: self.revealViewController];
     [self.menuButton setAction: @selector(revealToggle:)];
     
+    if (self.path) {
+        self.navigationItem.leftBarButtonItem = nil;
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated

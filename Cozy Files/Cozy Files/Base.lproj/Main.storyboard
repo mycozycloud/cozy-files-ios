@@ -82,7 +82,7 @@
             </objects>
             <point key="canvasLocation" x="1308" y="51"/>
         </scene>
-        <!--File Navigation View Controller-->
+        <!--File Navigation View Controller - Fichiers-->
         <scene sceneID="B91-3S-NjT">
             <objects>
                 <viewController storyboardIdentifier="CCFileNavigationViewController" id="hwk-im-3bh" customClass="CCFileNavigationViewController" sceneMemberID="viewController">
@@ -95,7 +95,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="897-if-Ecd">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="522"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </tableView>
@@ -103,23 +103,16 @@
                                 <rect key="frame" x="0.0" y="66" width="320" height="3"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </progressView>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wNq-Pq-1VW">
-                                <rect key="frame" x="0.0" y="522" width="320" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                <items>
-                                    <barButtonItem title="Menu" id="Zy9-Pl-SxW"/>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="xOp-nd-T0H"/>
-                                    <barButtonItem systemItem="add" id="GAW-s8-hWs"/>
-                                </items>
-                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" id="E4I-KR-TVR"/>
+                    <navigationItem key="navigationItem" title="Fichiers" id="E4I-KR-TVR">
+                        <barButtonItem key="leftBarButtonItem" title="Menu" id="X8s-LZ-WSA"/>
+                    </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="menuButton" destination="Zy9-Pl-SxW" id="gWJ-Ce-jpX"/>
+                        <outlet property="menuButton" destination="X8s-LZ-WSA" id="7eA-vx-Mia"/>
                         <outlet property="progressView" destination="U67-mn-ydG" id="veE-f7-5kY"/>
                         <outlet property="tableView" destination="897-if-Ecd" id="rgS-OU-Muf"/>
                         <segue destination="vXZ-lx-hvc" kind="modal" identifier="ShowConnection" modalTransitionStyle="crossDissolve" id="6Ve-SR-YZX"/>
@@ -222,20 +215,13 @@
                     <view key="view" contentMode="scaleToFill" id="0xM-tT-kf4">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RZb-rK-Fi4">
-                                <rect key="frame" x="0.0" y="524" width="320" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                <items>
-                                    <barButtonItem title="Menu" id="kXD-uN-9NR"/>
-                                </items>
-                            </toolbar>
-                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Configuration" id="OpL-MV-6pi"/>
+                    <navigationItem key="navigationItem" title="Configuration" id="OpL-MV-6pi">
+                        <barButtonItem key="leftBarButtonItem" title="Menu" id="cT2-Ju-9Ds"/>
+                    </navigationItem>
                     <connections>
-                        <outlet property="menuButton" destination="kXD-uN-9NR" id="Xzy-pd-UcW"/>
+                        <outlet property="menuButton" destination="cT2-Ju-9Ds" id="fuH-tz-Q9w"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IpW-1e-SbE" userLabel="First Responder" sceneMemberID="firstResponder"/>
