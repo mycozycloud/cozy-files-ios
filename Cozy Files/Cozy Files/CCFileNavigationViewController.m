@@ -57,9 +57,10 @@
     }
 }
 
-- (void)viewDidAppear:(BOOL)animated
+- (void)viewWillAppear:(BOOL)animated
 {
-    NSString *remoteID = [[NSUserDefaults standardUserDefaults] objectForKey:kRemoteIDKey];
+    NSString *remoteID = [[NSUserDefaults standardUserDefaults]
+                          objectForKey:kRemoteIDKey];
     if (!remoteID) {
         [self performSegueWithIdentifier:@"ShowConnection" sender:nil];
     }

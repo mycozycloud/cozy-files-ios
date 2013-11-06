@@ -36,10 +36,6 @@
         [self setDbFunctions];
     }
     
-
-    SWRevealViewController *revealViewController =
-        (SWRevealViewController *)self.window.rootViewController;
-    
     return YES;
 }
 							

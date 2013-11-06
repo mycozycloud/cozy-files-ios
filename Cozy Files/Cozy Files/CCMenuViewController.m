@@ -8,6 +8,7 @@
 
 #import "SWRevealViewController.h"
 
+#import "CCAppDelegate.h"
 #import "CCMenuViewController.h"
 
 @interface CCMenuViewController ()
@@ -34,6 +35,12 @@
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+
 }
 
 - (void)didReceiveMemoryWarning

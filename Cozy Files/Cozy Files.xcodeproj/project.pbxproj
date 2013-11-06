@@ -14,7 +14,7 @@
 		5C4F82EB1818125700CCA08E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C4F82EA1818125700CCA08E /* main.m */; };
 		5C4F82EF1818125700CCA08E /* CCAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C4F82EE1818125700CCA08E /* CCAppDelegate.m */; };
 		5C4F82F21818125700CCA08E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5C4F82F01818125700CCA08E /* Main.storyboard */; };
-		5C4F82F51818125700CCA08E /* CCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C4F82F41818125700CCA08E /* CCViewController.m */; };
+		5C4F82F51818125700CCA08E /* CCConnectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C4F82F41818125700CCA08E /* CCConnectionViewController.m */; };
 		5C4F82F71818125700CCA08E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5C4F82F61818125700CCA08E /* Images.xcassets */; };
 		5C4F82FE1818125700CCA08E /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C4F82FD1818125700CCA08E /* XCTest.framework */; };
 		5C4F82FF1818125700CCA08E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C4F82DE1818125700CCA08E /* Foundation.framework */; };
@@ -31,6 +31,7 @@
 		5CE23ADA182A50C100A1D5D8 /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CE23AD9182A50C100A1D5D8 /* SWRevealViewController.m */; };
 		5CE23ADE182A547E00A1D5D8 /* CCMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CE23ADD182A547E00A1D5D8 /* CCMenuViewController.m */; };
 		5CE23AE1182A6BA500A1D5D8 /* CCConfigurationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CE23AE0182A6BA500A1D5D8 /* CCConfigurationViewController.m */; };
+		5CE23AE4182A766700A1D5D8 /* CCRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CE23AE3182A766700A1D5D8 /* CCRevealViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,8 +56,8 @@
 		5C4F82ED1818125700CCA08E /* CCAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CCAppDelegate.h; sourceTree = "<group>"; };
 		5C4F82EE1818125700CCA08E /* CCAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CCAppDelegate.m; sourceTree = "<group>"; };
 		5C4F82F11818125700CCA08E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		5C4F82F31818125700CCA08E /* CCViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CCViewController.h; sourceTree = "<group>"; };
-		5C4F82F41818125700CCA08E /* CCViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CCViewController.m; sourceTree = "<group>"; };
+		5C4F82F31818125700CCA08E /* CCConnectionViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CCConnectionViewController.h; sourceTree = "<group>"; };
+		5C4F82F41818125700CCA08E /* CCConnectionViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CCConnectionViewController.m; sourceTree = "<group>"; };
 		5C4F82F61818125700CCA08E /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		5C4F82FC1818125700CCA08E /* Cozy FilesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Cozy FilesTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5C4F82FD1818125700CCA08E /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -77,6 +78,8 @@
 		5CE23ADD182A547E00A1D5D8 /* CCMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCMenuViewController.m; sourceTree = "<group>"; };
 		5CE23ADF182A6BA500A1D5D8 /* CCConfigurationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCConfigurationViewController.h; sourceTree = "<group>"; };
 		5CE23AE0182A6BA500A1D5D8 /* CCConfigurationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCConfigurationViewController.m; sourceTree = "<group>"; };
+		5CE23AE2182A766700A1D5D8 /* CCRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCRevealViewController.h; sourceTree = "<group>"; };
+		5CE23AE3182A766700A1D5D8 /* CCRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCRevealViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -152,14 +155,16 @@
 				5C4F82ED1818125700CCA08E /* CCAppDelegate.h */,
 				5C4F82EE1818125700CCA08E /* CCAppDelegate.m */,
 				5C4F82F01818125700CCA08E /* Main.storyboard */,
-				5C4F82F31818125700CCA08E /* CCViewController.h */,
-				5C4F82F41818125700CCA08E /* CCViewController.m */,
+				5C4F82F31818125700CCA08E /* CCConnectionViewController.h */,
+				5C4F82F41818125700CCA08E /* CCConnectionViewController.m */,
 				5C9D285A1820114400CA3A7C /* CCFileNavigationViewController.h */,
 				5C9D285B1820114400CA3A7C /* CCFileNavigationViewController.m */,
 				5CE23ADC182A547E00A1D5D8 /* CCMenuViewController.h */,
 				5CE23ADD182A547E00A1D5D8 /* CCMenuViewController.m */,
 				5CE23ADF182A6BA500A1D5D8 /* CCConfigurationViewController.h */,
 				5CE23AE0182A6BA500A1D5D8 /* CCConfigurationViewController.m */,
+				5CE23AE2182A766700A1D5D8 /* CCRevealViewController.h */,
+				5CE23AE3182A766700A1D5D8 /* CCRevealViewController.m */,
 				5C4F82F61818125700CCA08E /* Images.xcassets */,
 				5C4F82E51818125700CCA08E /* Supporting Files */,
 			);
@@ -308,7 +313,8 @@
 				5CE23ADA182A50C100A1D5D8 /* SWRevealViewController.m in Sources */,
 				5CE23ADE182A547E00A1D5D8 /* CCMenuViewController.m in Sources */,
 				5C4F82EB1818125700CCA08E /* main.m in Sources */,
-				5C4F82F51818125700CCA08E /* CCViewController.m in Sources */,
+				5C4F82F51818125700CCA08E /* CCConnectionViewController.m in Sources */,
+				5CE23AE4182A766700A1D5D8 /* CCRevealViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

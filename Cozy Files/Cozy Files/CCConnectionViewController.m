@@ -7,9 +7,9 @@
 //
 
 #import "CCAppDelegate.h"
-#import "CCViewController.h"
+#import "CCConnectionViewController.h"
 
-@interface CCViewController () <NSURLConnectionDataDelegate>
+@interface CCConnectionViewController () <NSURLConnectionDataDelegate>
 @property (strong, nonatomic) NSMutableData *responseData;
 
 - (void)sendGetCredentialsRequestWithCozyURLString:(NSString *)cozyURL
@@ -21,7 +21,7 @@
 - (void)setAppearance;
 @end
 
-@implementation CCViewController
+@implementation CCConnectionViewController
 
 - (void)viewDidLoad
 {

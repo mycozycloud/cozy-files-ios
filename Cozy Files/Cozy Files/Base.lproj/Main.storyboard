@@ -4,10 +4,10 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3746"/>
     </dependencies>
     <scenes>
-        <!--View Controller - Connexion-->
+        <!--Connection View Controller - Connexion-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
-                <viewController id="vXZ-lx-hvc" customClass="CCViewController" sceneMemberID="viewController">
+                <viewController id="vXZ-lx-hvc" customClass="CCConnectionViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="7ss-ZF-Sal"/>
                         <viewControllerLayoutGuide type="bottom" id="iyl-Wx-j9w"/>
@@ -80,7 +80,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1308" y="51"/>
+            <point key="canvasLocation" x="1715" y="-249"/>
         </scene>
         <!--File Navigation View Controller - Fichiers-->
         <scene sceneID="B91-3S-NjT">
@@ -115,7 +115,7 @@
                         <outlet property="menuButton" destination="X8s-LZ-WSA" id="7eA-vx-Mia"/>
                         <outlet property="progressView" destination="U67-mn-ydG" id="veE-f7-5kY"/>
                         <outlet property="tableView" destination="897-if-Ecd" id="rgS-OU-Muf"/>
-                        <segue destination="vXZ-lx-hvc" kind="modal" identifier="ShowConnection" modalTransitionStyle="crossDissolve" id="6Ve-SR-YZX"/>
+                        <segue destination="vXZ-lx-hvc" kind="modal" identifier="ShowConnection" modalTransitionStyle="crossDissolve" id="uUC-G4-ga7"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6bM-mB-JtM" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -125,7 +125,7 @@
         <!--Reveal View Controller-->
         <scene sceneID="EeL-Xl-9po">
             <objects>
-                <viewController id="443-tG-uOj" customClass="SWRevealViewController" sceneMemberID="viewController">
+                <viewController id="443-tG-uOj" customClass="CCRevealViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="aL7-zO-IXY"/>
                         <viewControllerLayoutGuide type="bottom" id="jEv-9c-YfT"/>
@@ -274,6 +274,6 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="Z92-e3-bUY"/>
+        <segue reference="1ry-pW-XaW"/>
     </inferredMetricsTieBreakers>
 </document>
