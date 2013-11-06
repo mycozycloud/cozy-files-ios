@@ -11,7 +11,7 @@
 #import "CCAppDelegate.h"
 #import "CCFileNavigationViewController.h"
 
-@interface CCFileNavigationViewController ()
+@interface CCFileNavigationViewController () <CBLUITableDelegate>
 
 @end
 
@@ -86,6 +86,16 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
                            [doc valueForKey:@"name"]];
         
         [self.navigationController pushViewController:controller animated:YES];
+    }
+}
+
+- (void)couchTableSource:(CBLUITableSource *)source willUseCell:(UITableViewCell *)cell forRow:(CBLQueryRow *)row
+{
+    CBLDocument *doc = row.value;
+    if ([[doc valueForKey:@"docType"] isEqualToString:@"Folder"]) {
+        [cell.imageView setImage:[UIImage imageNamed:@"folder"]];
+    } else if ([[doc valueForKey:@"docType"] isEqualToString:@"File"]) {
+        [cell.imageView setImage:[UIImage imageNamed:@"file"]];
     }
 }
 
