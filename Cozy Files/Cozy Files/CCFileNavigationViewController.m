@@ -47,6 +47,11 @@
                        forKeyPath:@"completed"
                           options:0
                           context:NULL];
+    
+    // Menu reveal
+    [self.menuButton setTarget: self.revealViewController];
+    [self.menuButton setAction: @selector(revealToggle:)];
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated

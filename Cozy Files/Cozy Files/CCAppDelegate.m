@@ -8,6 +8,8 @@
 
 #import <CouchbaseLite/CouchbaseLite.h>
 
+#import "SWRevealViewController.h"
+
 #import "CCAppDelegate.h"
 
 #define kDatabaseName @"cozyios"
@@ -33,6 +35,10 @@
     } else {
         [self setDbFunctions];
     }
+    
+
+    SWRevealViewController *revealViewController =
+        (SWRevealViewController *)self.window.rootViewController;
     
     return YES;
 }

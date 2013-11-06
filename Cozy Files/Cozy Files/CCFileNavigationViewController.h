@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+#import "SWRevealViewController.h"
+
 @class CBLUITableSource;
 
 @interface CCFileNavigationViewController : UIViewController
@@ -17,5 +19,6 @@
 @property (strong, nonatomic) CBLUITableSource *tableSource;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIProgressView *progressView;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *menuButton;
 
 @end
