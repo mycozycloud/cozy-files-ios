@@ -121,7 +121,11 @@
             [self.progressView setProgress: (completed / (float)total)];
         } else {
             [self.progressView setHidden:YES];
-            [self dismissViewControllerAnimated:YES completion:nil]; // TEST
+            [self dismissViewControllerAnimated:YES completion:^{
+                // End of replication monitoring
+                [appDelegate.push removeObserver:self forKeyPath:@"completed"];
+                [appDelegate.pull removeObserver:self forKeyPath:@"completed"];
+            }];
         }
     }
 }
@@ -147,7 +151,6 @@
     self.remoteNameTextField.layer.borderColor = [kYellow CGColor];
     self.remoteNameTextField.layer.borderWidth = kBorderWidth;
     self.remoteNameTextField.layer.cornerRadius = kCornerRadius;
-    
 
     [self.connectionButton setBackgroundColor:kBlue];
     [self.connectionButton setTintColor:[UIColor whiteColor]];
@@ -206,21 +209,16 @@ didReceiveResponse:(NSURLResponse *)response
             [appDelegate setupReplicationWithCozyURLString:self.cozyUrlTextField.text
                                         remoteLogin:[resp valueForKey:@"login"]
                                 remotePassword:[resp valueForKey:@"password"]
-                                        remoteID:[resp valueForKey:@"id"]
-                                                error:&error];
-            if (error) {
-                self.welcomeLabel.text = @"Veuillez vous connecter";
-                [self enableForm:YES];
-            } else {
-                [appDelegate.push addObserver:self
-                                   forKeyPath:@"completed"
-                                      options:0
-                                      context:NULL];
-                [appDelegate.pull addObserver:self
-                                   forKeyPath:@"completed"
-                                      options:0
-                                      context:NULL];
-            }
+                                        remoteID:[resp valueForKey:@"id"]];
+            
+            [appDelegate.push addObserver:self
+                               forKeyPath:@"completed"
+                                options:0
+                                context:NULL];
+            [appDelegate.pull addObserver:self
+                                forKeyPath:@"completed"
+                                  options:0
+                                  context:NULL];
         }
     }
 }

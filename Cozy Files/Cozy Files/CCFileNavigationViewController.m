@@ -31,7 +31,7 @@
     }
     
     CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication]
-                                  delegate];
+                                                   delegate];
     
     // TableView and TableSource setup
     CBLView *pathView = [appDelegate.database viewNamed:@"byPath"];
@@ -42,16 +42,6 @@
     self.tableSource.tableView = self.tableView;
     self.tableSource.labelProperty = @"name";
     self.tableView.dataSource = self.tableSource;
-    
-    // ProgressView setup for replication monitoring
-    [appDelegate.push addObserver:self
-                       forKeyPath:@"completed"
-                          options:0
-                          context:NULL];
-    [appDelegate.pull addObserver:self
-                       forKeyPath:@"completed"
-                          options:0
-                          context:NULL];
     
     // Menu reveal
     [self.menuButton setTarget:self.revealViewController];
@@ -71,11 +61,36 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    // Basic check to know if there's a need to display the connection screen
     NSString *remoteID = [[NSUserDefaults standardUserDefaults]
                           objectForKey:kRemoteIDKey];
     if (!remoteID) {
         [self performSegueWithIdentifier:@"ShowConnection" sender:nil];
     }
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication]
+                                                   delegate];
+    // ProgressView setup for replication monitoring
+    [appDelegate.push addObserver:self
+                       forKeyPath:@"completed"
+                          options:0
+                          context:NULL];
+    [appDelegate.pull addObserver:self
+                       forKeyPath:@"completed"
+                          options:0
+                          context:NULL];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication]
+                                                   delegate];
+    // End of replication monitoring
+    [appDelegate.push removeObserver:self forKeyPath:@"completed"];
+    [appDelegate.pull removeObserver:self forKeyPath:@"completed"];
 }
 
 - (void)didReceiveMemoryWarning

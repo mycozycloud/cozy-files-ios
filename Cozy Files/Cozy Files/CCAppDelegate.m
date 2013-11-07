@@ -119,7 +119,6 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
                               remoteLogin:(NSString *)remoteLogin
                            remotePassword:(NSString *)remotePassword
                                  remoteID:(NSString *)remoteID
-                                    error:(NSError *__autoreleasing *)error
 {
     NSURL *url = [NSURL URLWithString:cozyURL];
     
@@ -171,6 +170,10 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
 
 - (void)setDbFunctions
 {
+    // Retreive replications
+    self.pull = self.database.allReplications.firstObject;
+    self.push = self.database.allReplications.lastObject;
+    
     // Define validation
     [self.database defineValidation:@"allok" asBlock:VALIDATIONBLOCK({
         return YES;
