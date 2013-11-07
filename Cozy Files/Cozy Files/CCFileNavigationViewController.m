@@ -12,7 +12,7 @@
 #import "CCFileNavigationViewController.h"
 
 @interface CCFileNavigationViewController () <CBLUITableDelegate>
-
+- (void)goBackToRoot;
 @end
 
 @implementation CCFileNavigationViewController
@@ -49,11 +49,15 @@
                           context:NULL];
     
     // Menu reveal
-    [self.menuButton setTarget: self.revealViewController];
-    [self.menuButton setAction: @selector(revealToggle:)];
+    [self.menuButton setTarget:self.revealViewController];
+    [self.menuButton setAction:@selector(revealToggle:)];
     
-    if (self.path) {
-        self.navigationItem.leftBarButtonItem = nil;
+    // Back to root
+    [self.rootButton setTarget:self];
+    [self.rootButton setAction:@selector(goBackToRoot)];
+    if (!self.path) {
+#warning For now, till I find a better UX idea
+        self.rootButton.enabled = NO;
     }
 }
 
@@ -115,6 +119,13 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
             [self.progressView setHidden:YES];
         }
     }
+}
+
+#pragma mark - Custom
+
+- (void)goBackToRoot
+{
+    [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 @end

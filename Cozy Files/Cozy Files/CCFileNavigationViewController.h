@@ -20,5 +20,6 @@
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIProgressView *progressView;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *menuButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *rootButton;
 
 @end
