@@ -13,6 +13,7 @@
 
 @interface CCFileNavigationViewController () <CBLUITableDelegate>
 - (void)goBackToRoot;
+- (void)setAppearance;
 @end
 
 @implementation CCFileNavigationViewController
@@ -23,7 +24,11 @@
     
     self.tableView.delegate = self;
     
-    self.title = self.path ? self.path : @"Fichiers";
+    if (self.path) {
+        self.title = [[self.path componentsSeparatedByString:@"/"] lastObject];
+    } else {
+        self.title = @"Fichiers";
+    }
     
     CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication]
                                   delegate];
@@ -59,6 +64,9 @@
 #warning For now, till I find a better UX idea
         self.rootButton.enabled = NO;
     }
+    
+    // Appearance
+    [self setAppearance];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -126,6 +134,12 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 - (void)goBackToRoot
 {
     [self.navigationController popToRootViewControllerAnimated:YES];
+}
+
+- (void)setAppearance
+{
+    [self.menuButton setTintColor:kBlue];
+    [self.rootButton setTintColor:kBlue];
 }
 
 @end

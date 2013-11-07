@@ -12,10 +12,12 @@
 
 #import "CCAppDelegate.h"
 
+// Database
 #define kDatabaseName @"cozyios"
 
 @interface CCAppDelegate ()
 - (void)setDbFunctions;
+- (void)setAppearance;
 @end
 
 @implementation CCAppDelegate
@@ -35,6 +37,8 @@
     } else {
         [self setDbFunctions];
     }
+    
+    [self setAppearance];
     
     return YES;
 }
@@ -227,6 +231,19 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
                   floorf((self.push.completed / (float)self.push.total)*100));
         }
     }
+}
+
+#pragma mark - Appearance
+
+
+- (void)setAppearance
+{
+    // TextFields
+    [[UITextField appearance] setTextColor:kYellow];
+    [[UITextField appearance] setTintColor:kYellow];
+    
+    // ProgressBar
+    [[UIProgressView appearance] setProgressTintColor:kBlue];
 }
 
 

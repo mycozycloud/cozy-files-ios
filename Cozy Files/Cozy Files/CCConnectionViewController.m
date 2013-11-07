@@ -136,42 +136,22 @@
 
 - (void)setAppearance
 {
-    // Colors
-    UIColor *yellow = [UIColor colorWithRed:254/255.0
-                                      green:136/255.0
-                                       blue:0
-                                      alpha:1];
-    UIColor *blue = [UIColor colorWithRed:27/255.0
-                                    green:171/255.0
-                                     blue:244/255.0
-                                    alpha:1];
+    self.cozyUrlTextField.layer.borderColor = [kYellow CGColor];
+    self.cozyUrlTextField.layer.borderWidth = kBorderWidth;
+    self.cozyUrlTextField.layer.cornerRadius = kCornerRadius;
     
-    // TextFields
-    [[UITextField appearance] setTextColor:yellow];
-    [[UITextField appearance] setTintColor:yellow];
+    self.cozyMDPTextField.layer.borderColor = [kYellow CGColor];
+    self.cozyMDPTextField.layer.borderWidth = kBorderWidth;
+    self.cozyMDPTextField.layer.cornerRadius = kCornerRadius;
     
-    CGFloat borderWidth = 0.8;
-    CGFloat cornerRadius = 5.0;
+    self.remoteNameTextField.layer.borderColor = [kYellow CGColor];
+    self.remoteNameTextField.layer.borderWidth = kBorderWidth;
+    self.remoteNameTextField.layer.cornerRadius = kCornerRadius;
     
-    self.cozyUrlTextField.layer.borderColor = [yellow CGColor];
-    self.cozyUrlTextField.layer.borderWidth = borderWidth;
-    self.cozyUrlTextField.layer.cornerRadius = cornerRadius;
-    
-    self.cozyMDPTextField.layer.borderColor = [yellow CGColor];
-    self.cozyMDPTextField.layer.borderWidth = borderWidth;
-    self.cozyMDPTextField.layer.cornerRadius = cornerRadius;
-    
-    self.remoteNameTextField.layer.borderColor = [yellow CGColor];
-    self.remoteNameTextField.layer.borderWidth = borderWidth;
-    self.remoteNameTextField.layer.cornerRadius = cornerRadius;
-    
-    // Buttons
-    [[UIButton appearance] setBackgroundColor:blue];
-    [[UIButton appearance] setTintColor:[UIColor whiteColor]];
-    self.connectionButton.layer.cornerRadius = cornerRadius;
-    
-    // ProgressBar
-    [[UIProgressView appearance] setProgressTintColor:blue];
+
+    [self.connectionButton setBackgroundColor:kBlue];
+    [self.connectionButton setTintColor:[UIColor whiteColor]];
+    self.connectionButton.layer.cornerRadius = kCornerRadius;
 }
 
 #pragma mark - Connection

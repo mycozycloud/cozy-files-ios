@@ -26,29 +26,29 @@
                                 </connections>
                             </button>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="url du cozy" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="X8v-ci-sfQ">
-                                <rect key="frame" x="20" y="217" width="280" height="30"/>
+                                <rect key="frame" x="20" y="196" width="280" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" returnKeyType="next"/>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="votre mot de passe" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Ghm-4Y-bwa">
-                                <rect key="frame" x="20" y="269" width="280" height="30"/>
+                                <rect key="frame" x="20" y="248" width="280" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" returnKeyType="next" secureTextEntry="YES"/>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="nom de l'appareil" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="9Cr-Vb-icX">
-                                <rect key="frame" x="20" y="321" width="280" height="30"/>
+                                <rect key="frame" x="20" y="300" width="280" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" returnKeyType="done"/>
                             </textField>
                             <progressView hidden="YES" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" fixedFrame="YES" progressViewStyle="bar" progress="0.10000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="RbR-Cm-Lbj">
-                                <rect key="frame" x="0.0" y="192" width="320" height="3"/>
+                                <rect key="frame" x="0.0" y="173" width="320" height="3"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </progressView>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Veuillez vous connecter" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wHV-Fx-9P5">
-                                <rect key="frame" x="20" y="147" width="280" height="35"/>
+                                <rect key="frame" x="20" y="126" width="280" height="35"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
