@@ -61,8 +61,9 @@
 - (IBAction)okPressed:(id)sender
 {
     self.welcomeLabel.text = @"Synchronisation en cours";
-    [self enableForm:NO];
+    [self enableForm:NO]; // Can't change the form values while syncing
     
+    // Send connection request with the cozy in order to retrieve the remote credentials
     [self sendGetCredentialsRequestWithCozyURLString:self.cozyUrlTextField.text
                                         cozyPassword:self.cozyMDPTextField.text
                                     remoteName:self.remoteNameTextField.text];
@@ -74,6 +75,7 @@
 {
     CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication] delegate];
     
+    // Preparing the request
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:
                                     [NSURL URLWithString:
                                      [NSString stringWithFormat:
@@ -104,10 +106,12 @@
         
         NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request
                                                                       delegate:self];
+        // send the request
         [connection start];
     }
 }
 
+// Used to monitor the replications progress
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
                         change:(NSDictionary *)change context:(void *)context
 {
@@ -201,7 +205,7 @@ didReceiveResponse:(NSURLResponse *)response
                              fatal:NO];
             self.welcomeLabel.text = @"Veuillez vous connecter";
             [self enableForm:YES];
-        } else {
+        } else { // No error, then should setup replications
             NSLog(@"RESPONSE %@ - %@ - %@", [resp valueForKey:@"login"],
                   [resp valueForKey:@"password"],
                   [resp valueForKey:@"id"]);
@@ -211,6 +215,7 @@ didReceiveResponse:(NSURLResponse *)response
                                 remotePassword:[resp valueForKey:@"password"]
                                         remoteID:[resp valueForKey:@"id"]];
             
+            // monitor the replication progress
             [appDelegate.push addObserver:self
                                forKeyPath:@"completed"
                                 options:0
