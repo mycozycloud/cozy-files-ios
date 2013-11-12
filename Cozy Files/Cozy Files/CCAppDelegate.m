@@ -16,7 +16,9 @@
 #define kDatabaseName @"cozyios"
 
 @interface CCAppDelegate ()
+// Used to set filters, views and validation functions
 - (void)setDbFunctions;
+// Used for UX customization
 - (void)setAppearance;
 @end
 
@@ -30,14 +32,15 @@
     self.database = [[CBLManager sharedInstance] createDatabaseNamed:kDatabaseName
                                                                error:&error];
     
-    if (!self.database) {
+    if (!self.database) { // Bug : no db available nor created
         [self showAlert:@"L'app n'a pas pu ouvrir la base de données."
                   error:error
                   fatal:YES];
-    } else {
+    } else { // Ok then set the filters, the views and validation functions
         [self setDbFunctions];
     }
     
+    // Customize the appearance
     [self setAppearance];
     
     return YES;
@@ -134,11 +137,11 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
     [[NSURLCredentialStorage sharedCredentialStorage] setDefaultCredential:cred
                                                         forProtectionSpace:space];
     
-    // Remember remoteID
+    // Remember remoteID for later use
     [[NSUserDefaults standardUserDefaults] setObject:remoteID forKey:kRemoteIDKey];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
-    // Actually set up the replication
+    // Actually set up the two-way continuous and persistent replication
     NSString *newCozyURL = [NSString stringWithFormat:@"https://%@/cozy", url.host];
     NSArray *repls = [self.database replicateWithURL:[NSURL URLWithString:newCozyURL]
                                          exclusively:YES];
@@ -161,18 +164,44 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
     [self.pull addObserver:self forKeyPath:@"completed" options:0 context:NULL];
     [self.push addObserver:self forKeyPath:@"completed" options:0 context:NULL];
     
-    // Start the pull replication.
-    // The push replication will start when the pull replication ends.
+    // Start the replications
     [self.pull start];
 #warning Might change
     [self.push start];
 }
 
+- (NSArray *)setupFileReplicationForBinaryID:(NSString *)binaryID
+{
+    // Set Pull replication, not continuous but persistent
+    CBLReplication *binPull = [[CBLReplication alloc]
+                               initPullFromSourceURL:self.pull.remoteURL
+                                            toDatabase:self.database];
+    binPull.persistent = YES;
+    binPull.continuous = NO;
+    [binPull setDoc_ids:@[binaryID]];
+    
+    // Set Push replication, not continuous but persistent
+    CBLReplication *binPush = [[CBLReplication alloc]
+                               initPushFromDatabase:self.database
+                               toTargetURL:self.pull.remoteURL];
+    binPush.persistent = YES;
+    binPush.continuous = NO;
+    [binPush setDoc_ids:@[binaryID]];
+    
+    // Start replications
+    [binPull start];
+    [binPush start];
+    
+    return @[binPull, binPush];
+}
+
 - (void)setDbFunctions
 {
     // Retreive replications
-    self.pull = self.database.allReplications.firstObject;
-    self.push = self.database.allReplications.lastObject;
+    if (self.database.allReplications.count > 1) {
+        self.pull = self.database.allReplications.firstObject;
+        self.push = [self.database.allReplications objectAtIndex:1];
+    }
     
     // Define validation
     [self.database defineValidation:@"allok" asBlock:VALIDATIONBLOCK({
@@ -237,7 +266,6 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
 }
 
 #pragma mark - Appearance
-
 
 - (void)setAppearance
 {

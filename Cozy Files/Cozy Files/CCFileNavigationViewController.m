@@ -9,6 +9,7 @@
 #import <CouchbaseLite/CouchbaseLite.h>
 
 #import "CCAppDelegate.h"
+#import "CCFileViewerViewController.h"
 #import "CCFileNavigationViewController.h"
 
 @interface CCFileNavigationViewController () <CBLUITableDelegate>
@@ -17,6 +18,8 @@
 @end
 
 @implementation CCFileNavigationViewController
+
+#pragma mark - View Lifecycle
 
 - (void)viewDidLoad
 {
@@ -99,12 +102,23 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    // Prepare for file viewing transition
+    if ([segue.identifier isEqualToString:@"ShowFile"]) {
+        CBLDocument *doc = (CBLDocument *)sender;
+        CCFileViewerViewController *cont = (CCFileViewerViewController *)[segue destinationViewController];
+        cont.fileID = [doc valueForKey:@"_id"];
+    }
+}
+
 #pragma mark - TableView Delegate
+
 - (void)tableView:(UITableView *)tableView
 didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     CBLDocument *doc = [[self.tableSource.query.rows rowAtIndex:indexPath.row] value];
-    if ([[doc valueForKey:@"docType"] isEqualToString:@"Folder"]) {
+    if ([[doc valueForKey:@"docType"] isEqualToString:@"Folder"]) { // Folder, so navigate
         CCFileNavigationViewController *controller = [[UIStoryboard storyboardWithName:@"Main"
                                                                 bundle:nil]
                         instantiateViewControllerWithIdentifier:@"CCFileNavigationViewController"];
@@ -113,6 +127,9 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
                            [doc valueForKey:@"name"]];
         
         [self.navigationController pushViewController:controller animated:YES];
+        
+    } if ([[doc valueForKey:@"docType"] isEqualToString:@"File"]) { // File, so view it
+        [self performSegueWithIdentifier:@"ShowFile" sender:doc];
     }
 }
 
@@ -127,6 +144,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 }
 
 #pragma mark - Replication monitoring
+
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
                         change:(NSDictionary *)change context:(void *)context
 {
