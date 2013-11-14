@@ -85,10 +85,6 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" returnKeyType="done"/>
                             </textField>
-                            <progressView hidden="YES" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" fixedFrame="YES" progressViewStyle="bar" progress="0.10000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="RbR-Cm-Lbj">
-                                <rect key="frame" x="0.0" y="173" width="320" height="3"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </progressView>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Veuillez vous connecter" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wHV-Fx-9P5">
                                 <rect key="frame" x="20" y="126" width="280" height="35"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -115,7 +111,6 @@
                         <outlet property="connectionButton" destination="YIT-XK-73f" id="SdK-PI-JBa"/>
                         <outlet property="cozyMDPTextField" destination="Ghm-4Y-bwa" id="9Jv-zb-l4h"/>
                         <outlet property="cozyUrlTextField" destination="X8v-ci-sfQ" id="GwE-lr-uwD"/>
-                        <outlet property="progressView" destination="RbR-Cm-Lbj" id="Ksh-Iz-43H"/>
                         <outlet property="remoteNameTextField" destination="9Cr-Vb-icX" id="nR9-AT-cTk"/>
                         <outlet property="welcomeLabel" destination="wHV-Fx-9P5" id="Y6g-Zj-S2c"/>
                     </connections>

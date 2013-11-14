@@ -111,29 +111,6 @@
     }
 }
 
-// Used to monitor the replications progress
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
-                        change:(NSDictionary *)change context:(void *)context
-{
-    CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication] delegate];
-    
-    if (object == appDelegate.pull || object == appDelegate.push) {
-        unsigned completed = appDelegate.pull.completed + appDelegate.push.completed;
-        unsigned total = appDelegate.pull.total + appDelegate.push.total;
-        if (total > 0 && completed < total) {
-            [self.progressView setHidden:NO];
-            [self.progressView setProgress: (completed / (float)total)];
-        } else {
-            [self.progressView setHidden:YES];
-            [self dismissViewControllerAnimated:YES completion:^{
-                // End of replication monitoring
-                [appDelegate.push removeObserver:self forKeyPath:@"completed"];
-                [appDelegate.pull removeObserver:self forKeyPath:@"completed"];
-            }];
-        }
-    }
-}
-
 - (void)enableForm:(BOOL)enabled
 {
     self.cozyUrlTextField.enabled = enabled;
@@ -215,15 +192,7 @@ didReceiveResponse:(NSURLResponse *)response
                                 remotePassword:[resp valueForKey:@"password"]
                                         remoteID:[resp valueForKey:@"id"]];
             
-            // monitor the replication progress
-            [appDelegate.push addObserver:self
-                               forKeyPath:@"completed"
-                                options:0
-                                context:NULL];
-            [appDelegate.pull addObserver:self
-                                forKeyPath:@"completed"
-                                  options:0
-                                  context:NULL];
+            [self dismissViewControllerAnimated:YES completion:nil];
         }
     }
 }

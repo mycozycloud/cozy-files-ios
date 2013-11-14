@@ -64,12 +64,6 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    // Basic check to know if there's a need to display the connection screen
-    NSString *remoteID = [[NSUserDefaults standardUserDefaults]
-                          objectForKey:kRemoteIDKey];
-    if (!remoteID) {
-        [self performSegueWithIdentifier:@"ShowConnection" sender:nil];
-    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -85,6 +79,13 @@
                        forKeyPath:@"completed"
                           options:0
                           context:NULL];
+    
+    // Basic check to know if there's a need to display the connection screen
+    NSString *remoteID = [[NSUserDefaults standardUserDefaults]
+                          objectForKey:kRemoteIDKey];
+    if (!remoteID) {
+        [self performSegueWithIdentifier:@"ShowConnection" sender:nil];
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated

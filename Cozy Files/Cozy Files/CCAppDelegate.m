@@ -144,7 +144,7 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
     
     // Actually set up the two-way continuous and persistent replication
     NSString *newCozyURL = [NSString stringWithFormat:@"https://%@/cozy", url.host];
-    NSArray *repls = [self.database replicateWithURL:[NSURL URLWithString:newCozyURL]
+    NSArray *repls = [self.database replicationsWithURL:[NSURL URLWithString:newCozyURL]
                                          exclusively:YES];
     
     self.pull = repls.firstObject;
@@ -179,7 +179,7 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
                                             toDatabase:self.database];
     [binPull setDoc_ids:@[binaryID]];
     binPull.persistent = NO;
-    binPull.continuous = NO;
+    binPull.continuous = YES;
     
     // Start replication
     [binPull start];
@@ -190,6 +190,7 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
 - (void)setDbFunctions
 {
     // Retreive replications
+    NSLog(@"REPLICATIONS SAVED : %@", self.database.allReplications);
     if (self.database.allReplications.count > 1) {
         self.pull = self.database.allReplications.firstObject;
         self.push = [self.database.allReplications objectAtIndex:1];
