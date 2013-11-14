@@ -190,7 +190,6 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
 - (void)setDbFunctions
 {
     // Retreive replications
-    NSLog(@"REPLICATIONS SAVED : %@", self.database.allReplications);
     if (self.database.allReplications.count > 1) {
         self.pull = self.database.allReplications.firstObject;
         self.push = [self.database.allReplications objectAtIndex:1];

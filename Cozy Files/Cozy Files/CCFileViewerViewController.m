@@ -34,20 +34,26 @@
     
     CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication]
                                                    delegate];
+    
     // First, get the File document
     CBLDocument *file = [appDelegate.database documentWithID:self.fileID];
     
     // Set the title
     self.title = [file.properties valueForKey:@"name"];
     
-    // Then, check whether the binary exists locally
+    // Then, check whether the binary exists locally and has changed
     NSString *binaryID = [[[file.properties valueForKey:@"binary"]
                            valueForKey:@"file"] valueForKey:@"id"];
     CBLDocument *binary = [appDelegate.database documentWithID:binaryID];
     
-    if (binary.properties) { // It exists, so setup the view with the data
+    NSString *fileBinaryRev = [[[file.properties valueForKey:@"binary"]
+                               valueForKey:@"file"] valueForKey:@"rev"];
+    NSString *binaryRev = [binary.properties valueForKey:@"_rev"];
+    
+    if ([binaryRev isEqualToString:fileBinaryRev]) { // It exists and hasn't changed, so setup the view with the data
+        NSLog(@"BINARY IS HERE");
         [self displayDataWithBinary:binary];
-    } else { // It doesn't exist, so setup the replication to get the file
+    } else { // It doesn't exist or has changed, so setup the replication to get the binary
         NSLog(@"SETUP BINARY REPLICATION : %@", binaryID);
         self.pull = [appDelegate setupFileReplicationForBinaryID:binaryID];
         
@@ -55,6 +61,10 @@
         [self.pull addObserver:self forKeyPath:@"completed" options:0 context:NULL];
     }
     
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
 }
 
 - (void)didReceiveMemoryWarning
