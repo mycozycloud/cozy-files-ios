@@ -129,6 +129,7 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
     NSURLCredential *cred = [NSURLCredential credentialWithUser:remoteLogin
                                     password:remotePassword
                                 persistence:NSURLCredentialPersistencePermanent];
+    
     NSURLProtectionSpace *space = [[NSURLProtectionSpace alloc] initWithHost:url.host
                                         port:443
                                         protocol:@"https"
@@ -170,29 +171,20 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
     [self.push start];
 }
 
-- (NSArray *)setupFileReplicationForBinaryID:(NSString *)binaryID
+- (CBLReplication *)setupFileReplicationForBinaryID:(NSString *)binaryID
 {
     // Set Pull replication, not continuous but persistent
     CBLReplication *binPull = [[CBLReplication alloc]
                                initPullFromSourceURL:self.pull.remoteURL
                                             toDatabase:self.database];
-    binPull.persistent = YES;
-    binPull.continuous = NO;
     [binPull setDoc_ids:@[binaryID]];
+    binPull.persistent = NO;
+    binPull.continuous = NO;
     
-    // Set Push replication, not continuous but persistent
-    CBLReplication *binPush = [[CBLReplication alloc]
-                               initPushFromDatabase:self.database
-                               toTargetURL:self.pull.remoteURL];
-    binPush.persistent = YES;
-    binPush.continuous = NO;
-    [binPush setDoc_ids:@[binaryID]];
-    
-    // Start replications
+    // Start replication
     [binPull start];
-    [binPush start];
     
-    return @[binPull, binPush];
+    return binPull;
 }
 
 - (void)setDbFunctions
@@ -204,7 +196,21 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
     }
     
     // Define validation
-    [self.database defineValidation:@"allok" asBlock:VALIDATIONBLOCK({
+    [self.database defineValidation:@"fileFolderBinary" asBlock:VALIDATIONBLOCK({
+        
+//        CBLDocument *doc = newRevision.document;
+//        if ([doc isDeleted])
+//            return YES;
+//        
+//        if ([doc.properties valueForKey:@"docType"] //&&
+////            ([[doc.properties valueForKey:@"docType"] isEqualToString:@"File"]
+////             || [[doc.properties valueForKey:@"docType"] isEqualToString:@"Folder"]
+////             || [[doc.properties valueForKey:@"docType"] isEqualToString:@"Binary"])
+//            ) {
+//                return YES;
+//            }
+//        
+//        return NO;
         return YES;
     })];
     
@@ -230,6 +236,9 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
         
         return NO;
     })];
+    
+    // Define filter for binary pull replication
+    
 }
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object

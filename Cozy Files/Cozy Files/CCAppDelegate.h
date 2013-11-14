@@ -34,6 +34,6 @@
                            remotePassword:(NSString *)remotePassword
                                  remoteID:(NSString *)remoteID;
 // Used to replicate single binary documents
-- (NSArray *)setupFileReplicationForBinaryID:(NSString *)binaryID;
+- (CBLReplication *)setupFileReplicationForBinaryID:(NSString *)binaryID;
 
 @end

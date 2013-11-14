@@ -48,11 +48,11 @@
     if (binary.properties) { // It exists, so setup the view with the data
         [self displayDataWithBinary:binary];
     } else { // It doesn't exist, so setup the replication to get the file
-        NSLog(@"Setup file replication : %@", binaryID);
-        NSArray *repls = [appDelegate setupFileReplicationForBinaryID:binaryID];
-        self.pull = repls.firstObject;
+        NSLog(@"SETUP BINARY REPLICATION : %@", binaryID);
+        self.pull = [appDelegate setupFileReplicationForBinaryID:binaryID];
+        
         // Pull monitoring
-        [self.pull addObserver:self forKeyPath:@"complete" options:0 context:NULL];
+        [self.pull addObserver:self forKeyPath:@"completed" options:0 context:NULL];
     }
     
 }
@@ -70,13 +70,17 @@
 {
     CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication] delegate];
     
+    NSLog(@"MONITORING BINARY REPLICATION");
+    
     if (object == self.pull) {
+        NSLog(@"BINARY LOADING...");
         unsigned completed = self.pull.completed;
         unsigned total = self.pull.total;
         if (total > 0 && completed < total) {
             [self.progressView setHidden:NO];
             [self.progressView setProgress: (completed / (float)total)];
         } else {
+            NSLog(@"BINARY REPLICATION DONE");
             [self.progressView setHidden:YES];
             // Display the data
             CBLDocument *doc = [appDelegate.database

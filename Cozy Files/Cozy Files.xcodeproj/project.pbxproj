@@ -20,7 +20,6 @@
 		5C4F83001818125700CCA08E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C4F82E21818125700CCA08E /* UIKit.framework */; };
 		5C4F83081818125700CCA08E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5C4F83061818125700CCA08E /* InfoPlist.strings */; };
 		5C4F830A1818125700CCA08E /* Cozy_FilesTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C4F83091818125700CCA08E /* Cozy_FilesTests.m */; };
-		5C4F83141818136800CCA08E /* CouchbaseLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C4F83131818136800CCA08E /* CouchbaseLite.framework */; };
 		5C4F8316181813A400CCA08E /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C4F8315181813A400CCA08E /* CFNetwork.framework */; };
 		5C4F8318181813AB00CCA08E /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C4F8317181813AB00CCA08E /* Security.framework */; };
 		5C4F831A181813B900CCA08E /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C4F8319181813B900CCA08E /* SystemConfiguration.framework */; };
@@ -29,6 +28,7 @@
 		5C627821182BE25100C43EB4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5C4F82F01818125700CCA08E /* Main.storyboard */; };
 		5C9BE6C9182D293000FF5388 /* CCFileViewerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C9BE6C8182D293000FF5388 /* CCFileViewerViewController.m */; };
 		5C9D285C1820114400CA3A7C /* CCFileNavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C9D285B1820114400CA3A7C /* CCFileNavigationViewController.m */; };
+		5CC28BC11833F09700BFFEE1 /* CouchbaseLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5CC28BC01833F09700BFFEE1 /* CouchbaseLite.framework */; };
 		5CE23ADA182A50C100A1D5D8 /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CE23AD9182A50C100A1D5D8 /* SWRevealViewController.m */; };
 		5CE23ADE182A547E00A1D5D8 /* CCMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CE23ADD182A547E00A1D5D8 /* CCMenuViewController.m */; };
 		5CE23AE1182A6BA500A1D5D8 /* CCConfigurationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CE23AE0182A6BA500A1D5D8 /* CCConfigurationViewController.m */; };
@@ -65,7 +65,6 @@
 		5C4F83051818125700CCA08E /* Cozy FilesTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Cozy FilesTests-Info.plist"; sourceTree = "<group>"; };
 		5C4F83071818125700CCA08E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		5C4F83091818125700CCA08E /* Cozy_FilesTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Cozy_FilesTests.m; sourceTree = "<group>"; };
-		5C4F83131818136800CCA08E /* CouchbaseLite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CouchbaseLite.framework; sourceTree = "<group>"; };
 		5C4F8315181813A400CCA08E /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		5C4F8317181813AB00CCA08E /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		5C4F8319181813B900CCA08E /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
@@ -75,6 +74,7 @@
 		5C9BE6C8182D293000FF5388 /* CCFileViewerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCFileViewerViewController.m; sourceTree = "<group>"; };
 		5C9D285A1820114400CA3A7C /* CCFileNavigationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCFileNavigationViewController.h; sourceTree = "<group>"; };
 		5C9D285B1820114400CA3A7C /* CCFileNavigationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCFileNavigationViewController.m; sourceTree = "<group>"; };
+		5CC28BC01833F09700BFFEE1 /* CouchbaseLite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CouchbaseLite.framework; path = "../../../../Library/Developer/Xcode/DerivedData/CouchbaseLite-bkvpguzrnegusjehdhsfyiapqzbk/Build/Products/Debug-ios-universal/CouchbaseLite.framework"; sourceTree = "<group>"; };
 		5CE23AD8182A50C100A1D5D8 /* SWRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWRevealViewController.h; sourceTree = "<group>"; };
 		5CE23AD9182A50C100A1D5D8 /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWRevealViewController.m; sourceTree = "<group>"; };
 		5CE23ADC182A547E00A1D5D8 /* CCMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCMenuViewController.h; sourceTree = "<group>"; };
@@ -90,6 +90,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5CC28BC11833F09700BFFEE1 /* CouchbaseLite.framework in Frameworks */,
 				5C4F831E181813D000CCA08E /* libz.dylib in Frameworks */,
 				5C4F831C181813C400CCA08E /* libsqlite3.dylib in Frameworks */,
 				5C4F831A181813B900CCA08E /* SystemConfiguration.framework in Frameworks */,
@@ -97,7 +98,6 @@
 				5C4F8316181813A400CCA08E /* CFNetwork.framework in Frameworks */,
 				5C4F82E11818125700CCA08E /* CoreGraphics.framework in Frameworks */,
 				5C4F82E31818125700CCA08E /* UIKit.framework in Frameworks */,
-				5C4F83141818136800CCA08E /* CouchbaseLite.framework in Frameworks */,
 				5C4F82DF1818125700CCA08E /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -137,12 +137,12 @@
 		5C4F82DD1818125700CCA08E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				5CC28BC01833F09700BFFEE1 /* CouchbaseLite.framework */,
 				5C4F831D181813D000CCA08E /* libz.dylib */,
 				5C4F831B181813C400CCA08E /* libsqlite3.dylib */,
 				5C4F8319181813B900CCA08E /* SystemConfiguration.framework */,
 				5C4F8317181813AB00CCA08E /* Security.framework */,
 				5C4F8315181813A400CCA08E /* CFNetwork.framework */,
-				5C4F83131818136800CCA08E /* CouchbaseLite.framework */,
 				5C4F82DE1818125700CCA08E /* Foundation.framework */,
 				5C4F82E01818125700CCA08E /* CoreGraphics.framework */,
 				5C4F82E21818125700CCA08E /* UIKit.framework */,
@@ -450,6 +450,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/williamarchimede/Documents/iWorkspace/cozy-files-ios/Cozy\\ Files",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/CouchbaseLite-bkvpguzrnegusjehdhsfyiapqzbk/Build/Products/Debug-ios-universal",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Cozy Files/Cozy Files-Prefix.pch";
@@ -468,6 +469,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/williamarchimede/Documents/iWorkspace/cozy-files-ios/Cozy\\ Files",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/CouchbaseLite-bkvpguzrnegusjehdhsfyiapqzbk/Build/Products/Debug-ios-universal",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Cozy Files/Cozy Files-Prefix.pch";
