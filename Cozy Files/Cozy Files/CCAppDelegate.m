@@ -179,7 +179,7 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
                                             toDatabase:self.database];
     [binPull setDoc_ids:@[binaryID]];
     binPull.persistent = NO;
-    binPull.continuous = YES;
+    binPull.continuous = NO;
     
     // Start replication
     [binPull start];
@@ -197,20 +197,6 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
     
     // Define validation
     [self.database defineValidation:@"fileFolderBinary" asBlock:VALIDATIONBLOCK({
-        
-//        CBLDocument *doc = newRevision.document;
-//        if ([doc isDeleted])
-//            return YES;
-//        
-//        if ([doc.properties valueForKey:@"docType"] //&&
-////            ([[doc.properties valueForKey:@"docType"] isEqualToString:@"File"]
-////             || [[doc.properties valueForKey:@"docType"] isEqualToString:@"Folder"]
-////             || [[doc.properties valueForKey:@"docType"] isEqualToString:@"Binary"])
-//            ) {
-//                return YES;
-//            }
-//        
-//        return NO;
         return YES;
     })];
     
@@ -225,8 +211,6 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
     [self.database defineFilter:@"filter"
                         asBlock:FILTERBLOCK({
         CBLDocument *doc = revision.document;
-        if ([doc isDeleted])
-            return YES;
         
         if ([doc.properties valueForKey:@"docType"] &&
             ([[doc.properties valueForKey:@"docType"] isEqualToString:@"File"]
@@ -236,8 +220,6 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
         
         return NO;
     })];
-    
-    // Define filter for binary pull replication
     
 }
 

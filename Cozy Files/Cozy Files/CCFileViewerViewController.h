@@ -13,4 +13,5 @@
 @property (weak, nonatomic) IBOutlet UIProgressView *progressView;
 @property (weak, nonatomic) IBOutlet UIImageView *imgView;
 @property (weak, nonatomic) IBOutlet UITextView *txtView;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *trashButton;
 @end

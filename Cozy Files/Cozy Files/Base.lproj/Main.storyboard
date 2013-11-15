@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4514" systemVersion="13A603" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="443-tG-uOj">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3746"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3747"/>
     </dependencies>
     <scenes>
         <!--File Viewer View Controller-->
@@ -35,10 +35,13 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" id="9oq-K7-fIm"/>
+                    <navigationItem key="navigationItem" id="9oq-K7-fIm">
+                        <barButtonItem key="rightBarButtonItem" systemItem="trash" id="uC9-Uv-hbQ"/>
+                    </navigationItem>
                     <connections>
                         <outlet property="imgView" destination="6iW-dl-JLI" id="KGW-yX-ppT"/>
                         <outlet property="progressView" destination="c3e-Rv-URn" id="R4i-dg-8wU"/>
+                        <outlet property="trashButton" destination="uC9-Uv-hbQ" id="fx4-Ee-EB2"/>
                         <outlet property="txtView" destination="lJX-Y4-EEF" id="axs-U3-PAJ"/>
                     </connections>
                 </viewController>

@@ -14,6 +14,8 @@
 @interface CCFileViewerViewController ()
 @property (strong, nonatomic) CBLReplication *pull;
 - (void)displayDataWithBinary:(CBLDocument *)binary;
+- (void)removeBinary;
+@property (assign, nonatomic) BOOL isToRemove;
 @end
 
 @implementation CCFileViewerViewController
@@ -32,8 +34,13 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
+    [self.imgView setHidden:YES];
+    [self.txtView setHidden:YES];
+    
     CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication]
                                                    delegate];
+    
+    self.isToRemove = NO;
     
     // First, get the File document
     CBLDocument *file = [appDelegate.database documentWithID:self.fileID];
@@ -61,10 +68,44 @@
         [self.pull addObserver:self forKeyPath:@"completed" options:0 context:NULL];
     }
     
+    // Trash button
+    [self.trashButton setTarget:self];
+    [self.trashButton setAction:@selector(removeBinary)];
+    
 }
 
-- (void)viewWillDisappear:(BOOL)animated
+- (void)viewWillAppear:(BOOL)animated
 {
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    if (self.isToRemove) {
+        NSError *error;
+        
+        CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication]
+                                                       delegate];
+        
+        [self.pull stop];
+        [self.pull deleteDocument:&error];
+        if (error) {
+            [appDelegate showAlert:@"Une erreur est survenue" error:error fatal:NO];
+        }
+        
+        CBLDocument *file = [appDelegate.database documentWithID:self.fileID];
+        
+        NSString *binaryID = [[[file.properties valueForKey:@"binary"]
+                               valueForKey:@"file"] valueForKey:@"id"];
+        CBLDocument *binary = [appDelegate.database documentWithID:binaryID];
+        
+//        [binary deleteDocument:&error];
+        [binary purgeDocument:&error];
+        
+        if (error) {
+            [appDelegate showAlert:@"Une erreur est survenue" error:error fatal:NO];
+        }
+        
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -117,5 +158,11 @@
         
 }
 
+- (void)removeBinary
+{
+    self.isToRemove = YES;
+    
+    [self.navigationController popViewControllerAnimated:YES];
+}
 
 @end
