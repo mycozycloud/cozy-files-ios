@@ -21,5 +21,6 @@
 @property (weak, nonatomic) IBOutlet UIProgressView *progressView;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *menuButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *rootButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *actionButton;
 
 @end

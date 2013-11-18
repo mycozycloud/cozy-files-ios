@@ -7,7 +7,7 @@
         <!--File Viewer View Controller-->
         <scene sceneID="MJA-mt-vMZ">
             <objects>
-                <viewController id="k24-tn-eRZ" customClass="CCFileViewerViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="CCFileViewerViewController" id="k24-tn-eRZ" customClass="CCFileViewerViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Yex-SX-CH4"/>
                         <viewControllerLayoutGuide type="bottom" id="uXF-uk-kGy"/>
@@ -48,6 +48,46 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ucl-dh-Lgw" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1280" y="51"/>
+        </scene>
+        <!--Edition View Controller-->
+        <scene sceneID="F2F-io-Eu7">
+            <objects>
+                <viewController storyboardIdentifier="CCEditionViewController" id="rPz-VS-gDj" customClass="CCEditionViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="TUo-ox-9d7"/>
+                        <viewControllerLayoutGuide type="bottom" id="2dM-Aa-4Iv"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="1jv-7a-Dmf">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="idd-sC-6K7">
+                                <rect key="frame" x="20" y="138" width="280" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z5B-oW-KlA">
+                                <rect key="frame" x="20" y="269" width="280" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Renommer">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="renamePressed:" destination="rPz-VS-gDj" eventType="touchUpInside" id="FDu-VY-Bfx"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <outlet property="docNameTextField" destination="idd-sC-6K7" id="m5K-EC-1Cx"/>
+                        <outlet property="renameButton" destination="Z5B-oW-KlA" id="1Yc-Yi-yU8"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="lKb-Yb-zdA" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1280" y="737"/>
         </scene>
         <!--Connection View Controller - Connexion-->
         <scene sceneID="ufC-wZ-h7g">
@@ -134,7 +174,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="897-if-Ecd">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelectionDuringEditing="YES" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="897-if-Ecd">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="524"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -176,16 +216,18 @@
                     </view>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Fichiers" id="E4I-KR-TVR">
-                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="QeG-nH-eGo"/>
+                        <barButtonItem key="rightBarButtonItem" title="Modifier" id="QeG-nH-eGo"/>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="actionButton" destination="QeG-nH-eGo" id="b2r-iA-kXl"/>
                         <outlet property="menuButton" destination="DGb-8x-S7x" id="ifr-gS-Iap"/>
                         <outlet property="progressView" destination="U67-mn-ydG" id="veE-f7-5kY"/>
                         <outlet property="rootButton" destination="18i-Dg-bVv" id="uH1-My-SX7"/>
                         <outlet property="tableView" destination="897-if-Ecd" id="rgS-OU-Muf"/>
                         <segue destination="vXZ-lx-hvc" kind="modal" identifier="ShowConnection" modalTransitionStyle="crossDissolve" id="uUC-G4-ga7"/>
                         <segue destination="k24-tn-eRZ" kind="push" identifier="ShowFile" id="6pv-79-k9J"/>
+                        <segue destination="rPz-VS-gDj" kind="modal" identifier="ShowEdition" id="Ep5-nf-BkF"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6bM-mB-JtM" userLabel="First Responder" sceneMemberID="firstResponder"/>

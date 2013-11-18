@@ -10,15 +10,18 @@
 
 #import "CCAppDelegate.h"
 #import "CCFileViewerViewController.h"
+#import "CCEditionViewController.h"
 #import "CCFileNavigationViewController.h"
 
-@interface CCFileNavigationViewController () <CBLUITableDelegate, UIAlertViewDelegate>
+@interface CCFileNavigationViewController () <CBLUITableDelegate, UIAlertViewDelegate,
+UIActionSheetDelegate>
 - (void)goBackToRoot;
 - (void)setAppearance;
 @property (strong, nonatomic) CBLQueryRow *rowToDelete;
 - (void)prepareForDeletion;
 - (void)showDeleteAlert;
 - (void)deleteRecursively:(CBLDocument *)doc error:(NSError **)error;
+- (void)showActions;
 @end
 
 @implementation CCFileNavigationViewController
@@ -61,6 +64,10 @@
 #warning For now, till I find a better UX idea
         self.rootButton.enabled = NO;
     }
+    
+    // Actions
+    [self.actionButton setTarget:self];
+    [self.actionButton setAction:@selector(showActions)];
     
     // Appearance
     [self setAppearance];
@@ -113,7 +120,11 @@
     if ([segue.identifier isEqualToString:@"ShowFile"]) {
         CBLDocument *doc = (CBLDocument *)sender;
         CCFileViewerViewController *cont = (CCFileViewerViewController *)[segue destinationViewController];
-        cont.fileID = [doc valueForKey:@"_id"];
+        cont.fileID = [doc.properties valueForKey:@"_id"];
+    } else if ([segue.identifier isEqualToString:@"ShowEdition"]) {
+        CBLDocument *doc = (CBLDocument *)sender;
+        CCEditionViewController *edCont = (CCEditionViewController *)[segue destinationViewController];
+        edCont.doc = doc;
     }
 }
 
@@ -122,20 +133,28 @@
 - (void)tableView:(UITableView *)tableView
 didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    CBLDocument *doc = [[self.tableSource.query.rows rowAtIndex:indexPath.row] value];
-    if ([[doc valueForKey:@"docType"] isEqualToString:@"Folder"]) { // Folder, so navigate
-        CCFileNavigationViewController *controller = [[UIStoryboard storyboardWithName:@"Main"
-                                                                bundle:nil]
-                        instantiateViewControllerWithIdentifier:@"CCFileNavigationViewController"];
-        controller.path = [NSString stringWithFormat:@"%@/%@",
-                           [doc valueForKey:@"path"],
-                           [doc valueForKey:@"name"]];
-        
-        [self.navigationController pushViewController:controller animated:YES];
-        
-    } if ([[doc valueForKey:@"docType"] isEqualToString:@"File"]) { // File, so view it
-        [self performSegueWithIdentifier:@"ShowFile" sender:doc];
+    CBLDocument *doc = [[self.tableSource.query.rows rowAtIndex:indexPath.row] document];
+    
+    if (self.tableView.isEditing) {
+        [self.tableView setEditing:NO animated:YES];
+        [self.actionButton setTitle:@"Modifier"];
+        [self performSegueWithIdentifier:@"ShowEdition" sender:doc];
+    } else {
+        if ([[doc.properties valueForKey:@"docType"] isEqualToString:@"Folder"]) { // Folder, so navigate
+            CCFileNavigationViewController *controller = [[UIStoryboard storyboardWithName:@"Main"
+                                                                                    bundle:nil]
+                instantiateViewControllerWithIdentifier:@"CCFileNavigationViewController"];
+            controller.path = [NSString stringWithFormat:@"%@/%@",
+                               [doc.properties valueForKey:@"path"],
+                               [doc.properties valueForKey:@"name"]];
+            
+            [self.navigationController pushViewController:controller animated:YES];
+            
+        } if ([[doc.properties valueForKey:@"docType"] isEqualToString:@"File"]) { // File, so view it
+            [self performSegueWithIdentifier:@"ShowFile" sender:doc];
+        }
     }
+    
 }
 
 - (void)couchTableSource:(CBLUITableSource *)source willUseCell:(UITableViewCell *)cell forRow:(CBLQueryRow *)row
@@ -187,6 +206,23 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [self.menuButton setTintColor:kBlue];
     [self.rootButton setTintColor:kBlue];
+    [self.actionButton setTintColor:kBlue];
+}
+
+- (void)showActions
+{
+    if (self.tableView.isEditing) {
+        [self.tableView setEditing:NO animated:YES];
+        [self.actionButton setTitle:@"Modifier"];
+    } else {
+        UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@""
+                                                           delegate:self
+                                                  cancelButtonTitle:@"Annuler"
+                                             destructiveButtonTitle:nil
+                                                  otherButtonTitles:@"Renommer ou supprimer", nil];
+        
+        [sheet showFromBarButtonItem:self.actionButton animated:YES];
+    }
 }
 
 #pragma mark - Document Deletion
@@ -294,6 +330,19 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
     }
     
     [self.tableSource reloadFromQuery];
+}
+
+#pragma mark - Action Sheet
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0) {
+        [self.tableView setEditing:YES animated:YES];
+        [self.actionButton setTitle:@"Ok"];
+    } else {
+        [self.tableView setEditing:NO animated:YES];
+        [self.actionButton setTitle:@"Modifier"];
+    }
 }
 
 @end
