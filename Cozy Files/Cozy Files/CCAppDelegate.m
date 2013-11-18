@@ -210,6 +210,11 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
     // Define filter for push replication
     [self.database defineFilter:@"filter"
                         asBlock:FILTERBLOCK({
+        
+        if ([revision isDeleted]) {
+            return YES;
+        }
+        
         CBLDocument *doc = revision.document;
         
         if ([doc.properties valueForKey:@"docType"] &&
@@ -220,7 +225,6 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
         
         return NO;
     })];
-    
 }
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
