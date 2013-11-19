@@ -18,7 +18,6 @@ UIActionSheetDelegate>
 - (void)goBackToRoot;
 - (void)setAppearance;
 @property (strong, nonatomic) CBLQueryRow *rowToDelete;
-- (void)prepareForDeletion;
 - (void)showDeleteAlert;
 - (void)deleteRecursively:(CBLDocument *)doc error:(NSError **)error;
 - (void)showActions;
@@ -171,7 +170,8 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     self.rowToDelete = row;
     
-    [self prepareForDeletion];
+//    [self prepareForDeletion];
+    [self showDeleteAlert];
     
     return NO; // We'll get rid of the row ourselves
 }
@@ -227,71 +227,43 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 
 #pragma mark - Document Deletion
 
-- (void)prepareForDeletion
-{
-    CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication]
-                                                   delegate];
-    
-    CBLDocument *doc = self.rowToDelete.document;
-    if ([[doc.properties valueForKey:@"docType"] isEqualToString:@"File"]) {
-        NSLog(@"FILE DELETION : %@", [doc.properties valueForKey:@"name"]);
-        // Just delete the file and its binary since it's not a folder
-        NSError *error;
-        NSString *binaryID = [[[doc.properties valueForKey:@"binary"]
-                               valueForKey:@"file"] valueForKey:@"id"];
-        CBLDocument *binary = [appDelegate.database documentWithID:binaryID];
-        [binary purgeDocument:&error];
-        [doc deleteDocument:&error];
-        if (error) {
-            [appDelegate showAlert:@"Une erreur est survenue" error:error fatal:NO];
-        } else {
-            [self.tableSource reloadFromQuery]; // Reload the view
-        }
-    } else { // It's a folder, so be careful with its children
-        NSLog(@"FOLDER DELETION");
-        NSString *path = [NSString stringWithFormat:@"%@/%@",
-                          [doc.properties valueForKey:@"path"],
-                          [doc.properties valueForKey:@"name"]];
-        
-        CBLQuery *query = [[appDelegate.database viewNamed:@"byPath"] query];
-        query.keys = @[path];
-        if (query.rows.count > 0) { // There are children
-            NSLog(@"FOLDER HAS %i CHILDREN", query.rows.count);
-            [self showDeleteAlert];
-        } else { // Empty folder, so delete it
-            NSLog(@"FOLDER IS EMPTY ");
-            NSError *error;
-            [doc deleteDocument:&error];
-            if (error) {
-                [appDelegate showAlert:@"Une erreur est survenue" error:error fatal:NO];
-            } else {
-                [self.tableSource reloadFromQuery]; // Reload the view
-            }
-        }
-    }
-}
-
 - (void)deleteRecursively:(CBLDocument *)doc error:(NSError **)error
 {
     NSLog(@"DELETE RECURSIVELY : %@", [doc.properties valueForKey:@"name"]);
+    
     CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication]
                                                    delegate];
+    
+    // File case
+    if ([[doc.properties valueForKey:@"docType"] isEqualToString:@"File"]) {
+        // Just delete the file and its binary since it's not a folder
+        NSString *binaryID = [[[doc.properties valueForKey:@"binary"]
+                               valueForKey:@"file"] valueForKey:@"id"];
+        CBLDocument *binary = [appDelegate.database documentWithID:binaryID];
+        [binary deleteDocument:error];
+        [doc deleteDocument:error];
+        return;
+    }
+    
+    // Folder case
     CBLQuery *query = [[appDelegate.database viewNamed:@"byPath"] query];
     NSString *path = [NSString stringWithFormat:@"%@/%@",
                       [doc.properties valueForKey:@"path"],
                       [doc.properties valueForKey:@"name"]];
     query.keys = @[path];
     
+    // Loop through the children
     for (CBLQueryRow *row in query.rows) {
         CBLDocument *child = row.document;
         
+        // If it's a file, delete it
         if ([[child.properties valueForKey:@"docType"] isEqualToString:@"File"]) {
             NSLog(@"DELETE FILE : %@", [child.properties valueForKey:@"name"]);
             // Just delete the file and its binary since it's not a folder
             NSString *binaryID = [[[doc.properties valueForKey:@"binary"]
                                    valueForKey:@"file"] valueForKey:@"id"];
             CBLDocument *binary = [appDelegate.database documentWithID:binaryID];
-            [binary purgeDocument:error];
+            [binary deleteDocument:error];
             [child deleteDocument:error];
         } else { // It's a folder, so be careful with its children
             [self deleteRecursively:child error:error];
@@ -304,9 +276,12 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 
 - (void)showDeleteAlert
 {
+    NSString *format = [NSString stringWithFormat:@"Êtes-vous sûr de vouloir effacer %@ ?",
+                        [self.rowToDelete.document.properties valueForKey:@"name"]];
+    
     UIAlertView *alertView = [[UIAlertView alloc]
                               initWithTitle:@"Attention"
-                              message:@"Ce dossier n'est pas vide. Êtes-vous sûr ?"
+                              message:format
                               delegate:self
                               cancelButtonTitle:@"Annuler"
                               otherButtonTitles:@"Oui", nil];
