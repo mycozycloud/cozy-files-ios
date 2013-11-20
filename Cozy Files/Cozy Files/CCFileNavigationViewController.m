@@ -21,6 +21,7 @@ UIActionSheetDelegate>
 - (void)showDeleteAlert;
 - (void)deleteRecursively:(CBLDocument *)doc error:(NSError **)error;
 - (void)showActions;
+- (void)filterContentForSearchText:(NSString *)searchText;
 @end
 
 @implementation CCFileNavigationViewController
@@ -70,6 +71,9 @@ UIActionSheetDelegate>
     
     // Appearance
     [self setAppearance];
+    
+    // Search
+    self.searchBar.delegate = self;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -318,6 +322,54 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
         [self.tableView setEditing:NO animated:YES];
         [self.actionButton setTitle:@"Modifier"];
     }
+}
+
+#pragma mark - Search
+
+- (void)filterContentForSearchText:(NSString *)searchText
+{
+    CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication]
+                                                   delegate];
+    
+    CBLView *nameView = [appDelegate.database viewNamed:@"byName"];
+    CBLLiveQuery *query = [[nameView query] asLiveQuery];
+    query.keys = @[searchText];
+    self.tableSource.query = query;
+    [self.tableView reloadData];
+}
+
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
+{
+    [self.searchBar setShowsCancelButton:YES animated:YES];
+    [self filterContentForSearchText:searchText];
+}
+
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
+{
+    CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication]
+                                                   delegate];
+    
+    CBLView *nameView = [appDelegate.database viewNamed:@"byPath"];
+    CBLLiveQuery *query = [[nameView query] asLiveQuery];
+    query.keys = self.path ? @[self.path] : @[@""]; // empty path is root
+    self.tableSource.query = query;
+    [self.tableView reloadData];
+    
+    [self.searchBar setText:@""];
+    [self.searchBar setShowsCancelButton:NO animated:YES];
+    [self.searchBar resignFirstResponder];
+}
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
+{
+    [self.searchBar setShowsCancelButton:NO animated:YES];
+    [self.searchBar resignFirstResponder];
+    [self filterContentForSearchText:self.searchBar.text];
+}
+
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar
+{
+    [self.searchBar setShowsCancelButton:YES animated:YES];
 }
 
 @end

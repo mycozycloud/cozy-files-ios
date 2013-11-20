@@ -13,7 +13,7 @@
 @class CBLUITableSource;
 
 @interface CCFileNavigationViewController : UIViewController
-<UITableViewDelegate>
+<UITableViewDelegate, UISearchBarDelegate>
 
 @property (strong, nonatomic) NSString *path;
 @property (strong, nonatomic) CBLUITableSource *tableSource;
@@ -22,5 +22,6 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *menuButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *rootButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *actionButton;
+@property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 
 @end

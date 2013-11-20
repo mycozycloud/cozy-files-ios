@@ -201,11 +201,19 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
     })];
     
     // Define database views
-    CBLView* pathView = [self.database viewNamed: @"byPath"];
+    CBLView *pathView = [self.database viewNamed: @"byPath"];
     [pathView setMapBlock: MAPBLOCK({
         id path = [doc objectForKey: @"path"];
         if (path) emit(path, doc);
     }) version: @"1.0"];
+    
+    //////TEST FOR SEARCH
+    CBLView *nameView = [self.database viewNamed: @"byName"];
+    [nameView setMapBlock: MAPBLOCK({
+        id name = [doc objectForKey: @"name"];
+        if (name) emit(name, doc);
+    }) version: @"1.0"];
+    //////TEST FOR SEARCH
     
     // Define filter for push replication
     [self.database defineFilter:@"filter"
