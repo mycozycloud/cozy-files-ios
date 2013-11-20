@@ -341,7 +341,9 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
 {
     [self.searchBar setShowsCancelButton:YES animated:YES];
-    [self filterContentForSearchText:searchText];
+    if (searchText.length >= 3) { // Auto-search only when text is long enough
+        [self filterContentForSearchText:searchText];
+    }
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar

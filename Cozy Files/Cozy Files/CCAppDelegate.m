@@ -207,13 +207,22 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
         if (path) emit(path, doc);
     }) version: @"1.0"];
     
-    //////TEST FOR SEARCH
     CBLView *nameView = [self.database viewNamed: @"byName"];
     [nameView setMapBlock: MAPBLOCK({
-        id name = [doc objectForKey: @"name"];
-        if (name) emit(name, doc);
+        NSString *name = [doc objectForKey: @"name"];
+        if (name) {
+            // enumerating all substrings of the name of the doc
+            for (int start=0; start<name.length; start++) {
+                for (int end=start; end<name.length; end++) {
+                    NSRange range;
+                    range.location = start;
+                    range.length = end - start + 1;
+                    emit([name substringWithRange:range], doc);
+                }
+            }
+        }
+        
     }) version: @"1.0"];
-    //////TEST FOR SEARCH
     
     // Define filter for push replication
     [self.database defineFilter:@"filter"
