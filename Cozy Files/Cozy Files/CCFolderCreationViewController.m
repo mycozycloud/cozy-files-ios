@@ -60,13 +60,30 @@
 
 - (void)createFolderWithName:(NSString *)name error:(NSError *__autoreleasing *)error
 {
+    CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication]
+                                                   delegate];
+    
+    // Check that no folder with the same path has the same name
+    CBLQuery *pathQuery = [[appDelegate.database viewNamed:@"byPath"] query];
+    pathQuery.keys = @[self.path];
+    for (CBLQueryRow *row in pathQuery.rows) {
+        CBLDocument *doc = row.document;
+        if ([[doc.properties valueForKey:@"docType"] isEqualToString:@"Folder"]
+            && [[doc.properties valueForKey:@"name"] isEqualToString:name]) {
+            
+            NSString *desc = @"Un dossier existant porte déjà ce nom";
+            NSDictionary *userInfo = @{NSLocalizedDescriptionKey : desc};
+            
+            *error = [NSError errorWithDomain:kErrorDomain code:-101 userInfo:userInfo];
+            return;
+        }
+    }
+    
+    // Create the folder
     NSDictionary *contents = @{@"name" : self.folderNameTextField.text,
                                @"path" : self.path,
                                @"docType" : @"Folder"
                                };
-    
-    CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication]
-                                                   delegate];
     
     CBLDocument *doc = [appDelegate.database untitledDocument];
     [doc putProperties:contents error:error];
