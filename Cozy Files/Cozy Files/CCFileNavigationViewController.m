@@ -126,7 +126,8 @@ UIActionSheetDelegate>
         cont.fileID = [doc.properties valueForKey:@"_id"];
     } else if ([segue.identifier isEqualToString:@"ShowEdition"]) {
         CBLDocument *doc = (CBLDocument *)sender;
-        CCEditionViewController *edCont = (CCEditionViewController *)[segue destinationViewController];
+        UINavigationController *navCont = (UINavigationController *)[segue destinationViewController];
+        CCEditionViewController *edCont = (CCEditionViewController *)navCont.viewControllers.firstObject;
         edCont.doc = doc;
     }
 }

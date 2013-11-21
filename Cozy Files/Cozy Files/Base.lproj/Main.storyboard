@@ -49,7 +49,7 @@
             </objects>
             <point key="canvasLocation" x="1280" y="51"/>
         </scene>
-        <!--Edition View Controller-->
+        <!--Edition View Controller - Renommer un élément-->
         <scene sceneID="F2F-io-Eu7">
             <objects>
                 <viewController storyboardIdentifier="CCEditionViewController" id="rPz-VS-gDj" customClass="CCEditionViewController" sceneMemberID="viewController">
@@ -62,32 +62,33 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="idd-sC-6K7">
-                                <rect key="frame" x="20" y="138" width="280" height="30"/>
+                                <rect key="frame" x="20" y="163" width="280" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z5B-oW-KlA">
-                                <rect key="frame" x="20" y="269" width="280" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Renommer">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="renamePressed:" destination="rPz-VS-gDj" eventType="touchUpInside" id="FDu-VY-Bfx"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
+                    <navigationItem key="navigationItem" title="Renommer un élément" id="BOb-14-lEH">
+                        <barButtonItem key="leftBarButtonItem" title="Annuler" id="GKz-JZ-Z4B">
+                            <connections>
+                                <action selector="cancelPressed:" destination="rPz-VS-gDj" id="kMk-Qt-J5N"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Ok" id="kS5-Gh-Rmz">
+                            <connections>
+                                <action selector="renamePressed:" destination="rPz-VS-gDj" id="TjS-xh-yis"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="docNameTextField" destination="idd-sC-6K7" id="m5K-EC-1Cx"/>
-                        <outlet property="renameButton" destination="Z5B-oW-KlA" id="1Yc-Yi-yU8"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lKb-Yb-zdA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1280" y="737"/>
+            <point key="canvasLocation" x="1806" y="737"/>
         </scene>
         <!--Connection View Controller - Connexion-->
         <scene sceneID="ufC-wZ-h7g">
@@ -234,7 +235,7 @@
                         <outlet property="tableView" destination="897-if-Ecd" id="rgS-OU-Muf"/>
                         <segue destination="vXZ-lx-hvc" kind="modal" identifier="ShowConnection" modalTransitionStyle="crossDissolve" id="uUC-G4-ga7"/>
                         <segue destination="k24-tn-eRZ" kind="push" identifier="ShowFile" id="6pv-79-k9J"/>
-                        <segue destination="rPz-VS-gDj" kind="modal" identifier="ShowEdition" id="Ep5-nf-BkF"/>
+                        <segue destination="5zy-pv-q2X" kind="modal" identifier="ShowEdition" id="Ep5-nf-BkF"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6bM-mB-JtM" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -398,6 +399,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="L9V-1Z-CAT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="754" y="-635"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="3Bc-Mg-1ez">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="5zy-pv-q2X" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="JSV-6q-O6e">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="rPz-VS-gDj" kind="relationship" relationship="rootViewController" id="r8o-Ro-An8"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="PcI-WP-3hh" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1280" y="737"/>
         </scene>
     </scenes>
     <resources>

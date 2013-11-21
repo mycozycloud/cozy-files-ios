@@ -136,15 +136,15 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (IBAction)cancelPressed:(id)sender {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
 - (void)setAppearance
 {
     self.docNameTextField.layer.borderColor = [kYellow CGColor];
     self.docNameTextField.layer.borderWidth = kBorderWidth;
     self.docNameTextField.layer.cornerRadius = kCornerRadius;
-    
-    [self.renameButton setBackgroundColor:kBlue];
-    [self.renameButton setTintColor:[UIColor whiteColor]];
-    self.renameButton.layer.cornerRadius = kCornerRadius;
 }
 
 @end
