@@ -121,16 +121,41 @@
 - (IBAction)renamePressed:(id)sender
 {
     [self.docNameTextField setEnabled:NO];
+    // If the name doesn't change, there is nothing to do
     if (![self.docNameTextField.text isEqualToString:[self.doc.properties valueForKey:@"name"]]) {
+        CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication]
+                                                       delegate];
+        
         NSError *error;
-        [self renameRecursively:self.doc
-                        newPath:[self.doc.properties valueForKey:@"path"]
-                          error:&error];
-        if (error) {
-            CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication]
-                                                           delegate];
+        
+        // Check that no element with the same path and docType has the same name
+        CBLQuery *pathQuery = [[appDelegate.database viewNamed:@"byPath"] query];
+        pathQuery.keys = @[[self.doc.properties valueForKey:@"path"]];
+        for (CBLQueryRow *row in pathQuery.rows) {
+            CBLDocument *document = row.document;
+            if ([[document.properties valueForKey:@"docType"]
+                 isEqualToString:[self.doc.properties valueForKey:@"docType"]]
+                && [[document.properties valueForKey:@"name"]
+                    isEqualToString:self.docNameTextField.text]) {
+                
+                NSString *desc = @"Un dossier existant porte déjà ce nom";
+                NSDictionary *userInfo = @{NSLocalizedDescriptionKey : desc};
+                
+                error = [NSError errorWithDomain:kErrorDomain code:-101 userInfo:userInfo];
+            }
+        }
+        
+        if (error) { // There's already an element here with same docType and name
             [appDelegate showAlert:@"Une erreur est survenue"
                              error:error fatal:NO];
+        } else { // The doc can be renamed
+            [self renameRecursively:self.doc
+                            newPath:[self.doc.properties valueForKey:@"path"]
+                              error:&error];
+            if (error) {
+                [appDelegate showAlert:@"Une erreur est survenue"
+                                 error:error fatal:NO];
+            }
         }
     }
     [self dismissViewControllerAnimated:YES completion:nil];
