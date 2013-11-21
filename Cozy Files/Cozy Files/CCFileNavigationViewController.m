@@ -11,6 +11,7 @@
 #import "CCAppDelegate.h"
 #import "CCFileViewerViewController.h"
 #import "CCEditionViewController.h"
+#import "CCFolderCreationViewController.h"
 #import "CCFileNavigationViewController.h"
 
 @interface CCFileNavigationViewController () <CBLUITableDelegate, UIAlertViewDelegate,
@@ -129,6 +130,10 @@ UIActionSheetDelegate>
         UINavigationController *navCont = (UINavigationController *)[segue destinationViewController];
         CCEditionViewController *edCont = (CCEditionViewController *)navCont.viewControllers.firstObject;
         edCont.doc = doc;
+    } else if ([segue.identifier isEqualToString:@"ShowFolderCreation"]) {
+        UINavigationController *navCont = (UINavigationController *)[segue destinationViewController];
+        CCFolderCreationViewController *folderCreationCont = (CCFolderCreationViewController *)navCont.viewControllers.firstObject;
+        folderCreationCont.path = self.path ? self.path : @"";
     }
 }
 
@@ -224,7 +229,9 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
                                                            delegate:self
                                                   cancelButtonTitle:@"Annuler"
                                              destructiveButtonTitle:nil
-                                                  otherButtonTitles:@"Renommer ou supprimer", nil];
+                                otherButtonTitles:@"Renommer ou supprimer",
+                                @"Créer un dossier",
+                                nil];
         
         [sheet showFromBarButtonItem:self.actionButton animated:YES];
     }
@@ -319,6 +326,9 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
     if (buttonIndex == 0) {
         [self.tableView setEditing:YES animated:YES];
         [self.actionButton setTitle:@"Ok"];
+    } else if (buttonIndex == 1) {
+        [actionSheet setHidden:YES];
+        [self performSegueWithIdentifier:@"ShowFolderCreation" sender:self.path];
     } else {
         [self.tableView setEditing:NO animated:YES];
         [self.actionButton setTitle:@"Modifier"];

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5C066854183E2ECC00F1A329 /* CCFolderCreationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C066853183E2ECC00F1A329 /* CCFolderCreationViewController.m */; };
 		5C3E5154183A5F58006C9832 /* CCEditionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C3E5153183A5F58006C9832 /* CCEditionViewController.m */; };
 		5C4F82DF1818125700CCA08E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C4F82DE1818125700CCA08E /* Foundation.framework */; };
 		5C4F82E11818125700CCA08E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C4F82E01818125700CCA08E /* CoreGraphics.framework */; };
@@ -47,6 +48,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5C066852183E2ECC00F1A329 /* CCFolderCreationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCFolderCreationViewController.h; sourceTree = "<group>"; };
+		5C066853183E2ECC00F1A329 /* CCFolderCreationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCFolderCreationViewController.m; sourceTree = "<group>"; };
 		5C3E5152183A5F58006C9832 /* CCEditionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCEditionViewController.h; sourceTree = "<group>"; };
 		5C3E5153183A5F58006C9832 /* CCEditionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCEditionViewController.m; sourceTree = "<group>"; };
 		5C4F82DB1818125700CCA08E /* Cozy Files.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cozy Files.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -169,6 +172,8 @@
 				5C9BE6C8182D293000FF5388 /* CCFileViewerViewController.m */,
 				5C3E5152183A5F58006C9832 /* CCEditionViewController.h */,
 				5C3E5153183A5F58006C9832 /* CCEditionViewController.m */,
+				5C066852183E2ECC00F1A329 /* CCFolderCreationViewController.h */,
+				5C066853183E2ECC00F1A329 /* CCFolderCreationViewController.m */,
 				5CE23ADC182A547E00A1D5D8 /* CCMenuViewController.h */,
 				5CE23ADD182A547E00A1D5D8 /* CCMenuViewController.m */,
 				5CE23ADF182A6BA500A1D5D8 /* CCConfigurationViewController.h */,
@@ -324,6 +329,7 @@
 				5CE23ADA182A50C100A1D5D8 /* SWRevealViewController.m in Sources */,
 				5CE23ADE182A547E00A1D5D8 /* CCMenuViewController.m in Sources */,
 				5C4F82EB1818125700CCA08E /* main.m in Sources */,
+				5C066854183E2ECC00F1A329 /* CCFolderCreationViewController.m in Sources */,
 				5C4F82F51818125700CCA08E /* CCConnectionViewController.m in Sources */,
 				5CE23AE4182A766700A1D5D8 /* CCRevealViewController.m in Sources */,
 				5C3E5154183A5F58006C9832 /* CCEditionViewController.m in Sources */,

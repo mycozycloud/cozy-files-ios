@@ -236,6 +236,7 @@
                         <segue destination="vXZ-lx-hvc" kind="modal" identifier="ShowConnection" modalTransitionStyle="crossDissolve" id="uUC-G4-ga7"/>
                         <segue destination="k24-tn-eRZ" kind="push" identifier="ShowFile" id="6pv-79-k9J"/>
                         <segue destination="5zy-pv-q2X" kind="modal" identifier="ShowEdition" id="Ep5-nf-BkF"/>
+                        <segue destination="oEJ-Xa-24w" kind="modal" identifier="ShowFolderCreation" id="1aX-Hq-KcS"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6bM-mB-JtM" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -248,7 +249,7 @@
                     </connections>
                 </searchDisplayController>
             </objects>
-            <point key="canvasLocation" x="829" y="51"/>
+            <point key="canvasLocation" x="843" y="73"/>
         </scene>
         <!--Reveal View Controller-->
         <scene sceneID="EeL-Xl-9po">
@@ -400,6 +401,47 @@
             </objects>
             <point key="canvasLocation" x="754" y="-635"/>
         </scene>
+        <!--Folder Creation View Controller - Créer un dossier-->
+        <scene sceneID="bC7-z3-dE4">
+            <objects>
+                <viewController storyboardIdentifier="CCFolderCreationViewController" id="XM1-fg-ZCw" customClass="CCFolderCreationViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="wE6-fY-BlZ"/>
+                        <viewControllerLayoutGuide type="bottom" id="dGT-Re-bSS"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="umB-NI-chX">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Nom du dossier" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="4Jx-Kh-2Jh">
+                                <rect key="frame" x="20" y="163" width="280" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Créer un dossier" id="g5Y-h1-49c">
+                        <barButtonItem key="leftBarButtonItem" title="Annuler" id="EJi-Eo-Q36">
+                            <connections>
+                                <action selector="cancelPressed:" destination="XM1-fg-ZCw" id="Ygq-fM-ba2"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Ok" id="pVN-VD-2xT">
+                            <connections>
+                                <action selector="createPressed:" destination="XM1-fg-ZCw" id="TAT-BL-2u3"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="folderNameTextField" destination="4Jx-Kh-2Jh" id="F7h-0d-h1F"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ta6-5R-kPI" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1806" y="1428"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="3Bc-Mg-1ez">
             <objects>
@@ -417,6 +459,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PcI-WP-3hh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1280" y="737"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="WHg-G4-c30">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="oEJ-Xa-24w" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="cjE-P5-gfC">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="XM1-fg-ZCw" kind="relationship" relationship="rootViewController" id="BZu-43-KW8"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="DQZ-wV-iVn" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1280" y="1428"/>
         </scene>
     </scenes>
     <resources>
