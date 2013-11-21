@@ -79,7 +79,7 @@
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:
                                     [NSURL URLWithString:
                                      [NSString stringWithFormat:
-                                      @"%@/device", cozyURL]]];
+                                      @"%@/device/", cozyURL]]];
     
     NSDictionary *requestData = [NSDictionary dictionaryWithObjectsAndKeys:remoteName,
                                  @"login", nil];
