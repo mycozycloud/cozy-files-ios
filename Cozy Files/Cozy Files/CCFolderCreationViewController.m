@@ -64,9 +64,10 @@
                                                    delegate];
     
     // Check that no folder with the same path has the same name
-    CBLQuery *pathQuery = [[appDelegate.database viewNamed:@"byPath"] query];
+    CBLQuery *pathQuery = [[appDelegate.database viewNamed:@"byPath"] createQuery];
     pathQuery.keys = @[self.path];
-    for (CBLQueryRow *row in pathQuery.rows) {
+    CBLQueryEnumerator *rowsEnum = [pathQuery rows:error];
+    for (CBLQueryRow *row in rowsEnum) {
         CBLDocument *doc = row.document;
         if ([[doc.properties valueForKey:@"docType"] isEqualToString:@"Folder"]
             && [[doc.properties valueForKey:@"name"] isEqualToString:name]) {
@@ -85,7 +86,7 @@
                                @"docType" : @"Folder"
                                };
     
-    CBLDocument *doc = [appDelegate.database untitledDocument];
+    CBLDocument *doc = [appDelegate.database createDocument];
     [doc putProperties:contents error:error];
 }
 

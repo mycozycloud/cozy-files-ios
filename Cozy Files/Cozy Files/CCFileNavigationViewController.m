@@ -46,7 +46,7 @@ UIActionSheetDelegate>
     
     // TableView and TableSource setup
     CBLView *pathView = [appDelegate.database viewNamed:@"byPath"];
-    CBLLiveQuery *query = [[pathView query] asLiveQuery];
+    CBLLiveQuery *query = [[pathView createQuery] asLiveQuery];
     query.keys = self.path ? @[self.path] : @[@""]; // empty path is root
     self.tableSource = [[CBLUITableSource alloc] init];
     self.tableSource.query = query;
@@ -87,11 +87,11 @@ UIActionSheetDelegate>
                                                    delegate];
     // ProgressView setup for replication monitoring
     [appDelegate.push addObserver:self
-                       forKeyPath:@"completed"
+                       forKeyPath:@"completedChangesCount"
                           options:0
                           context:NULL];
     [appDelegate.pull addObserver:self
-                       forKeyPath:@"completed"
+                       forKeyPath:@"completedChangesCount"
                           options:0
                           context:NULL];
     
@@ -108,8 +108,8 @@ UIActionSheetDelegate>
     CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication]
                                                    delegate];
     // End of replication monitoring
-    [appDelegate.push removeObserver:self forKeyPath:@"completed"];
-    [appDelegate.pull removeObserver:self forKeyPath:@"completed"];
+    [appDelegate.push removeObserver:self forKeyPath:@"completedChangesCount"];
+    [appDelegate.pull removeObserver:self forKeyPath:@"completedChangesCount"];
 }
 
 - (void)didReceiveMemoryWarning
@@ -194,8 +194,8 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication] delegate];
     
     if (object == appDelegate.pull || object == appDelegate.push) {
-        unsigned completed = appDelegate.pull.completed + appDelegate.push.completed;
-        unsigned total = appDelegate.pull.total + appDelegate.push.total;
+        unsigned completed = appDelegate.pull.completedChangesCount + appDelegate.push.completedChangesCount;
+        unsigned total = appDelegate.pull.changesCount + appDelegate.push.changesCount;
         if (total > 0 && completed < total) {
             [self.progressView setHidden:NO];
             [self.progressView setProgress: (completed / (float)total)];
@@ -258,14 +258,15 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     }
     
     // Folder case
-    CBLQuery *query = [[appDelegate.database viewNamed:@"byPath"] query];
+    CBLQuery *query = [[appDelegate.database viewNamed:@"byPath"] createQuery];
     NSString *path = [NSString stringWithFormat:@"%@/%@",
                       [doc.properties valueForKey:@"path"],
                       [doc.properties valueForKey:@"name"]];
     query.keys = @[path];
     
     // Loop through the children
-    for (CBLQueryRow *row in query.rows) {
+    CBLQueryEnumerator *rowsEnum = [query rows:error];
+    for (CBLQueryRow *row in rowsEnum) {
         CBLDocument *child = row.document;
         
         // If it's a file, delete it
@@ -343,7 +344,7 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
                                                    delegate];
     
     CBLView *nameView = [appDelegate.database viewNamed:@"byName"];
-    CBLLiveQuery *query = [[nameView query] asLiveQuery];
+    CBLLiveQuery *query = [[nameView createQuery] asLiveQuery];
     query.keys = @[searchText];
     self.tableSource.query = query;
     [self.tableView reloadData];
@@ -363,7 +364,7 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
                                                    delegate];
     
     CBLView *nameView = [appDelegate.database viewNamed:@"byPath"];
-    CBLLiveQuery *query = [[nameView query] asLiveQuery];
+    CBLLiveQuery *query = [[nameView createQuery] asLiveQuery];
     query.keys = self.path ? @[self.path] : @[@""]; // empty path is root
     self.tableSource.query = query;
     [self.tableView reloadData];

@@ -65,7 +65,7 @@
         self.pull = [appDelegate setupFileReplicationForBinaryID:binaryID];
         
         // Pull monitoring
-        [self.pull addObserver:self forKeyPath:@"completed" options:0 context:NULL];
+        [self.pull addObserver:self forKeyPath:@"completedChangesCount" options:0 context:NULL];
     }
     
     // Trash button
@@ -125,8 +125,8 @@
     
     if (object == self.pull) {
         NSLog(@"BINARY LOADING...");
-        unsigned completed = self.pull.completed;
-        unsigned total = self.pull.total;
+        unsigned completed = self.pull.completedChangesCount;
+        unsigned total = self.pull.changesCount;
         if (total > 0 && completed < total) {
             [self.progressView setHidden:NO];
             [self.progressView setProgress: (completed / (float)total)];
@@ -135,7 +135,7 @@
             [self.progressView setHidden:YES];
             // Display the data
             CBLDocument *doc = [appDelegate.database
-                                documentWithID:self.pull.doc_ids.firstObject];
+                                documentWithID:self.pull.documentIDs.firstObject];
             [self displayDataWithBinary:doc];
         }
     }
@@ -148,10 +148,10 @@
     NSString *extension = [[self.title componentsSeparatedByString:@"."] lastObject];
     
     if ([extension isEqualToString:@"png"]) {
-        [self.imgView setImage:[UIImage imageWithData:att.body]];
+        [self.imgView setImage:[UIImage imageWithData:att.content]];
         self.imgView.hidden = NO;
     } else if ([extension isEqualToString:@"txt"]) {
-        [self.txtView setText:[[NSString alloc] initWithData:att.body
+        [self.txtView setText:[[NSString alloc] initWithData:att.content
                                         encoding:NSUTF8StringEncoding]];
         self.txtView.hidden = NO;
     }

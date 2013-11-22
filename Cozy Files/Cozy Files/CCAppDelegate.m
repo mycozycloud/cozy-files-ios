@@ -29,7 +29,7 @@
 {
     // Get or create the database
     NSError *error;
-    self.database = [[CBLManager sharedInstance] createDatabaseNamed:kDatabaseName
+    self.database = [[CBLManager sharedInstance] databaseNamed:kDatabaseName
                                                                error:&error];
     
     if (!self.database) { // Bug : no db available nor created
@@ -162,8 +162,8 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
     self.push.filter = @"filter";
     
     // Monitor the progress
-    [self.pull addObserver:self forKeyPath:@"completed" options:0 context:NULL];
-    [self.push addObserver:self forKeyPath:@"completed" options:0 context:NULL];
+    [self.pull addObserver:self forKeyPath:@"completedChangesCount" options:0 context:NULL];
+    [self.push addObserver:self forKeyPath:@"completedChangesCount" options:0 context:NULL];
     
     // Start the replications
     [self.pull start];
@@ -177,7 +177,7 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
     CBLReplication *binPull = [[CBLReplication alloc]
                                initPullFromSourceURL:self.pull.remoteURL
                                             toDatabase:self.database];
-    [binPull setDoc_ids:@[binaryID]];
+    [binPull setDocumentIDs:@[binaryID]];
     binPull.persistent = NO;
     binPull.continuous = NO;
     
@@ -196,7 +196,7 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
     }
     
     // Define validation
-    [self.database defineValidation:@"fileFolderBinary" asBlock:VALIDATIONBLOCK({
+    [self.database setValidationNamed:@"fileFolderBinary" asBlock:VALIDATIONBLOCK({
         return YES;
     })];
     
@@ -225,10 +225,10 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
     }) version: @"1.0"];
     
     // Define filter for push replication
-    [self.database defineFilter:@"filter"
+    [self.database setFilterNamed:@"filter"
                         asBlock:FILTERBLOCK({
         
-        if ([revision isDeleted]) {
+        if ([revision isDeletion]) {
             return YES;
         }
         
@@ -248,10 +248,11 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
                          change:(NSDictionary *)change context:(void *)context
 {
     // PULL
-    if (object == self.pull && self.pull.total > 0) {
-        if (self.pull.completed < self.pull.total) {
+    if (object == self.pull && self.pull.changesCount > 0) {
+        if (self.pull.completedChangesCount < self.pull.changesCount) {
             NSLog(@"PULL REPLICATION COMPLETION : %f%%",
-                  floorf((self.pull.completed / (float)self.pull.total)*100));
+                  floorf((self.pull.completedChangesCount /
+                          (float)self.pull.changesCount)*100));
         }
 #warning Might change
 //        else {
@@ -269,10 +270,11 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
     }
     
     // PUSH
-    if (object == self.push && self.push.total > 0) {
-        if (self.push.completed < self.push.total) {
+    if (object == self.push && self.push.changesCount > 0) {
+        if (self.push.completedChangesCount < self.push.changesCount) {
             NSLog(@"PUSH REPLICATION COMPLETION : %f%%",
-                  floorf((self.push.completed / (float)self.push.total)*100));
+                  floorf((self.push.completedChangesCount /
+                          (float)self.push.changesCount)*100));
         }
     }
 }

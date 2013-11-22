@@ -67,7 +67,7 @@
     CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication]
                                                    delegate];
     // Query the current outdated path for navigation in the tree
-    CBLQuery *query = [[appDelegate.database viewNamed:@"byPath"] query];
+    CBLQuery *query = [[appDelegate.database viewNamed:@"byPath"] createQuery];
     NSString *queryPath = [NSString stringWithFormat:@"%@/%@",
                       [doc.properties valueForKey:@"path"],
                       [doc.properties valueForKey:@"name"]];
@@ -83,7 +83,8 @@
            newPath, [doc.properties valueForKey:@"name"]];
     }
     
-    for (CBLQueryRow *row in query.rows) {
+    CBLQueryEnumerator *rowsEnum = [query rows:error];
+    for (CBLQueryRow *row in rowsEnum) {
         CBLDocument *child = row.document;
         
         if ([[child.properties valueForKey:@"docType"] isEqualToString:@"File"]) {
@@ -129,9 +130,10 @@
         NSError *error;
         
         // Check that no element with the same path and docType has the same name
-        CBLQuery *pathQuery = [[appDelegate.database viewNamed:@"byPath"] query];
+        CBLQuery *pathQuery = [[appDelegate.database viewNamed:@"byPath"] createQuery];
         pathQuery.keys = @[[self.doc.properties valueForKey:@"path"]];
-        for (CBLQueryRow *row in pathQuery.rows) {
+        CBLQueryEnumerator *rowsEnum = [pathQuery rows:&error];
+        for (CBLQueryRow *row in rowsEnum) {
             CBLDocument *document = row.document;
             if ([[document.properties valueForKey:@"docType"]
                  isEqualToString:[self.doc.properties valueForKey:@"docType"]]
