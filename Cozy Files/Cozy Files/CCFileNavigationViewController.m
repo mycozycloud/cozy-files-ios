@@ -77,10 +77,6 @@ UIActionSheetDelegate>
     self.searchBar.delegate = self;
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-}
-
 - (void)viewDidAppear:(BOOL)animated
 {
     CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication]
@@ -125,11 +121,13 @@ UIActionSheetDelegate>
         CBLDocument *doc = (CBLDocument *)sender;
         CCFileViewerViewController *cont = (CCFileViewerViewController *)[segue destinationViewController];
         cont.fileID = [doc.properties valueForKey:@"_id"];
+    // For renaming elements
     } else if ([segue.identifier isEqualToString:@"ShowEdition"]) {
         CBLDocument *doc = (CBLDocument *)sender;
         UINavigationController *navCont = (UINavigationController *)[segue destinationViewController];
         CCEditionViewController *edCont = (CCEditionViewController *)navCont.viewControllers.firstObject;
         edCont.doc = doc;
+    // For creating a folder
     } else if ([segue.identifier isEqualToString:@"ShowFolderCreation"]) {
         UINavigationController *navCont = (UINavigationController *)[segue destinationViewController];
         CCFolderCreationViewController *folderCreationCont = (CCFolderCreationViewController *)navCont.viewControllers.firstObject;
@@ -144,11 +142,11 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     CBLDocument *doc = [[self.tableSource.query.rows rowAtIndex:indexPath.row] document];
     
-    if (self.tableView.isEditing) {
+    if (self.tableView.isEditing) { // While editing, show renaming view
         [self.tableView setEditing:NO animated:YES];
         [self.actionButton setTitle:@"Modifier"];
         [self performSegueWithIdentifier:@"ShowEdition" sender:doc];
-    } else {
+    } else { // if not editing, navigate or show the content
         if ([[doc.properties valueForKey:@"docType"] isEqualToString:@"Folder"]) { // Folder, so navigate
             CCFileNavigationViewController *controller = [[UIStoryboard storyboardWithName:@"Main"
                                                                                     bundle:nil]
@@ -180,8 +178,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     self.rowToDelete = row;
     
-//    [self prepareForDeletion];
-    [self showDeleteAlert];
+    [self showDeleteAlert]; // Get confirmation
     
     return NO; // We'll get rid of the row ourselves
 }
@@ -304,7 +301,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 - (void)alertView:(UIAlertView *)alertView
 didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
-    if (buttonIndex > 0) {
+    if (buttonIndex > 0) { // Willingness to delete confirmed
         NSError *error;
         CBLDocument *doc = self.rowToDelete.document;
         [self deleteRecursively:doc error:&error];
@@ -324,13 +321,13 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (buttonIndex == 0) {
+    if (buttonIndex == 0) { // Edition
         [self.tableView setEditing:YES animated:YES];
         [self.actionButton setTitle:@"Ok"];
-    } else if (buttonIndex == 1) {
+    } else if (buttonIndex == 1) { // Creation
         [actionSheet setHidden:YES];
         [self performSegueWithIdentifier:@"ShowFolderCreation" sender:self.path];
-    } else {
+    } else { // Cancel
         [self.tableView setEditing:NO animated:YES];
         [self.actionButton setTitle:@"Modifier"];
     }
@@ -342,12 +339,12 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
     CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication]
                                                    delegate];
-    
+    // Query the database for the docs having searchText in their names
     CBLView *nameView = [appDelegate.database viewNamed:@"byName"];
     CBLLiveQuery *query = [[nameView createQuery] asLiveQuery];
     query.keys = @[searchText];
     self.tableSource.query = query;
-    [self.tableView reloadData];
+    [self.tableView reloadData]; // Reloads the view
 }
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
@@ -362,7 +359,7 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
     CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication]
                                                    delegate];
-    
+    // Cancel clicked, so reinitialize
     CBLView *nameView = [appDelegate.database viewNamed:@"byPath"];
     CBLLiveQuery *query = [[nameView createQuery] asLiveQuery];
     query.keys = self.path ? @[self.path] : @[@""]; // empty path is root
@@ -376,6 +373,7 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
+    // Search clicked, so force search
     [self.searchBar setShowsCancelButton:NO animated:YES];
     [self.searchBar resignFirstResponder];
     [self filterContentForSearchText:self.searchBar.text];

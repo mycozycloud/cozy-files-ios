@@ -38,11 +38,6 @@
     
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-
-}
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -83,10 +78,11 @@
 
 - (void) prepareForSegue: (UIStoryboardSegue *) segue sender: (id) sender
 {
-    
-    // configure the segue.
-    // in this case we dont swap out the front view controller, which is a UINavigationController.
-    // but we could..
+    /* Configure the segue.
+       in this case we dont swap out the front view controller,
+       which is a UINavigationController.
+       But we could...
+     */
     if ( [segue isKindOfClass: [SWRevealViewControllerSegue class]] )
     {
         SWRevealViewControllerSegue* rvcs = (SWRevealViewControllerSegue*) segue;

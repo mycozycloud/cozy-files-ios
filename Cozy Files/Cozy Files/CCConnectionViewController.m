@@ -80,10 +80,10 @@
                                     [NSURL URLWithString:
                                      [NSString stringWithFormat:
                                       @"%@/device/", cozyURL]]];
-    
+    // Body
     NSDictionary *requestData = [NSDictionary dictionaryWithObjectsAndKeys:remoteName,
                                  @"login", nil];
-    
+    // Into JSON
     NSError *error;
     NSData *postData = [NSJSONSerialization dataWithJSONObject:requestData
                                                        options:0
@@ -93,7 +93,7 @@
         [appDelegate showAlert:@"Une erreur s'est produite" error:error fatal:NO];
         self.welcomeLabel.text = @"Veuillez vous connecter";
         [self enableForm:YES];
-    } else {
+    } else { // Auth
         NSString *base64Auth = [[[NSString stringWithFormat:@"owner:%@", cozyPassword]
                                  dataUsingEncoding:NSUTF8StringEncoding]
                                 base64EncodedStringWithOptions:0];
@@ -168,15 +168,15 @@ didReceiveResponse:(NSURLResponse *)response
     NSDictionary *resp = [NSJSONSerialization JSONObjectWithData:self.responseData
                                                          options:0
                                                            error:&error];
-    if (error) {
+    if (error) { // if deserialization error
         [appDelegate showAlert:@"Une erreur s'est produite"
                          error:error
                          fatal:NO];
         self.welcomeLabel.text = @"Veuillez vous connecter";
         [self enableForm:YES];
-    } else {
+    } else { // if error coming from the cozy
         if ([resp valueForKey:@"error"]) {
-            error = [NSError errorWithDomain:@"Cozy" code:1 userInfo:nil];
+            error = [NSError errorWithDomain:kErrorDomain code:1 userInfo:nil];
             [appDelegate showAlert:[resp valueForKey:@"msg"]
                              error:error
                              fatal:NO];

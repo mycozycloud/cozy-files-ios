@@ -74,13 +74,9 @@
     
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-}
-
 - (void)viewDidDisappear:(BOOL)animated
 {
-    if (self.isToRemove) {
+    if (self.isToRemove) { // Purge the binary when the view disappeared
         NSError *error;
         
         CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication]
@@ -98,7 +94,6 @@
                                valueForKey:@"file"] valueForKey:@"id"];
         CBLDocument *binary = [appDelegate.database documentWithID:binaryID];
         
-//        [binary deleteDocument:&error];
         [binary purgeDocument:&error];
         
         if (error) {
@@ -143,10 +138,12 @@
 
 - (void)displayDataWithBinary:(CBLDocument *)binary
 {
+    // Get attachments
     CBLAttachment *att = [[binary.currentRevision attachments] firstObject];
     
     NSString *extension = [[self.title componentsSeparatedByString:@"."] lastObject];
     
+    // Display content based on file extension
     if ([extension isEqualToString:@"png"]) {
         [self.imgView setImage:[UIImage imageWithData:att.content]];
         self.imgView.hidden = NO;

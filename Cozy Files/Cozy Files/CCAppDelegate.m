@@ -113,6 +113,7 @@
 - (void)alertView:(UIAlertView *)alertView
 didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
+    // If it's a fatal error, the app closes
     exit(0);
 }
 
@@ -254,19 +255,6 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
                   floorf((self.pull.completedChangesCount /
                           (float)self.pull.changesCount)*100));
         }
-#warning Might change
-//        else {
-//            // Pull replication finished, then start push one.
-//            if (![self.push running]) {
-//                NSLog(@"START PUSH REPLICATION");
-//                self.push.persistent = YES;
-//                self.push.continuous = YES;
-//                
-//                // Set the filter for the push replication
-//                self.push.filter = @"filter";
-//                [self.push start];
-//            }
-//        }
     }
     
     // PUSH
