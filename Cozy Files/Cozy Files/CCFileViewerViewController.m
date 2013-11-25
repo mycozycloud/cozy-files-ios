@@ -56,6 +56,8 @@
     NSString *fileBinaryRev = [[[file.properties valueForKey:@"binary"]
                                valueForKey:@"file"] valueForKey:@"rev"];
     
+    NSLog(@"%@ - %@", fileBinaryRev, binary.currentRevisionID);
+    
     if ([binary.currentRevisionID isEqualToString:fileBinaryRev]) { // It exists and hasn't changed, so setup the view with the data
         NSLog(@"BINARY IS HERE");
         [self displayDataWithBinary:binary];
@@ -63,11 +65,11 @@
         NSLog(@"SETUP BINARY REPLICATION : %@", binaryID);
         NSError *error;
         [binary purgeDocument:&error];
-        
+
         if (error) {
             NSLog(@"ERREUR - %@", error);
         }
-        
+    
         self.pull = [appDelegate setupFileReplicationForBinaryID:binaryID];
         
         // Pull monitoring
@@ -87,7 +89,6 @@
         
         CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication]
                                                        delegate];
-        
         [self.pull stop];
         
         CBLDocument *file = [appDelegate.database documentWithID:self.fileID];
