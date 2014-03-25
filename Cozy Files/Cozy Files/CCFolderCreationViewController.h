@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 CozyCloud. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+@import UIKit;
 
 @interface CCFolderCreationViewController : UIViewController <UITextFieldDelegate>
 @property (strong, nonatomic) NSString *path;

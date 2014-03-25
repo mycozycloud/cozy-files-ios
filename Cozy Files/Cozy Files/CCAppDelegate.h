@@ -6,7 +6,8 @@
 //  Copyright (c) 2013 CozyCloud. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+@import UIKit;
+
 #import <CouchbaseLite/CouchbaseLite.h>
 
 #define kRemoteIDKey @"cozyFilesRemoteID"

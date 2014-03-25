@@ -144,17 +144,12 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
     [[NSUserDefaults standardUserDefaults] synchronize];
     
     // Actually set up the two-way continuous and persistent replication
-    NSString *newCozyURL = [NSString stringWithFormat:@"https://%@/cozy", url.host];
-    NSArray *repls = [self.database replicationsWithURL:[NSURL URLWithString:newCozyURL]
-                                         exclusively:YES];
+    NSURL *newCozyURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://%@/cozy", url.host]];
     
-    self.pull = repls.firstObject;
-    self.pull.persistent = YES;
+    self.pull = [self.database createPullReplication:newCozyURL];
     self.pull.continuous = YES;
     
-    self.push = repls.lastObject;
-#warning Might change
-    self.push.persistent = YES;
+    self.push = [self.database createPushReplication:newCozyURL];
     self.push.continuous = YES;
     
     // Set the filter for the pull replication
@@ -175,11 +170,8 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
 - (CBLReplication *)setupFileReplicationForBinaryID:(NSString *)binaryID
 {
     // Set Pull replication, not continuous but persistent
-    CBLReplication *binPull = [[CBLReplication alloc]
-                               initPullFromSourceURL:self.pull.remoteURL
-                                            toDatabase:self.database];
+    CBLReplication *binPull = [self.database createPullReplication:self.pull.remoteURL];
     [binPull setDocumentIDs:@[binaryID]];
-    binPull.persistent = NO;
     binPull.continuous = NO;
     
     // Start replication
@@ -196,10 +188,8 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
         self.push = [self.database.allReplications objectAtIndex:1];
     }
     
-    // Define validation
-    [self.database setValidationNamed:@"fileFolderBinary" asBlock:VALIDATIONBLOCK({
-        return YES;
-    })];
+    // Define validation, everything is accepted
+    [self.database setValidationNamed:@"fileFolderBinary" asBlock:VALIDATIONBLOCK()];
     
     // Define database views
     CBLView *pathView = [self.database viewNamed: @"byPath"];

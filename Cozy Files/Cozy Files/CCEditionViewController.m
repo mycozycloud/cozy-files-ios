@@ -83,38 +83,40 @@
            newPath, [doc.properties valueForKey:@"name"]];
     }
     
-    CBLQueryEnumerator *rowsEnum = [query rows:error];
-    for (CBLQueryRow *row in rowsEnum) {
-        CBLDocument *child = row.document;
-        
-        if ([[child.properties valueForKey:@"docType"] isEqualToString:@"File"]) {
-            NSLog(@"EDIT PATH FILE : %@", [child.properties valueForKey:@"name"]);
-            // Just edit the path of the file since it's not a folder
-            // Copy the document
-            NSMutableDictionary *contents = [child.properties mutableCopy];
-            // Change its path
-            [contents setObject:newNewPath forKey: @"path"];
-            // Save the updated document
-            [child putProperties:contents error:error];
+//    CBLQueryEnumerator *rowsEnum = [query rows:error];
+    [query runAsync:^(CBLQueryEnumerator *rowsEnum, NSError *error){
+        for (CBLQueryRow *row in rowsEnum) {
+            CBLDocument *child = row.document;
             
-        } else { // It's a folder, so be careful with its children
-            [self renameRecursively:child newPath:newNewPath error:error];
+            if ([[child.properties valueForKey:@"docType"] isEqualToString:@"File"]) {
+                NSLog(@"EDIT PATH FILE : %@", [child.properties valueForKey:@"name"]);
+                // Just edit the path of the file since it's not a folder
+                // Copy the document
+                NSMutableDictionary *contents = [child.properties mutableCopy];
+                // Change its path
+                [contents setObject:newNewPath forKey: @"path"];
+                // Save the updated document
+                [child putProperties:contents error:&error];
+                
+            } else { // It's a folder, so be careful with its children
+                [self renameRecursively:child newPath:newNewPath error:&error];
+            }
         }
-    }
-    
-    // Now its children are supposed to be edited, so edit it
-    // Copy the document
-    NSMutableDictionary *contents = [doc.properties mutableCopy];
-    if ([doc isEqual:self.doc]) { // Rename the document
-        // Change its name
-        [contents setObject:self.docNameTextField.text forKey: @"name"];
-    } else if ([[doc.properties valueForKey:@"docType"] isEqualToString:@"Folder"]) {
-        // Edit the path of the folder
-        // Change its path
-        [contents setObject:newPath forKey: @"path"];
-    }
-    // Save the updated document
-    [doc putProperties:contents error:error];
+        
+        // Now its children are supposed to be edited, so edit it
+        // Copy the document
+        NSMutableDictionary *contents = [doc.properties mutableCopy];
+        if ([doc isEqual:self.doc]) { // Rename the document
+            // Change its name
+            [contents setObject:self.docNameTextField.text forKey: @"name"];
+        } else if ([[doc.properties valueForKey:@"docType"] isEqualToString:@"Folder"]) {
+            // Edit the path of the folder
+            // Change its path
+            [contents setObject:newPath forKey: @"path"];
+        }
+        // Save the updated document
+        [doc putProperties:contents error:&error];
+    }];
 }
 
 #pragma mark - Custom
@@ -127,38 +129,37 @@
         CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication]
                                                        delegate];
         
-        NSError *error;
-        
         // Check that no element with the same path and docType has the same name
         CBLQuery *pathQuery = [[appDelegate.database viewNamed:@"byPath"] createQuery];
         pathQuery.keys = @[[self.doc.properties valueForKey:@"path"]];
-        CBLQueryEnumerator *rowsEnum = [pathQuery rows:&error];
-        for (CBLQueryRow *row in rowsEnum) {
-            CBLDocument *document = row.document;
-            if ([[document.properties valueForKey:@"docType"]
-                 isEqualToString:[self.doc.properties valueForKey:@"docType"]]
-                && [[document.properties valueForKey:@"name"]
-                    isEqualToString:self.docNameTextField.text]) {
-                
-                NSString *desc = @"Un dossier existant porte déjà ce nom";
-                NSDictionary *userInfo = @{NSLocalizedDescriptionKey : desc};
-                
-                error = [NSError errorWithDomain:kErrorDomain code:-101 userInfo:userInfo];
+        [pathQuery runAsync:^(CBLQueryEnumerator *rowsEnum, NSError *error){
+            for (CBLQueryRow *row in rowsEnum) {
+                CBLDocument *document = row.document;
+                if ([[document.properties valueForKey:@"docType"]
+                     isEqualToString:[self.doc.properties valueForKey:@"docType"]]
+                    && [[document.properties valueForKey:@"name"]
+                        isEqualToString:self.docNameTextField.text]) {
+                        
+                        NSString *desc = @"Un dossier existant porte déjà ce nom";
+                        NSDictionary *userInfo = @{NSLocalizedDescriptionKey : desc};
+                        
+                        error = [NSError errorWithDomain:kErrorDomain code:-101 userInfo:userInfo];
+                    }
             }
-        }
-        
-        if (error) { // There's already an element here with same docType and name
-            [appDelegate showAlert:@"Une erreur est survenue"
-                             error:error fatal:NO];
-        } else { // The doc can be renamed
-            [self renameRecursively:self.doc
-                            newPath:[self.doc.properties valueForKey:@"path"]
-                              error:&error];
-            if (error) {
+            
+            if (error) { // There's already an element here with same docType and name
                 [appDelegate showAlert:@"Une erreur est survenue"
                                  error:error fatal:NO];
+            } else { // The doc can be renamed
+                [self renameRecursively:self.doc
+                                newPath:[self.doc.properties valueForKey:@"path"]
+                                  error:&error];
+                if (error) {
+                    [appDelegate showAlert:@"Une erreur est survenue"
+                                     error:error fatal:NO];
+                }
             }
-        }
+        }];
     }
     [self dismissViewControllerAnimated:YES completion:nil];
 }

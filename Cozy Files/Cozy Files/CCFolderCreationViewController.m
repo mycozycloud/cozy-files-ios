@@ -66,28 +66,29 @@
     // Check that no folder with the same path has the same name
     CBLQuery *pathQuery = [[appDelegate.database viewNamed:@"byPath"] createQuery];
     pathQuery.keys = @[self.path];
-    CBLQueryEnumerator *rowsEnum = [pathQuery rows:error];
-    for (CBLQueryRow *row in rowsEnum) {
-        CBLDocument *doc = row.document;
-        if ([[doc.properties valueForKey:@"docType"] isEqualToString:@"Folder"]
-            && [[doc.properties valueForKey:@"name"] isEqualToString:name]) {
-            
-            NSString *desc = @"Un dossier existant porte déjà ce nom";
-            NSDictionary *userInfo = @{NSLocalizedDescriptionKey : desc};
-            
-            *error = [NSError errorWithDomain:kErrorDomain code:-101 userInfo:userInfo];
-            return;
+    [pathQuery runAsync:^(CBLQueryEnumerator *rowsEnum, NSError *error){
+        for (CBLQueryRow *row in rowsEnum) {
+            CBLDocument *doc = row.document;
+            if ([[doc.properties valueForKey:@"docType"] isEqualToString:@"Folder"]
+                && [[doc.properties valueForKey:@"name"] isEqualToString:name]) {
+                
+                NSString *desc = @"Un dossier existant porte déjà ce nom";
+                NSDictionary *userInfo = @{NSLocalizedDescriptionKey : desc};
+                
+                error = [NSError errorWithDomain:kErrorDomain code:-101 userInfo:userInfo];
+                return;
+            }
         }
-    }
-    
-    // Create the folder
-    NSDictionary *contents = @{@"name" : self.folderNameTextField.text,
-                               @"path" : self.path,
-                               @"docType" : @"Folder"
-                               };
-    
-    CBLDocument *doc = [appDelegate.database createDocument];
-    [doc putProperties:contents error:error];
+        
+        // Create the folder
+        NSDictionary *contents = @{@"name" : self.folderNameTextField.text,
+                                   @"path" : self.path,
+                                   @"docType" : @"Folder"
+                                   };
+        
+        CBLDocument *doc = [appDelegate.database createDocument];
+        [doc putProperties:contents error:&error];
+    }];
 }
 
 #pragma mark - Custom

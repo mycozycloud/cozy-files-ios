@@ -262,26 +262,27 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     query.keys = @[path];
     
     // Loop through the children
-    CBLQueryEnumerator *rowsEnum = [query rows:error];
-    for (CBLQueryRow *row in rowsEnum) {
-        CBLDocument *child = row.document;
-        
-        // If it's a file, delete it
-        if ([[child.properties valueForKey:@"docType"] isEqualToString:@"File"]) {
-            NSLog(@"DELETE FILE : %@", [child.properties valueForKey:@"name"]);
-            // Just delete the file and its binary since it's not a folder
-            NSString *binaryID = [[[doc.properties valueForKey:@"binary"]
-                                   valueForKey:@"file"] valueForKey:@"id"];
-            CBLDocument *binary = [appDelegate.database documentWithID:binaryID];
-            [binary deleteDocument:error];
-            [child deleteDocument:error];
-        } else { // It's a folder, so be careful with its children
-            [self deleteRecursively:child error:error];
+    [query runAsync:^(CBLQueryEnumerator *rowsEnum, NSError *error){
+        for (CBLQueryRow *row in rowsEnum) {
+            CBLDocument *child = row.document;
+            
+            // If it's a file, delete it
+            if ([[child.properties valueForKey:@"docType"] isEqualToString:@"File"]) {
+                NSLog(@"DELETE FILE : %@", [child.properties valueForKey:@"name"]);
+                // Just delete the file and its binary since it's not a folder
+                NSString *binaryID = [[[doc.properties valueForKey:@"binary"]
+                                       valueForKey:@"file"] valueForKey:@"id"];
+                CBLDocument *binary = [appDelegate.database documentWithID:binaryID];
+                [binary deleteDocument:&error];
+                [child deleteDocument:&error];
+            } else { // It's a folder, so be careful with its children
+                [self deleteRecursively:child error:&error];
+            }
         }
-    }
-    
-    // Now it's supposed to be empty, so delete it
-    [doc deleteDocument:error];
+        
+        // Now it's supposed to be empty, so delete it
+        [doc deleteDocument:&error];
+    }];
 }
 
 - (void)showDeleteAlert
