@@ -28,14 +28,14 @@
 		5C4F831C181813C400CCA08E /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C4F831B181813C400CCA08E /* libsqlite3.dylib */; };
 		5C4F831E181813D000CCA08E /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C4F831D181813D000CCA08E /* libz.dylib */; };
 		5C627821182BE25100C43EB4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5C4F82F01818125700CCA08E /* Main.storyboard */; };
+		5C7768CA18E1A252000EBE47 /* CouchbaseLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C7768C818E19CC7000EBE47 /* CouchbaseLite.framework */; };
+		5C7768CC18E1A260000EBE47 /* CouchbaseLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C7768CB18E1A260000EBE47 /* CouchbaseLite.framework */; };
 		5C9BE6C9182D293000FF5388 /* CCFileViewerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C9BE6C8182D293000FF5388 /* CCFileViewerViewController.m */; };
 		5C9D285C1820114400CA3A7C /* CCFileNavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C9D285B1820114400CA3A7C /* CCFileNavigationViewController.m */; };
 		5CE23ADA182A50C100A1D5D8 /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CE23AD9182A50C100A1D5D8 /* SWRevealViewController.m */; };
 		5CE23ADE182A547E00A1D5D8 /* CCMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CE23ADD182A547E00A1D5D8 /* CCMenuViewController.m */; };
 		5CE23AE1182A6BA500A1D5D8 /* CCConfigurationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CE23AE0182A6BA500A1D5D8 /* CCConfigurationViewController.m */; };
 		5CE23AE4182A766700A1D5D8 /* CCRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CE23AE3182A766700A1D5D8 /* CCRevealViewController.m */; };
-		5CE740E918E09E7400C1EB7B /* CouchbaseLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5CE740E818E09E7400C1EB7B /* CouchbaseLite.framework */; };
-		5CE740F118E0A8C800C1EB7B /* CouchbaseLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5CE740F018E0A8C800C1EB7B /* CouchbaseLite.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,6 +77,8 @@
 		5C4F8319181813B900CCA08E /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		5C4F831B181813C400CCA08E /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		5C4F831D181813D000CCA08E /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		5C7768C818E19CC7000EBE47 /* CouchbaseLite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CouchbaseLite.framework; path = "../../../utils/objective-c/couchbase-lite-community-ios_1.0-beta3/CouchbaseLite.framework"; sourceTree = "<group>"; };
+		5C7768CB18E1A260000EBE47 /* CouchbaseLite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CouchbaseLite.framework; path = "../../../utils/objective-c/couchbase-lite-community-ios_1.0-beta3/64bit/CouchbaseLite.framework"; sourceTree = "<group>"; };
 		5C9BE6C7182D293000FF5388 /* CCFileViewerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCFileViewerViewController.h; sourceTree = "<group>"; };
 		5C9BE6C8182D293000FF5388 /* CCFileViewerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCFileViewerViewController.m; sourceTree = "<group>"; };
 		5C9D285A1820114400CA3A7C /* CCFileNavigationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCFileNavigationViewController.h; sourceTree = "<group>"; };
@@ -89,8 +91,6 @@
 		5CE23AE0182A6BA500A1D5D8 /* CCConfigurationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCConfigurationViewController.m; sourceTree = "<group>"; };
 		5CE23AE2182A766700A1D5D8 /* CCRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCRevealViewController.h; sourceTree = "<group>"; };
 		5CE23AE3182A766700A1D5D8 /* CCRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCRevealViewController.m; sourceTree = "<group>"; };
-		5CE740E818E09E7400C1EB7B /* CouchbaseLite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CouchbaseLite.framework; path = "../../../utils/objective-c/couchbase-lite-community-ios_1.0-beta3/CouchbaseLite.framework"; sourceTree = "<group>"; };
-		5CE740F018E0A8C800C1EB7B /* CouchbaseLite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CouchbaseLite.framework; path = "../../../utils/objective-c/couchbase-lite-community-ios_1.0-beta3/64bit/CouchbaseLite.framework"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,8 +98,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5CE740F118E0A8C800C1EB7B /* CouchbaseLite.framework in Frameworks */,
-				5CE740E918E09E7400C1EB7B /* CouchbaseLite.framework in Frameworks */,
+				5C7768CC18E1A260000EBE47 /* CouchbaseLite.framework in Frameworks */,
+				5C7768CA18E1A252000EBE47 /* CouchbaseLite.framework in Frameworks */,
 				5C4F831E181813D000CCA08E /* libz.dylib in Frameworks */,
 				5C4F831C181813C400CCA08E /* libsqlite3.dylib in Frameworks */,
 				5C4F831A181813B900CCA08E /* SystemConfiguration.framework in Frameworks */,
@@ -146,8 +146,8 @@
 		5C4F82DD1818125700CCA08E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				5CE740F018E0A8C800C1EB7B /* CouchbaseLite.framework */,
-				5CE740E818E09E7400C1EB7B /* CouchbaseLite.framework */,
+				5C7768CB18E1A260000EBE47 /* CouchbaseLite.framework */,
+				5C7768C818E19CC7000EBE47 /* CouchbaseLite.framework */,
 				5C4F831D181813D000CCA08E /* libz.dylib */,
 				5C4F831B181813C400CCA08E /* libsqlite3.dylib */,
 				5C4F8319181813B900CCA08E /* SystemConfiguration.framework */,
@@ -165,25 +165,10 @@
 			isa = PBXGroup;
 			children = (
 				5CE23AD7182A50C100A1D5D8 /* SWRevealViewController */,
+				5C7768CD18E1D57E000EBE47 /* View Controllers */,
 				5C4F82ED1818125700CCA08E /* CCAppDelegate.h */,
 				5C4F82EE1818125700CCA08E /* CCAppDelegate.m */,
 				5C4F82F01818125700CCA08E /* Main.storyboard */,
-				5C4F82F31818125700CCA08E /* CCConnectionViewController.h */,
-				5C4F82F41818125700CCA08E /* CCConnectionViewController.m */,
-				5C9D285A1820114400CA3A7C /* CCFileNavigationViewController.h */,
-				5C9D285B1820114400CA3A7C /* CCFileNavigationViewController.m */,
-				5C9BE6C7182D293000FF5388 /* CCFileViewerViewController.h */,
-				5C9BE6C8182D293000FF5388 /* CCFileViewerViewController.m */,
-				5C3E5152183A5F58006C9832 /* CCEditionViewController.h */,
-				5C3E5153183A5F58006C9832 /* CCEditionViewController.m */,
-				5C066852183E2ECC00F1A329 /* CCFolderCreationViewController.h */,
-				5C066853183E2ECC00F1A329 /* CCFolderCreationViewController.m */,
-				5CE23ADC182A547E00A1D5D8 /* CCMenuViewController.h */,
-				5CE23ADD182A547E00A1D5D8 /* CCMenuViewController.m */,
-				5CE23ADF182A6BA500A1D5D8 /* CCConfigurationViewController.h */,
-				5CE23AE0182A6BA500A1D5D8 /* CCConfigurationViewController.m */,
-				5CE23AE2182A766700A1D5D8 /* CCRevealViewController.h */,
-				5CE23AE3182A766700A1D5D8 /* CCRevealViewController.m */,
 				5C4F82F61818125700CCA08E /* Images.xcassets */,
 				5C4F82E51818125700CCA08E /* Supporting Files */,
 			);
@@ -217,6 +202,29 @@
 				5C4F83061818125700CCA08E /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		5C7768CD18E1D57E000EBE47 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				5C4F82F31818125700CCA08E /* CCConnectionViewController.h */,
+				5C4F82F41818125700CCA08E /* CCConnectionViewController.m */,
+				5C9D285A1820114400CA3A7C /* CCFileNavigationViewController.h */,
+				5C9D285B1820114400CA3A7C /* CCFileNavigationViewController.m */,
+				5C9BE6C7182D293000FF5388 /* CCFileViewerViewController.h */,
+				5C9BE6C8182D293000FF5388 /* CCFileViewerViewController.m */,
+				5C3E5152183A5F58006C9832 /* CCEditionViewController.h */,
+				5C3E5153183A5F58006C9832 /* CCEditionViewController.m */,
+				5C066852183E2ECC00F1A329 /* CCFolderCreationViewController.h */,
+				5C066853183E2ECC00F1A329 /* CCFolderCreationViewController.m */,
+				5CE23ADC182A547E00A1D5D8 /* CCMenuViewController.h */,
+				5CE23ADD182A547E00A1D5D8 /* CCMenuViewController.m */,
+				5CE23ADF182A6BA500A1D5D8 /* CCConfigurationViewController.h */,
+				5CE23AE0182A6BA500A1D5D8 /* CCConfigurationViewController.m */,
+				5CE23AE2182A766700A1D5D8 /* CCRevealViewController.h */,
+				5CE23AE3182A766700A1D5D8 /* CCRevealViewController.m */,
+			);
+			name = "View Controllers";
 			sourceTree = "<group>";
 		};
 		5CE23AD7182A50C100A1D5D8 /* SWRevealViewController */ = {
@@ -465,11 +473,10 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/CouchbaseLite-bkvpguzrnegusjehdhsfyiapqzbk/Build/Products/Debug-ios-universal",
 					"$(PROJECT_DIR)",
 					"/Users/williamarchimede/Documents/utils/objective-c/couchbase-lite-community-ios_1.0-beta3",
-					"/Users/williamarchimede/Documents/utils/objective-c",
 					"/Users/williamarchimede/Documents/utils/objective-c/couchbase-lite-community-ios_1.0-beta3/64bit",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/CouchbaseLite-bkvpguzrnegusjehdhsfyiapqzbk/Build/Products/Debug-ios-universal",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Cozy Files/Cozy Files-Prefix.pch";
@@ -488,11 +495,10 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/CouchbaseLite-bkvpguzrnegusjehdhsfyiapqzbk/Build/Products/Debug-ios-universal",
 					"$(PROJECT_DIR)",
 					"/Users/williamarchimede/Documents/utils/objective-c/couchbase-lite-community-ios_1.0-beta3",
-					"/Users/williamarchimede/Documents/utils/objective-c",
 					"/Users/williamarchimede/Documents/utils/objective-c/couchbase-lite-community-ios_1.0-beta3/64bit",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/CouchbaseLite-bkvpguzrnegusjehdhsfyiapqzbk/Build/Products/Debug-ios-universal",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Cozy Files/Cozy Files-Prefix.pch";

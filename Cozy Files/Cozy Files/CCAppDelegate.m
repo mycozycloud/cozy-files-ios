@@ -143,7 +143,7 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
     [[NSUserDefaults standardUserDefaults] setObject:remoteID forKey:kRemoteIDKey];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
-    // Actually set up the two-way continuous and persistent replication
+    // Actually set up the two-way continuous replication
     NSURL *newCozyURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://%@/cozy", url.host]];
     
     self.pull = [self.database createPullReplication:newCozyURL];

@@ -10,7 +10,6 @@
 #import "CCConnectionViewController.h"
 
 @interface CCConnectionViewController () <NSURLConnectionDataDelegate>
-@property (strong, nonatomic) NSMutableData *responseData;
 
 - (void)sendGetCredentialsRequestWithCozyURLString:(NSString *)cozyURL
                                       cozyPassword:(NSString *)cozyPassword
@@ -80,15 +79,17 @@
                                     [NSURL URLWithString:
                                      [NSString stringWithFormat:
                                       @"%@/device/", cozyURL]]];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPMethod:@"POST"];
+    
     // Body
     NSDictionary *requestData = [NSDictionary dictionaryWithObjectsAndKeys:remoteName,
-                                 @"login", nil];
+                                 @"login", @"type", @"phone", nil];
     // Into JSON
     NSError *error;
     NSData *postData = [NSJSONSerialization dataWithJSONObject:requestData
                                                        options:0
                                                          error:&error];
-    
     if (error) {
         [appDelegate showAlert:@"Une erreur s'est produite" error:error fatal:NO];
         self.welcomeLabel.text = @"Veuillez vous connecter";
@@ -98,16 +99,70 @@
                                  dataUsingEncoding:NSUTF8StringEncoding]
                                 base64EncodedStringWithOptions:0];
         NSString *authValue = [NSString stringWithFormat:@"Basic %@", base64Auth];
-        
-        [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+
         [request setValue:authValue forHTTPHeaderField:@"Authorization"];
-        [request setHTTPMethod:@"POST"];
-        [request setHTTPBody:postData];
         
-        NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request
-                                                                      delegate:self];
-        // send the request
-        [connection start];
+        // Prepare the cofiguration for the session
+        NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+        [config setAllowsCellularAccess:YES];
+        [config setHTTPAdditionalHeaders:@{
+            @"Accept": @"application/json",
+            @"Content-Type": @"application/json",
+            @"Authorization": authValue
+        }];
+        // Create the session with the configuration
+        NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
+        // Send the post request
+        [[session uploadTaskWithRequest:request fromData:postData
+            completionHandler:
+                ^(NSData *data, NSURLResponse *response, NSError *error){
+                    if (error) {
+                        CCAppDelegate *appDelegate = (CCAppDelegate *)
+                                [[UIApplication sharedApplication] delegate];
+                        [appDelegate showAlert:@"Une erreur s'est produite"
+                                         error:error
+                                         fatal:NO];
+                        self.welcomeLabel.text = @"Veuillez vous connecter";
+                        [self enableForm:YES];
+                    } else {
+                        NSDictionary *resp = [NSJSONSerialization
+                                            JSONObjectWithData:data
+                                                options:0
+                                                error:&error];
+                        if (error) { // if deserialization error
+                            [appDelegate showAlert:@"Une erreur s'est produite"
+                                             error:error
+                                             fatal:NO];
+                            self.welcomeLabel.text = @"Veuillez vous connecter";
+                            [self enableForm:YES];
+                        } else { // if error coming from the cozy
+                            if ([resp valueForKey:@"error"]) {
+                                error = [NSError errorWithDomain:kErrorDomain
+                                                            code:1
+                                                        userInfo:nil];
+                                [appDelegate showAlert:[resp valueForKey:@"msg"]
+                                                 error:error
+                                                 fatal:NO];
+                                self.welcomeLabel.text = @"Veuillez vous connecter";
+                                [self enableForm:YES];
+                            } else { // No error, then should setup replications
+                                NSLog(@"RESPONSE %@ - %@ - %@",
+                                      [resp valueForKey:@"login"],
+                                      [resp valueForKey:@"password"],
+                                      [resp valueForKey:@"id"]);
+                                
+                                [appDelegate setupReplicationWithCozyURLString:
+                                                    self.cozyUrlTextField.text
+                                        remoteLogin:[resp valueForKey:@"login"]
+                                    remotePassword:[resp valueForKey:@"password"]
+                                            remoteID:[resp valueForKey:@"id"]];
+                                
+                                [self dismissViewControllerAnimated:YES
+                                                         completion:nil];
+                            }
+                        }
+                    }
+                }] resume];
     }
 }
 
@@ -136,65 +191,6 @@
     [self.connectionButton setBackgroundColor:kBlue];
     [self.connectionButton setTintColor:[UIColor whiteColor]];
     self.connectionButton.layer.cornerRadius = kCornerRadius;
-}
-
-#pragma mark - Connection
-
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
-{
-    CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication] delegate];
-    [appDelegate showAlert:@"Une erreur s'est produite" error:error fatal:NO];
-    self.welcomeLabel.text = @"Veuillez vous connecter";
-    [self enableForm:YES];
-}
-
-- (void)connection:(NSURLConnection *)connection
-didReceiveResponse:(NSURLResponse *)response
-{
-    self.responseData = [NSMutableData data];
-}
-
-- (void)connection:(NSURLConnection *)connection
-    didReceiveData:(NSData *)data
-{
-    [self.responseData appendData:data];
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection
-{
-    CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication] delegate];
-    
-    NSError *error;
-    NSDictionary *resp = [NSJSONSerialization JSONObjectWithData:self.responseData
-                                                         options:0
-                                                           error:&error];
-    if (error) { // if deserialization error
-        [appDelegate showAlert:@"Une erreur s'est produite"
-                         error:error
-                         fatal:NO];
-        self.welcomeLabel.text = @"Veuillez vous connecter";
-        [self enableForm:YES];
-    } else { // if error coming from the cozy
-        if ([resp valueForKey:@"error"]) {
-            error = [NSError errorWithDomain:kErrorDomain code:1 userInfo:nil];
-            [appDelegate showAlert:[resp valueForKey:@"msg"]
-                             error:error
-                             fatal:NO];
-            self.welcomeLabel.text = @"Veuillez vous connecter";
-            [self enableForm:YES];
-        } else { // No error, then should setup replications
-            NSLog(@"RESPONSE %@ - %@ - %@", [resp valueForKey:@"login"],
-                  [resp valueForKey:@"password"],
-                  [resp valueForKey:@"id"]);
-            
-            [appDelegate setupReplicationWithCozyURLString:self.cozyUrlTextField.text
-                                        remoteLogin:[resp valueForKey:@"login"]
-                                remotePassword:[resp valueForKey:@"password"]
-                                        remoteID:[resp valueForKey:@"id"]];
-            
-            [self dismissViewControllerAnimated:YES completion:nil];
-        }
-    }
 }
 
 @end
