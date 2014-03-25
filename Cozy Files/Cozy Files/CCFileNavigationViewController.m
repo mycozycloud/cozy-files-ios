@@ -9,6 +9,7 @@
 #import <CouchbaseLite/CouchbaseLite.h>
 
 #import "CCAppDelegate.h"
+#import "CCConstants.h"
 #import "CCErrorHandler.h"
 #import "CCFileViewerViewController.h"
 #import "CCEditionViewController.h"

@@ -7,6 +7,7 @@
 //
 
 #import "CCAppDelegate.h"
+#import "CCConstants.h"
 #import "CCErrorHandler.h"
 #import "CCConnectionViewController.h"
 

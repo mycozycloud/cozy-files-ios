@@ -82,6 +82,7 @@
 		5C7768CB18E1A260000EBE47 /* CouchbaseLite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CouchbaseLite.framework; path = "../../../utils/objective-c/couchbase-lite-community-ios_1.0-beta3/64bit/CouchbaseLite.framework"; sourceTree = "<group>"; };
 		5C7768CF18E1D8F6000EBE47 /* CCErrorHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCErrorHandler.h; sourceTree = "<group>"; };
 		5C7768D018E1D8F6000EBE47 /* CCErrorHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCErrorHandler.m; sourceTree = "<group>"; };
+		5C7768D218E1E148000EBE47 /* CCConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCConstants.h; sourceTree = "<group>"; };
 		5C9BE6C7182D293000FF5388 /* CCFileViewerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCFileViewerViewController.h; sourceTree = "<group>"; };
 		5C9BE6C8182D293000FF5388 /* CCFileViewerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCFileViewerViewController.m; sourceTree = "<group>"; };
 		5C9D285A1820114400CA3A7C /* CCFileNavigationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCFileNavigationViewController.h; sourceTree = "<group>"; };
@@ -234,6 +235,7 @@
 		5C7768CE18E1D89B000EBE47 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				5C7768D218E1E148000EBE47 /* CCConstants.h */,
 				5C7768CF18E1D8F6000EBE47 /* CCErrorHandler.h */,
 				5C7768D018E1D8F6000EBE47 /* CCErrorHandler.m */,
 			);
