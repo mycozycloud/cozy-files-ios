@@ -9,6 +9,7 @@
 #import <CouchbaseLite/CouchbaseLite.h>
 
 #import "CCAppDelegate.h"
+#import "CCErrorHandler.h"
 #import "CCEditionViewController.h"
 
 @interface CCEditionViewController ()
@@ -143,20 +144,24 @@
                         NSString *desc = @"Un dossier existant porte déjà ce nom";
                         NSDictionary *userInfo = @{NSLocalizedDescriptionKey : desc};
                         
-                        error = [NSError errorWithDomain:kErrorDomain code:-101 userInfo:userInfo];
+                        [[CCErrorHandler sharedInstance] populateError:&error
+                            withCode:-101
+                            userInfo:userInfo];
                     }
             }
             
             if (error) { // There's already an element here with same docType and name
-                [appDelegate showAlert:@"Une erreur est survenue"
-                                 error:error fatal:NO];
+                [[CCErrorHandler sharedInstance] presentError:error
+                    withMessage:[ccErrorDefault copy]
+                    fatal:NO];
             } else { // The doc can be renamed
                 [self renameRecursively:self.doc
                                 newPath:[self.doc.properties valueForKey:@"path"]
                                   error:&error];
                 if (error) {
-                    [appDelegate showAlert:@"Une erreur est survenue"
-                                     error:error fatal:NO];
+                    [[CCErrorHandler sharedInstance] presentError:error
+                        withMessage:[ccErrorDefault copy]
+                        fatal:NO];
                 }
             }
         }];

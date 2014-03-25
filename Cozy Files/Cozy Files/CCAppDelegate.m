@@ -11,6 +11,7 @@
 #import "SWRevealViewController.h"
 
 #import "CCAppDelegate.h"
+#import "CCErrorHandler.h"
 
 // Database
 #define kDatabaseName @"cozyios"
@@ -33,9 +34,9 @@
                                                                error:&error];
     
     if (!self.database) { // Bug : no db available nor created
-        [self showAlert:@"L'app n'a pas pu ouvrir la base de données."
-                  error:error
-                  fatal:YES];
+        [[CCErrorHandler sharedInstance] presentError:error
+            withMessage:@"L'app n'a pas pu accéder à la base de données"
+            fatal:YES];
     } else { // Ok then set the filters, the views and validation functions
         [self setDbFunctions];
     }
@@ -89,32 +90,6 @@
     /* Called when the application is about to terminate. 
      Save data if appropriate. See also applicationDidEnterBackground:.
      */
-}
-
-#pragma mark - Alerts
-
-// Displays an error alert, without blocking.
-// If 'fatal' is true, the app will quit when it's pressed.
-- (void)showAlert:(NSString *)message error:(NSError *)error fatal:(BOOL)fatal
-{
-    if (error) {
-        message = [NSString stringWithFormat:@"%@\n\n%@", message,
-                   error.localizedDescription];
-    }
-    UIAlertView *alertView = [[UIAlertView alloc]
-                              initWithTitle:(fatal ? @"Erreur Fatale" : @"Erreur")
-                                    message:message
-                                    delegate:(fatal ? self : nil)
-                            cancelButtonTitle:(fatal ? @"Quitter" : @"Désolé")
-                                    otherButtonTitles:nil];
-    [alertView show];
-}
-
-- (void)alertView:(UIAlertView *)alertView
-didDismissWithButtonIndex:(NSInteger)buttonIndex
-{
-    // If it's a fatal error, the app closes
-    exit(0);
 }
 
 #pragma mark - Database

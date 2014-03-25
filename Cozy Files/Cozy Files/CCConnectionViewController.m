@@ -7,6 +7,7 @@
 //
 
 #import "CCAppDelegate.h"
+#import "CCErrorHandler.h"
 #import "CCConnectionViewController.h"
 
 @interface CCConnectionViewController () <NSURLConnectionDataDelegate>
@@ -91,7 +92,9 @@
                                                        options:0
                                                          error:&error];
     if (error) {
-        [appDelegate showAlert:@"Une erreur s'est produite" error:error fatal:NO];
+        [[CCErrorHandler sharedInstance] presentError:error
+            withMessage:[ccErrorDefault copy]
+            fatal:NO];
         self.welcomeLabel.text = @"Veuillez vous connecter";
         [self enableForm:YES];
     } else { // Auth
@@ -117,11 +120,9 @@
             completionHandler:
                 ^(NSData *data, NSURLResponse *response, NSError *error){
                     if (error) {
-                        CCAppDelegate *appDelegate = (CCAppDelegate *)
-                                [[UIApplication sharedApplication] delegate];
-                        [appDelegate showAlert:@"Une erreur s'est produite"
-                                         error:error
-                                         fatal:NO];
+                        [[CCErrorHandler sharedInstance] presentError:error
+                            withMessage:[ccErrorDefault copy]
+                            fatal:NO];
                         self.welcomeLabel.text = @"Veuillez vous connecter";
                         [self enableForm:YES];
                     } else {
@@ -130,19 +131,19 @@
                                                 options:0
                                                 error:&error];
                         if (error) { // if deserialization error
-                            [appDelegate showAlert:@"Une erreur s'est produite"
-                                             error:error
-                                             fatal:NO];
+                            [[CCErrorHandler sharedInstance] presentError:error
+                                withMessage:[ccErrorDefault copy]
+                                fatal:NO];
                             self.welcomeLabel.text = @"Veuillez vous connecter";
                             [self enableForm:YES];
                         } else { // if error coming from the cozy
                             if ([resp valueForKey:@"error"]) {
-                                error = [NSError errorWithDomain:kErrorDomain
-                                                            code:1
-                                                        userInfo:nil];
-                                [appDelegate showAlert:[resp valueForKey:@"msg"]
-                                                 error:error
-                                                 fatal:NO];
+                                [[CCErrorHandler sharedInstance] populateError:&error
+                                    withCode:1
+                                    userInfo:nil];
+                                [[CCErrorHandler sharedInstance] presentError:error
+                                    withMessage:[resp valueForKey:@"msg"]
+                                    fatal:NO];
                                 self.welcomeLabel.text = @"Veuillez vous connecter";
                                 [self enableForm:YES];
                             } else { // No error, then should setup replications

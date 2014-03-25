@@ -10,6 +10,7 @@
 
 #import "CCAppDelegate.h"
 #import "CCFileViewerViewController.h"
+#import "CCErrorHandler.h"
 
 @interface CCFileViewerViewController ()
 @property (strong, nonatomic) CBLReplication *pull;
@@ -100,7 +101,9 @@
         [binary purgeDocument:&error];
         
         if (error) {
-            [appDelegate showAlert:@"Une erreur est survenue" error:error fatal:NO];
+            [[CCErrorHandler sharedInstance] presentError:error
+                withMessage:@"Une erreur est survenue"
+                fatal:NO];
         }
         
     }

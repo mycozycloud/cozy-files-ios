@@ -10,6 +10,7 @@
 
 #import "CCAppDelegate.h"
 #import "CCFolderCreationViewController.h"
+#import "CCErrorHandler.h"
 
 @interface CCFolderCreationViewController ()
 - (void)setAppearance;
@@ -75,7 +76,8 @@
                 NSString *desc = @"Un dossier existant porte déjà ce nom";
                 NSDictionary *userInfo = @{NSLocalizedDescriptionKey : desc};
                 
-                error = [NSError errorWithDomain:kErrorDomain code:-101 userInfo:userInfo];
+                [[CCErrorHandler sharedInstance] populateError:&error
+                        withCode:-101 userInfo:userInfo];
                 return;
             }
         }
@@ -100,10 +102,9 @@
         NSError *error;
         [self createFolderWithName:self.folderNameTextField.text error:&error];
         if (error) {
-            CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication]
-                                                           delegate];
-            [appDelegate showAlert:@"Une erreur est survenue"
-                             error:error fatal:NO];
+            [[CCErrorHandler sharedInstance] presentError:error
+                withMessage:[ccErrorDefault copy]
+                fatal:NO];
         }
     }
     [self dismissViewControllerAnimated:YES completion:nil];

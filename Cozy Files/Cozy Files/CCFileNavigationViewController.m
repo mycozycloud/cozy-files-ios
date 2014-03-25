@@ -9,6 +9,7 @@
 #import <CouchbaseLite/CouchbaseLite.h>
 
 #import "CCAppDelegate.h"
+#import "CCErrorHandler.h"
 #import "CCFileViewerViewController.h"
 #import "CCEditionViewController.h"
 #import "CCFolderCreationViewController.h"
@@ -308,10 +309,9 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
         [self deleteRecursively:doc error:&error];
         
         if (error) {
-            CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication]
-                                                           delegate];
-            [appDelegate showAlert:@"Une erreur est survenue"
-                             error:error fatal:NO];
+            [[CCErrorHandler sharedInstance] presentError:error
+                withMessage:@"Une erreur est survenue"
+                fatal:NO];
         }
     }
     
