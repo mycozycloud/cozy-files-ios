@@ -17,5 +17,6 @@
 
 // Preferences constants
 static const NSString *ccRemoteIDKey = @"cozyFilesRemoteID";
+static const NSString *ccCozyURLKey = @"cozyURL";
 
 #endif

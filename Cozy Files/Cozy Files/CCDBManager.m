@@ -13,6 +13,14 @@
 // Database
 static const NSString *ccDBName = @"cozyios";
 
+@interface CCDBManager ()
+
+/* Initiates the two-way continuous replication with the configured cozy
+ */
+- (void)initReplications;
+
+@end
+
 @implementation CCDBManager
 
 /*
@@ -55,11 +63,7 @@ static const NSString *ccDBName = @"cozyios";
 - (void)setDbFunctions
 {
     // Retreive replications
-#warning CHANGE THIS
-    if (self.database.allReplications.count > 1) {
-        self.pull = self.database.allReplications.firstObject;
-        self.push = [self.database.allReplications objectAtIndex:1];
-    }
+    [self initReplications];
     
     // Define validation, everything is accepted
     [self.database setValidationNamed:@"fileFolderBinary" asBlock:VALIDATIONBLOCK()];
@@ -131,22 +135,31 @@ static const NSString *ccDBName = @"cozyios";
                                                         forProtectionSpace:space];
     
     // Remember remoteID for later use
-#warning CHANGE TO REMEMBER EVERYTHING
     [[NSUserDefaults standardUserDefaults] setObject:remoteID forKey:[ccRemoteIDKey copy]];
+    [[NSUserDefaults standardUserDefaults] setObject:cozyURL forKey:[ccCozyURLKey copy]];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
     // Actually set up the two-way continuous replication
-    NSURL *newCozyURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://%@/cozy", url.host]];
+    [self initReplications];
+}
+
+- (void)initReplications
+{
+    // Retrieve preferences
+    NSString *remoteID = [[NSUserDefaults standardUserDefaults] objectForKey:[ccRemoteIDKey copy]];
+    NSURL *cozyURL = [NSURL URLWithString:[[NSUserDefaults standardUserDefaults] objectForKey:[ccCozyURLKey copy]]];
     
+    NSURL *newCozyURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://%@/cozy", cozyURL.host]];
+    
+    // Create the replications
     self.pull = [self.database createPullReplication:newCozyURL];
     self.pull.continuous = YES;
     
     self.push = [self.database createPushReplication:newCozyURL];
     self.push.continuous = YES;
     
-    // Set the filter for the pull replication
+    // Set the filter
     self.pull.filter = [NSString stringWithFormat:@"%@/filter", remoteID];
-#warning Might change
     self.push.filter = @"filter";
     
     // Monitor the progress
@@ -155,7 +168,6 @@ static const NSString *ccDBName = @"cozyios";
     
     // Start the replications
     [self.pull start];
-#warning Might change
     [self.push start];
 }
 
