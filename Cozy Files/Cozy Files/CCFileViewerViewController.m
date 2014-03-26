@@ -8,9 +8,10 @@
 
 #import <CouchbaseLite/CouchbaseLite.h>
 
-#import "CCAppDelegate.h"
-#import "CCFileViewerViewController.h"
 #import "CCErrorHandler.h"
+#import "CCDBManager.h"
+#import "CCFileViewerViewController.h"
+
 
 @interface CCFileViewerViewController ()
 @property (strong, nonatomic) CBLReplication *pull;
@@ -38,13 +39,10 @@
     [self.imgView setHidden:YES];
     [self.txtView setHidden:YES];
     
-    CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication]
-                                                   delegate];
-    
     self.isToRemove = NO;
     
     // First, get the File document
-    CBLDocument *file = [appDelegate.database documentWithID:self.fileID];
+    CBLDocument *file = [[CCDBManager sharedInstance].database documentWithID:self.fileID];
     
     // Set the title
     self.title = [file.properties valueForKey:@"name"];
@@ -52,7 +50,7 @@
     // Then, check whether the binary exists locally and has changed
     NSString *binaryID = [[[file.properties valueForKey:@"binary"]
                            valueForKey:@"file"] valueForKey:@"id"];
-    CBLDocument *binary = [appDelegate.database documentWithID:binaryID];
+    CBLDocument *binary = [[CCDBManager sharedInstance].database documentWithID:binaryID];
     
     NSString *fileBinaryRev = [[[file.properties valueForKey:@"binary"]
                                valueForKey:@"file"] valueForKey:@"rev"];
@@ -71,7 +69,7 @@
             NSLog(@"ERREUR - %@", error);
         }
     
-        self.pull = [appDelegate setupFileReplicationForBinaryID:binaryID];
+        self.pull = [[CCDBManager sharedInstance] setupFileReplicationForBinaryID:binaryID];
         
         // Pull monitoring
         [self.pull addObserver:self forKeyPath:@"completedChangesCount" options:0 context:NULL];
@@ -88,15 +86,13 @@
     if (self.isToRemove) { // Purge the binary when the view disappeared
         NSError *error;
         
-        CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication]
-                                                       delegate];
         [self.pull stop];
         
-        CBLDocument *file = [appDelegate.database documentWithID:self.fileID];
+        CBLDocument *file = [[CCDBManager sharedInstance].database documentWithID:self.fileID];
         
         NSString *binaryID = [[[file.properties valueForKey:@"binary"]
                                valueForKey:@"file"] valueForKey:@"id"];
-        CBLDocument *binary = [appDelegate.database documentWithID:binaryID];
+        CBLDocument *binary = [[CCDBManager sharedInstance].database documentWithID:binaryID];
         
         [binary purgeDocument:&error];
         
@@ -120,8 +116,6 @@
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
                         change:(NSDictionary *)change context:(void *)context
 {
-    CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication] delegate];
-    
     NSLog(@"MONITORING BINARY REPLICATION");
     
     if (object == self.pull) {
@@ -135,7 +129,7 @@
             NSLog(@"BINARY REPLICATION DONE");
             [self.progressView setHidden:YES];
             // Display the data
-            CBLDocument *doc = [appDelegate.database
+            CBLDocument *doc = [[CCDBManager sharedInstance].database
                                 documentWithID:self.pull.documentIDs.firstObject];
             [self displayDataWithBinary:doc];
         }

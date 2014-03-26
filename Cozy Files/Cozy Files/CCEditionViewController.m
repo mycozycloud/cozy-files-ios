@@ -8,9 +8,9 @@
 
 #import <CouchbaseLite/CouchbaseLite.h>
 
-#import "CCAppDelegate.h"
 #import "CCConstants.h"
 #import "CCErrorHandler.h"
+#import "CCDBManager.h"
 #import "CCEditionViewController.h"
 
 @interface CCEditionViewController ()
@@ -66,10 +66,8 @@
                     error:(NSError *__autoreleasing *)error
 {
     NSLog(@"RENAME RECURSIVELY : %@", [doc.properties valueForKey:@"name"]);
-    CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication]
-                                                   delegate];
     // Query the current outdated path for navigation in the tree
-    CBLQuery *query = [[appDelegate.database viewNamed:@"byPath"] createQuery];
+    CBLQuery *query = [[[CCDBManager sharedInstance].database viewNamed:@"byPath"] createQuery];
     NSString *queryPath = [NSString stringWithFormat:@"%@/%@",
                       [doc.properties valueForKey:@"path"],
                       [doc.properties valueForKey:@"name"]];
@@ -128,11 +126,8 @@
     [self.docNameTextField setEnabled:NO];
     // If the name doesn't change, there is nothing to do
     if (![self.docNameTextField.text isEqualToString:[self.doc.properties valueForKey:@"name"]]) {
-        CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication]
-                                                       delegate];
-        
         // Check that no element with the same path and docType has the same name
-        CBLQuery *pathQuery = [[appDelegate.database viewNamed:@"byPath"] createQuery];
+        CBLQuery *pathQuery = [[[CCDBManager sharedInstance].database viewNamed:@"byPath"] createQuery];
         pathQuery.keys = @[[self.doc.properties valueForKey:@"path"]];
         [pathQuery runAsync:^(CBLQueryEnumerator *rowsEnum, NSError *error){
             for (CBLQueryRow *row in rowsEnum) {

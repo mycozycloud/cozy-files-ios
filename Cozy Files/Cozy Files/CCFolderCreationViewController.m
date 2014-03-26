@@ -8,10 +8,10 @@
 
 #import <CouchbaseLite/CouchbaseLite.h>
 
-#import "CCAppDelegate.h"
 #import "CCConstants.h"
-#import "CCFolderCreationViewController.h"
 #import "CCErrorHandler.h"
+#import "CCDBManager.h"
+#import "CCFolderCreationViewController.h"
 
 @interface CCFolderCreationViewController ()
 - (void)setAppearance;
@@ -62,11 +62,8 @@
 
 - (void)createFolderWithName:(NSString *)name error:(NSError *__autoreleasing *)error
 {
-    CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication]
-                                                   delegate];
-    
     // Check that no folder with the same path has the same name
-    CBLQuery *pathQuery = [[appDelegate.database viewNamed:@"byPath"] createQuery];
+    CBLQuery *pathQuery = [[[CCDBManager sharedInstance].database viewNamed:@"byPath"] createQuery];
     pathQuery.keys = @[self.path];
     [pathQuery runAsync:^(CBLQueryEnumerator *rowsEnum, NSError *error){
         for (CBLQueryRow *row in rowsEnum) {
@@ -89,7 +86,7 @@
                                    @"docType" : @"Folder"
                                    };
         
-        CBLDocument *doc = [appDelegate.database createDocument];
+        CBLDocument *doc = [[CCDBManager sharedInstance].database createDocument];
         [doc putProperties:contents error:&error];
     }];
 }

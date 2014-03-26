@@ -8,7 +8,6 @@
 
 #import "SWRevealViewController.h"
 
-#import "CCAppDelegate.h"
 #import "CCMenuViewController.h"
 
 @interface CCMenuViewController ()

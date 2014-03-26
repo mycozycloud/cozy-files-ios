@@ -8,9 +8,9 @@
 
 #import <CouchbaseLite/CouchbaseLite.h>
 
-#import "CCAppDelegate.h"
 #import "CCConstants.h"
 #import "CCErrorHandler.h"
+#import "CCDBManager.h"
 #import "CCFileViewerViewController.h"
 #import "CCEditionViewController.h"
 #import "CCFolderCreationViewController.h"
@@ -43,11 +43,8 @@ UIActionSheetDelegate>
         self.title = @"Fichiers";
     }
     
-    CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication]
-                                                   delegate];
-    
     // TableView and TableSource setup
-    CBLView *pathView = [appDelegate.database viewNamed:@"byPath"];
+    CBLView *pathView = [[CCDBManager sharedInstance].database viewNamed:@"byPath"];
     CBLLiveQuery *query = [[pathView createQuery] asLiveQuery];
     query.keys = self.path ? @[self.path] : @[@""]; // empty path is root
     self.tableSource = [[CBLUITableSource alloc] init];
@@ -81,21 +78,19 @@ UIActionSheetDelegate>
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication]
-                                                   delegate];
     // ProgressView setup for replication monitoring
-    [appDelegate.push addObserver:self
+    [[CCDBManager sharedInstance].push addObserver:self
                        forKeyPath:@"completedChangesCount"
                           options:0
                           context:NULL];
-    [appDelegate.pull addObserver:self
+    [[CCDBManager sharedInstance].pull addObserver:self
                        forKeyPath:@"completedChangesCount"
                           options:0
                           context:NULL];
     
     // Basic check to know if there's a need to display the connection screen
     NSString *remoteID = [[NSUserDefaults standardUserDefaults]
-                          objectForKey:kRemoteIDKey];
+                          objectForKey:[ccRemoteIDKey copy]];
     if (!remoteID) {
         [self performSegueWithIdentifier:@"ShowConnection" sender:nil];
     }
@@ -103,11 +98,9 @@ UIActionSheetDelegate>
 
 - (void)viewDidDisappear:(BOOL)animated
 {
-    CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication]
-                                                   delegate];
     // End of replication monitoring
-    [appDelegate.push removeObserver:self forKeyPath:@"completedChangesCount"];
-    [appDelegate.pull removeObserver:self forKeyPath:@"completedChangesCount"];
+    [[CCDBManager sharedInstance].push removeObserver:self forKeyPath:@"completedChangesCount"];
+    [[CCDBManager sharedInstance].pull removeObserver:self forKeyPath:@"completedChangesCount"];
 }
 
 - (void)didReceiveMemoryWarning
@@ -190,11 +183,11 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
                         change:(NSDictionary *)change context:(void *)context
 {
-    CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication] delegate];
-    
-    if (object == appDelegate.pull || object == appDelegate.push) {
-        unsigned completed = appDelegate.pull.completedChangesCount + appDelegate.push.completedChangesCount;
-        unsigned total = appDelegate.pull.changesCount + appDelegate.push.changesCount;
+    if (object == [CCDBManager sharedInstance].pull || object == [CCDBManager sharedInstance].push) {
+        unsigned completed = [CCDBManager sharedInstance].pull.completedChangesCount +
+                        [CCDBManager sharedInstance].push.completedChangesCount;
+        unsigned total = [CCDBManager sharedInstance].pull.changesCount +
+                        [CCDBManager sharedInstance].push.changesCount;
         if (total > 0 && completed < total) {
             [self.progressView setHidden:NO];
             [self.progressView setProgress: (completed / (float)total)];
@@ -242,22 +235,19 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSLog(@"DELETE RECURSIVELY : %@", [doc.properties valueForKey:@"name"]);
     
-    CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication]
-                                                   delegate];
-    
     // File case
     if ([[doc.properties valueForKey:@"docType"] isEqualToString:@"File"]) {
         // Just delete the file and its binary since it's not a folder
         NSString *binaryID = [[[doc.properties valueForKey:@"binary"]
                                valueForKey:@"file"] valueForKey:@"id"];
-        CBLDocument *binary = [appDelegate.database documentWithID:binaryID];
+        CBLDocument *binary = [[CCDBManager sharedInstance].database documentWithID:binaryID];
         [binary deleteDocument:error];
         [doc deleteDocument:error];
         return;
     }
     
     // Folder case
-    CBLQuery *query = [[appDelegate.database viewNamed:@"byPath"] createQuery];
+    CBLQuery *query = [[[CCDBManager sharedInstance].database viewNamed:@"byPath"] createQuery];
     NSString *path = [NSString stringWithFormat:@"%@/%@",
                       [doc.properties valueForKey:@"path"],
                       [doc.properties valueForKey:@"name"]];
@@ -274,7 +264,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
                 // Just delete the file and its binary since it's not a folder
                 NSString *binaryID = [[[doc.properties valueForKey:@"binary"]
                                        valueForKey:@"file"] valueForKey:@"id"];
-                CBLDocument *binary = [appDelegate.database documentWithID:binaryID];
+                CBLDocument *binary = [[CCDBManager sharedInstance].database documentWithID:binaryID];
                 [binary deleteDocument:&error];
                 [child deleteDocument:&error];
             } else { // It's a folder, so be careful with its children
@@ -339,10 +329,8 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
 
 - (void)filterContentForSearchText:(NSString *)searchText
 {
-    CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication]
-                                                   delegate];
     // Query the database for the docs having searchText in their names
-    CBLView *nameView = [appDelegate.database viewNamed:@"byName"];
+    CBLView *nameView = [[CCDBManager sharedInstance].database viewNamed:@"byName"];
     CBLLiveQuery *query = [[nameView createQuery] asLiveQuery];
     query.keys = @[searchText];
     self.tableSource.query = query;
@@ -359,10 +347,8 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
 {
-    CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication]
-                                                   delegate];
     // Cancel clicked, so reinitialize
-    CBLView *nameView = [appDelegate.database viewNamed:@"byPath"];
+    CBLView *nameView = [[CCDBManager sharedInstance].database viewNamed:@"byPath"];
     CBLLiveQuery *query = [[nameView createQuery] asLiveQuery];
     query.keys = self.path ? @[self.path] : @[@""]; // empty path is root
     self.tableSource.query = query;

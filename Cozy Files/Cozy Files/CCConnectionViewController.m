@@ -6,9 +6,9 @@
 //  Copyright (c) 2013 CozyCloud. All rights reserved.
 //
 
-#import "CCAppDelegate.h"
 #import "CCConstants.h"
 #import "CCErrorHandler.h"
+#import "CCDBManager.h"
 #import "CCConnectionViewController.h"
 
 @interface CCConnectionViewController () <NSURLConnectionDataDelegate>
@@ -74,8 +74,6 @@
                                       cozyPassword:(NSString *)cozyPassword
                                         remoteName:(NSString *)remoteName
 {
-    CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication] delegate];
-    
     // Preparing the request
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:
                                     [NSURL URLWithString:
@@ -153,7 +151,7 @@
                                       [resp valueForKey:@"password"],
                                       [resp valueForKey:@"id"]);
                                 
-                                [appDelegate setupReplicationWithCozyURLString:
+                                [[CCDBManager sharedInstance] setupReplicationWithCozyURLString:
                                                     self.cozyUrlTextField.text
                                         remoteLogin:[resp valueForKey:@"login"]
                                     remotePassword:[resp valueForKey:@"password"]

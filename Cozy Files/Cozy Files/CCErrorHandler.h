@@ -10,6 +10,7 @@
 
 // Error messages
 static const NSString *ccErrorDefault =  @"Une erreur s'est produite";
+static const NSString *ccErrorDBAccess =  @"L'app n'a pas pu accéder à la base de données";
 
 @interface CCErrorHandler : NSObject <UIAlertViewDelegate>
 

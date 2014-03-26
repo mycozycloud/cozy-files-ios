@@ -16,7 +16,6 @@
 #define kCornerRadius 5.0
 
 // Preferences constants
-#define kRemoteIDKey @"cozyFilesRemoteID"
-
+static const NSString *ccRemoteIDKey = @"cozyFilesRemoteID";
 
 #endif
