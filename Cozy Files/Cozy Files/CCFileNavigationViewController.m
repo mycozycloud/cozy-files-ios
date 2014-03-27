@@ -22,7 +22,13 @@ UIActionSheetDelegate>
 - (void)setAppearance;
 @property (strong, nonatomic) CBLQueryRow *rowToDelete;
 - (void)showDeleteAlert;
-- (void)deleteRecursively:(CBLDocument *)doc error:(NSError **)error;
+- (void)deleteRecursively:(CBLDocument *)doc error:(NSError *__autoreleasing*)error;
+/*! Deletes a document by removing the fields "name" and "path"
+ * and adding the field "_deleted":true.
+ * \param doc The document to delete
+ * \param error An error which should be handled by the caller
+ */
+- (void)deleteDoc:(CBLDocument *)doc error:(NSError *__autoreleasing*)error;
 - (void)showActions;
 - (void)filterContentForSearchText:(NSString *)searchText;
 @end
@@ -230,7 +236,16 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 
 #pragma mark - Document Deletion
 
-- (void)deleteRecursively:(CBLDocument *)doc error:(NSError **)error
+- (void)deleteDoc:(CBLDocument *)doc error:(NSError *__autoreleasing *)error
+{
+    NSMutableDictionary *contents = [doc.properties mutableCopy];
+    [contents removeObjectForKey:@"name"];
+    [contents removeObjectForKey:@"path"];
+    [contents setObject:[NSNumber numberWithBool:YES] forKey:@"_deleted"];
+    [doc putProperties:contents error:error];
+}
+
+- (void)deleteRecursively:(CBLDocument *)doc error:(NSError *__autoreleasing*)error
 {
     NSLog(@"DELETE RECURSIVELY : %@", [doc.properties valueForKey:@"name"]);
     
@@ -240,8 +255,8 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
         NSString *binaryID = [[[doc.properties valueForKey:@"binary"]
                                valueForKey:@"file"] valueForKey:@"id"];
         CBLDocument *binary = [[CCDBManager sharedInstance].database documentWithID:binaryID];
-        [binary deleteDocument:error];
-        [doc deleteDocument:error];
+        [self deleteDoc:binary error:error];
+        [self deleteDoc:doc error:error];
         return;
     }
     
@@ -264,15 +279,15 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
                 NSString *binaryID = [[[doc.properties valueForKey:@"binary"]
                                        valueForKey:@"file"] valueForKey:@"id"];
                 CBLDocument *binary = [[CCDBManager sharedInstance].database documentWithID:binaryID];
-                [binary deleteDocument:&error];
-                [child deleteDocument:&error];
+                [self deleteDoc:binary error:&error];
+                [self deleteDoc:doc error:&error];
             } else { // It's a folder, so be careful with its children
                 [self deleteRecursively:child error:&error];
             }
         }
         
         // Now it's supposed to be empty, so delete it
-        [doc deleteDocument:&error];
+        [self deleteDoc:doc error:&error];
     }];
 }
 
