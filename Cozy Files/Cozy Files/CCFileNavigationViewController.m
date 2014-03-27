@@ -26,30 +26,37 @@ UISearchBarDelegate, CBLUITableDelegate, UIAlertViewDelegate, UIActionSheetDeleg
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *rootButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *actionButton;
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
+
 /*! Pops back to the root navigation controller.
  */
 - (void)goBackToRoot;
+
 /*! Sets the appearance of the elements of this view controller.
  */
 - (void)setAppearance;
 @property (strong, nonatomic) CBLQueryRow *rowToDelete;
+
 /*! Displays an alert view asking the user to confirm the deletion.
  */
 - (void)showDeleteAlert;
+
 /*! Deletes recursively a document and all its children if it is a folder.
  * \param doc The document to delete
  * \param error An error handled by the caller
  */
 - (void)deleteRecursively:(CBLDocument *)doc error:(NSError *__autoreleasing*)error;
+
 /*! Deletes a document by removing the fields "name" and "path"
  * and adding the field "_deleted":true.
  * \param doc The document to delete
  * \param error An error which should be handled by the caller
  */
 - (void)deleteDoc:(CBLDocument *)doc error:(NSError *__autoreleasing*)error;
+
 /*! Displays an action sheet with the options to create, rename or delete a folder.
  */
 - (void)showActions;
+
 /*! Changes the live query with the search query and reloads the views for results.
  * \param searchText The string representing the search query
  */

@@ -14,8 +14,23 @@
 
 
 @interface CCFileViewerViewController ()
+
+@property (weak, nonatomic) IBOutlet UIProgressView *progressView;
+@property (weak, nonatomic) IBOutlet UIImageView *imgView;
+@property (weak, nonatomic) IBOutlet UITextView *txtView;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *trashButton;
+
 @property (strong, nonatomic) CBLReplication *pull;
+
+/*! Gets the binary file attachment and displays the content according to the
+ * file extension.
+ * \param binary The binary document holding the file to display
+ */
 - (void)displayDataWithBinary:(CBLDocument *)binary;
+
+/*! Sets the property isToRemove to YES and pops the view controller which
+ * purges the binary document.
+ */
 - (void)removeBinary;
 @property (assign, nonatomic) BOOL isToRemove;
 @end
@@ -72,6 +87,7 @@
 
         if (error) {
             NSLog(@"ERREUR - %@", error);
+#warning - TODO ERROR
         }
     
         self.pull = [[CCDBManager sharedInstance] setupFileReplicationForBinaryID:binaryID];
@@ -103,11 +119,12 @@
         
         if (error) {
             [[CCErrorHandler sharedInstance] presentError:error
-                withMessage:@"Une erreur est survenue"
+                withMessage:[ccErrorDefault copy]
                 fatal:NO];
         }
-        
     }
+    
+    [self.pull removeObserver:self forKeyPath:@"completedChangesCount"];
 }
 
 - (void)didReceiveMemoryWarning
@@ -149,7 +166,8 @@
     NSString *extension = [[self.title componentsSeparatedByString:@"."] lastObject];
     
     // Display content based on file extension
-    if ([extension isEqualToString:@"png"]) {
+    if ([extension isEqualToString:@"png"]
+        || [extension isEqualToString:@"jpg"]) {
         [self.imgView setImage:[UIImage imageWithData:att.content]];
         self.imgView.hidden = NO;
     } else if ([extension isEqualToString:@"txt"]) {

@@ -28,9 +28,11 @@
 - (void)sendGetCredentialsRequestWithCozyURLString:(NSString *)cozyURL
                                       cozyPassword:(NSString *)cozyPassword
                                         remoteName:(NSString *)remoteName;
+
 /*! Enables or disables the connection form.
  */
 - (void)enableForm:(BOOL)enabled;
+
 /*! Sets the appearance of the elements of this view controller.
  */
 - (void)setAppearance;
