@@ -84,7 +84,7 @@
     
     // Body
     NSDictionary *requestData = [NSDictionary dictionaryWithObjectsAndKeys:remoteName,
-                                 @"login", @"type", @"phone", nil];
+                                 @"login", @"phone", @"type", nil];
     // Into JSON
     NSError *error;
     NSData *postData = [NSJSONSerialization dataWithJSONObject:requestData

@@ -35,8 +35,6 @@ UIActionSheetDelegate>
 {
     [super viewDidLoad];
     
-    self.tableView.delegate = self;
-    
     if (self.path) {
         self.title = [[self.path componentsSeparatedByString:@"/"] lastObject];
     } else {
@@ -52,6 +50,7 @@ UIActionSheetDelegate>
     self.tableSource.tableView = self.tableView;
     self.tableSource.labelProperty = @"name";
     self.tableView.dataSource = self.tableSource;
+    self.tableView.delegate = self;
     
     // Menu reveal
     [self.menuButton setTarget:self.revealViewController];
