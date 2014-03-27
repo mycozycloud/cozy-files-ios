@@ -8,13 +8,6 @@
 
 @import UIKit;
 
-@interface CCConnectionViewController : UIViewController <UITextFieldDelegate>
-
-@property (weak, nonatomic) IBOutlet UITextField *cozyUrlTextField;
-@property (weak, nonatomic) IBOutlet UITextField *cozyMDPTextField;
-@property (weak, nonatomic) IBOutlet UITextField *remoteNameTextField;
-@property (weak, nonatomic) IBOutlet UILabel *welcomeLabel;
-- (IBAction)okPressed:(id)sender;
-@property (weak, nonatomic) IBOutlet UIButton *connectionButton;
+@interface CCConnectionViewController : UIViewController
 
 @end

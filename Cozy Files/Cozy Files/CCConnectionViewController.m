@@ -11,14 +11,28 @@
 #import "CCDBManager.h"
 #import "CCConnectionViewController.h"
 
-@interface CCConnectionViewController () <NSURLConnectionDataDelegate>
+@interface CCConnectionViewController () <UITextFieldDelegate>
 
+@property (weak, nonatomic) IBOutlet UITextField *cozyUrlTextField;
+@property (weak, nonatomic) IBOutlet UITextField *cozyMDPTextField;
+@property (weak, nonatomic) IBOutlet UITextField *remoteNameTextField;
+@property (weak, nonatomic) IBOutlet UILabel *welcomeLabel;
+- (IBAction)okPressed:(id)sender;
+@property (weak, nonatomic) IBOutlet UIButton *connectionButton;
+
+/*! Sends a request to get the credentials necessary to initiate the replications.
+ * \param cozyURL The URL of the cozy
+ * \param cozyPassword The password for this cozy
+ * \param remoteName The name of the new device to sync
+ */
 - (void)sendGetCredentialsRequestWithCozyURLString:(NSString *)cozyURL
                                       cozyPassword:(NSString *)cozyPassword
                                         remoteName:(NSString *)remoteName;
-
+/*! Enables or disables the connection form.
+ */
 - (void)enableForm:(BOOL)enabled;
-
+/*! Sets the appearance of the elements of this view controller.
+ */
 - (void)setAppearance;
 @end
 
