@@ -83,7 +83,6 @@
            newPath, [doc.properties valueForKey:@"name"]];
     }
     
-//    CBLQueryEnumerator *rowsEnum = [query rows:error];
     [query runAsync:^(CBLQueryEnumerator *rowsEnum, NSError *error){
         for (CBLQueryRow *row in rowsEnum) {
             CBLDocument *child = row.document;
