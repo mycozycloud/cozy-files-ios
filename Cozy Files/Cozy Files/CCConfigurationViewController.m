@@ -28,6 +28,11 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
+    // Disable default swipe to go back
+    if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
+        self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    }
+    
     // Menu reveal
     [self.menuButton setTarget: self.revealViewController];
     [self.menuButton setAction: @selector(revealToggle:)];

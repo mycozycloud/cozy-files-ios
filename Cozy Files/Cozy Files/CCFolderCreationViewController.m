@@ -34,6 +34,11 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
+    // Disable default swipe to go back
+    if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
+        self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    }
+    
     // Text Field
     self.folderNameTextField.delegate = self;
     [self.folderNameTextField setEnabled:YES];

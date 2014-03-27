@@ -41,6 +41,12 @@ UIActionSheetDelegate>
 {
     [super viewDidLoad];
     
+    // Disable default swipe to go back
+    if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
+        self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    }
+    
+    // Title
     if (self.path) {
         self.title = [[self.path componentsSeparatedByString:@"/"] lastObject];
     } else {

@@ -36,6 +36,11 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
+    // Disable default swipe to go back
+    if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
+        self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    }
+    
     [self.imgView setHidden:YES];
     [self.txtView setHidden:YES];
     

@@ -29,6 +29,11 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
+    // Disable default swipe to go back
+    if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
+        self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    }
+    
     self.cozyUrlTextField.delegate = self;
     self.cozyMDPTextField.delegate = self;
     self.remoteNameTextField.delegate = self;
