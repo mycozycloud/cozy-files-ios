@@ -185,7 +185,7 @@
                                     <textInputTraits key="textInputTraits" autocorrectionType="no"/>
                                 </searchBar>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="1G3-py-27K" style="IBUITableViewCellStyleDefault" id="aE2-WW-KUR">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="FileCell" textLabel="1G3-py-27K" style="IBUITableViewCellStyleDefault" id="aE2-WW-KUR">
                                         <rect key="frame" x="0.0" y="130" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="aE2-WW-KUR" id="tCm-6a-MEV">
