@@ -8,10 +8,8 @@
 
 @import UIKit;
 
-@interface CCFolderCreationViewController : UIViewController <UITextFieldDelegate>
+@interface CCFolderCreationViewController : UIViewController 
+
 @property (strong, nonatomic) NSString *path;
-@property (weak, nonatomic) IBOutlet UITextField *folderNameTextField;
-- (IBAction)createPressed:(id)sender;
-- (IBAction)cancelPressed:(id)sender;
 
 @end

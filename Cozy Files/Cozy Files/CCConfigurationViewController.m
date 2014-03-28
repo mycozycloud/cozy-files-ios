@@ -10,6 +10,8 @@
 
 @interface CCConfigurationViewController ()
 
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *menuButton;
+
 @end
 
 @implementation CCConfigurationViewController

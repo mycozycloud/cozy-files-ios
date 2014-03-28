@@ -11,6 +11,5 @@
 #import "SWRevealViewController.h"
 
 @interface CCConfigurationViewController : UIViewController
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *menuButton;
 
 @end

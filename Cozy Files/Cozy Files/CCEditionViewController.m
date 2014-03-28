@@ -13,10 +13,24 @@
 #import "CCDBManager.h"
 #import "CCEditionViewController.h"
 
-@interface CCEditionViewController ()
+@interface CCEditionViewController () <UITextFieldDelegate>
+
+@property (weak, nonatomic) IBOutlet UITextField *docNameTextField;
+- (IBAction)renamePressed:(id)sender;
+- (IBAction)cancelPressed:(id)sender;
+
+/*! Sets the appearance of the elements of this view controller.
+ */
 - (void)setAppearance;
+
+/*! Renames a document and does it recursively beginning by updating the path 
+ * of the deepest children when it is a folder.
+ * \param doc The document to rename
+ * \param newPath The path of the document to rename
+ * \param error An error which is handled by the caller
+ */
 - (void)renameRecursively:(CBLDocument *)doc newPath:(NSString *)newPath
-                    error:(NSError **)error;
+                    error:(NSError *__autoreleasing *)error;
 @end
 
 @implementation CCEditionViewController
@@ -95,7 +109,7 @@
             if ([[child.properties valueForKey:@"docType"] isEqualToString:@"File"]) {
                 NSLog(@"EDIT PATH FILE : %@", [child.properties valueForKey:@"name"]);
                 // Just edit the path of the file since it's not a folder
-                // Copy the document
+                // Copy the document properties
                 NSMutableDictionary *contents = [child.properties mutableCopy];
                 // Change its path
                 [contents setObject:newNewPath forKey: @"path"];

@@ -44,14 +44,14 @@ UISearchBarDelegate, CBLUITableDelegate, UIAlertViewDelegate, UIActionSheetDeleg
  * \param doc The document to delete
  * \param error An error handled by the caller
  */
-- (void)deleteRecursively:(CBLDocument *)doc error:(NSError *__autoreleasing*)error;
+- (void)deleteRecursively:(CBLDocument *)doc error:(NSError *__autoreleasing *)error;
 
 /*! Deletes a document by removing the fields "name" and "path"
  * and adding the field "_deleted":true.
  * \param doc The document to delete
  * \param error An error which should be handled by the caller
  */
-- (void)deleteDoc:(CBLDocument *)doc error:(NSError *__autoreleasing*)error;
+- (void)deleteDoc:(CBLDocument *)doc error:(NSError *__autoreleasing *)error;
 
 /*! Displays an action sheet with the options to create, rename or delete a folder.
  */

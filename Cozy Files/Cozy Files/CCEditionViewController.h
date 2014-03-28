@@ -10,9 +10,8 @@
 
 @class CBLDocument;
 
-@interface CCEditionViewController : UIViewController <UITextFieldDelegate>
+@interface CCEditionViewController : UIViewController
+
 @property (strong, nonatomic) CBLDocument *doc;
-@property (weak, nonatomic) IBOutlet UITextField *docNameTextField;
-- (IBAction)renamePressed:(id)sender;
-- (IBAction)cancelPressed:(id)sender;
+
 @end

@@ -13,9 +13,21 @@
 #import "CCDBManager.h"
 #import "CCFolderCreationViewController.h"
 
-@interface CCFolderCreationViewController ()
+@interface CCFolderCreationViewController () <UITextFieldDelegate>
+
+@property (weak, nonatomic) IBOutlet UITextField *folderNameTextField;
+- (IBAction)createPressed:(id)sender;
+- (IBAction)cancelPressed:(id)sender;
+
+/*! Sets the appearance of the elements of this view controller.
+ */
 - (void)setAppearance;
-- (void)createFolderWithName:(NSString *)name error:(NSError **)error;
+
+/*! Creates a folder with the current path.
+ * \param name A string representing the name of the folder to create
+ * \param error An error handled by the caller
+ */
+- (void)createFolderWithName:(NSString *)name error:(NSError *__autoreleasing *)error;
 @end
 
 @implementation CCFolderCreationViewController
