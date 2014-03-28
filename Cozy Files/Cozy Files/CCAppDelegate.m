@@ -14,6 +14,7 @@
 #import "CCConstants.h"
 #import "CCErrorHandler.h"
 #import "CCDBManager.h"
+#import "CCPhotoImporter.h"
 
 @interface CCAppDelegate ()
 // Used for UX customization
@@ -27,7 +28,13 @@
 {
     // Init or create the database
     [[CCDBManager sharedInstance] initDB];
-        
+    
+    // Start the photo import if the user is connected
+    if ([[NSUserDefaults standardUserDefaults]
+         objectForKey:[ccRemoteIDKey copy]]) {
+        [[CCPhotoImporter sharedInstance] start];
+    }
+    
     // Customize the appearance
     [self setAppearance];
     

@@ -136,6 +136,7 @@ static const NSString *ccDBName = @"cozyios";
     
     // Remember remoteID for later use
     [[NSUserDefaults standardUserDefaults] setObject:remoteID forKey:[ccRemoteIDKey copy]];
+    [[NSUserDefaults standardUserDefaults] setObject:remoteLogin forKey:[ccRemoteLoginKey copy]];
     [[NSUserDefaults standardUserDefaults] setObject:cozyURL forKey:[ccCozyURLKey copy]];
     [[NSUserDefaults standardUserDefaults] synchronize];
     

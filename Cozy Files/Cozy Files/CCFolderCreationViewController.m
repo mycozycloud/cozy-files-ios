@@ -102,7 +102,7 @@
                                    @"path" : self.path,
                                    @"docType" : @"Folder"
                                    };
-        
+
         CBLDocument *doc = [[CCDBManager sharedInstance].database createDocument];
         [doc putProperties:contents error:&error];
     }];

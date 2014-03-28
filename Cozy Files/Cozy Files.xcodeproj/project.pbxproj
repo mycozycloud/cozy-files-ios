@@ -28,6 +28,8 @@
 		5C4F831C181813C400CCA08E /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C4F831B181813C400CCA08E /* libsqlite3.dylib */; };
 		5C4F831E181813D000CCA08E /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C4F831D181813D000CCA08E /* libz.dylib */; };
 		5C627821182BE25100C43EB4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5C4F82F01818125700CCA08E /* Main.storyboard */; };
+		5C68B6D118E59172004F5392 /* CCPhotoImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C68B6D018E59172004F5392 /* CCPhotoImporter.m */; };
+		5C68B6D318E597A5004F5392 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C68B6D218E597A5004F5392 /* AssetsLibrary.framework */; };
 		5C7768CA18E1A252000EBE47 /* CouchbaseLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C7768C818E19CC7000EBE47 /* CouchbaseLite.framework */; };
 		5C7768CC18E1A260000EBE47 /* CouchbaseLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C7768CB18E1A260000EBE47 /* CouchbaseLite.framework */; };
 		5C7768D118E1D8F6000EBE47 /* CCErrorHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7768D018E1D8F6000EBE47 /* CCErrorHandler.m */; };
@@ -79,6 +81,9 @@
 		5C4F8319181813B900CCA08E /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		5C4F831B181813C400CCA08E /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		5C4F831D181813D000CCA08E /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		5C68B6CF18E59172004F5392 /* CCPhotoImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCPhotoImporter.h; sourceTree = "<group>"; };
+		5C68B6D018E59172004F5392 /* CCPhotoImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCPhotoImporter.m; sourceTree = "<group>"; };
+		5C68B6D218E597A5004F5392 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		5C7768C818E19CC7000EBE47 /* CouchbaseLite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CouchbaseLite.framework; path = "../../../utils/objective-c/couchbase-lite-community-ios_1.0-beta3/CouchbaseLite.framework"; sourceTree = "<group>"; };
 		5C7768CB18E1A260000EBE47 /* CouchbaseLite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CouchbaseLite.framework; path = "../../../utils/objective-c/couchbase-lite-community-ios_1.0-beta3/64bit/CouchbaseLite.framework"; sourceTree = "<group>"; };
 		5C7768CF18E1D8F6000EBE47 /* CCErrorHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCErrorHandler.h; sourceTree = "<group>"; };
@@ -105,6 +110,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5C68B6D318E597A5004F5392 /* AssetsLibrary.framework in Frameworks */,
 				5C7768CC18E1A260000EBE47 /* CouchbaseLite.framework in Frameworks */,
 				5C7768CA18E1A252000EBE47 /* CouchbaseLite.framework in Frameworks */,
 				5C4F831E181813D000CCA08E /* libz.dylib in Frameworks */,
@@ -153,6 +159,7 @@
 		5C4F82DD1818125700CCA08E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				5C68B6D218E597A5004F5392 /* AssetsLibrary.framework */,
 				5C7768CB18E1A260000EBE47 /* CouchbaseLite.framework */,
 				5C7768C818E19CC7000EBE47 /* CouchbaseLite.framework */,
 				5C4F831D181813D000CCA08E /* libz.dylib */,
@@ -243,6 +250,8 @@
 				5C7768D018E1D8F6000EBE47 /* CCErrorHandler.m */,
 				5C8F84EF18E2DC9000FD19FB /* CCDBManager.h */,
 				5C8F84F018E2DC9000FD19FB /* CCDBManager.m */,
+				5C68B6CF18E59172004F5392 /* CCPhotoImporter.h */,
+				5C68B6D018E59172004F5392 /* CCPhotoImporter.m */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -366,6 +375,7 @@
 				5C066854183E2ECC00F1A329 /* CCFolderCreationViewController.m in Sources */,
 				5C4F82F51818125700CCA08E /* CCConnectionViewController.m in Sources */,
 				5CE23AE4182A766700A1D5D8 /* CCRevealViewController.m in Sources */,
+				5C68B6D118E59172004F5392 /* CCPhotoImporter.m in Sources */,
 				5C3E5154183A5F58006C9832 /* CCEditionViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -9,6 +9,7 @@
 #import "CCConstants.h"
 #import "CCErrorHandler.h"
 #import "CCDBManager.h"
+#import "CCPhotoImporter.h"
 #import "CCConnectionViewController.h"
 
 @interface CCConnectionViewController () <UITextFieldDelegate>
@@ -20,7 +21,8 @@
 - (IBAction)okPressed:(id)sender;
 @property (weak, nonatomic) IBOutlet UIButton *connectionButton;
 
-/*! Sends a request to get the credentials necessary to initiate the replications.
+/*! Sends a request to get the credentials necessary to initiate the replications
+ * and photos import.
  * \param cozyURL The URL of the cozy
  * \param cozyPassword The password for this cozy
  * \param remoteName The name of the new device to sync
@@ -166,7 +168,7 @@
                                     fatal:NO];
                                 self.welcomeLabel.text = @"Veuillez vous connecter";
                                 [self enableForm:YES];
-                            } else { // No error, then should setup replications
+                            } else { // No error, then should setup replications and photo import
                                 NSLog(@"RESPONSE %@ - %@ - %@",
                                       [resp valueForKey:@"login"],
                                       [resp valueForKey:@"password"],
@@ -177,6 +179,8 @@
                                         remoteLogin:[resp valueForKey:@"login"]
                                     remotePassword:[resp valueForKey:@"password"]
                                             remoteID:[resp valueForKey:@"id"]];
+                                
+                                [[CCPhotoImporter sharedInstance] start];
                                 
                                 [self dismissViewControllerAnimated:YES
                                                          completion:nil];
