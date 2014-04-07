@@ -87,49 +87,58 @@
     ALAssetsLibrary *assetsLib = [ALAssetsLibrary new];
     [assetsLib enumerateGroupsWithTypes:ALAssetsGroupAll
         usingBlock:^(ALAssetsGroup *group, BOOL *stop){
-            NSLog(@"%@", group.description);
+            NSLog(@"GROUP %@", group.description);
             if (group) {
                 [group setAssetsFilter:[ALAssetsFilter allPhotos]];
                 [group enumerateAssetsUsingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop){
-                    if (result) {
-//                        dispatch_async(dispatch_get_main_queue(), ^{
-                            NSLog(@"ASSET %@", result);
-//                            NSError *error;
-//                            ALAssetRepresentation *representation = result.defaultRepresentation;
-//                            NSString *path = [[NSUserDefaults standardUserDefaults]
-//                                              objectForKey:[ccRemoteLoginKey copy]];
-//                            
-//                            NSLog(@"PATH %@", path);
-//                            
-//                            NSDictionary *binaryContents = @{@"docType" : @"Binary"};
-//                            CBLDocument *binary = [[CCDBManager sharedInstance].database createDocument];
-//                            [binary putProperties:binaryContents error:&error];
-//                            CBLUnsavedRevision *rev = [binary newRevision];
-//                            
-//                            NSData *imageData = UIImagePNGRepresentation([UIImage imageWithCGImage:representation.fullResolutionImage]);
-//                            [rev setAttachmentNamed:representation.filename withContentType:@"image/png" content:imageData];
-//                            [rev save:&error];
-//                            
-//                            NSDictionary *fileContents =
-//                            @{@"name" : representation.filename,
-//                              @"path" : path,
-//                              @"docType" : @"File",
-//                              @"binary" : @{
-//                                      @"file" : @{
-//                                              @"id" : [binary.properties objectForKey:@"_id"],
-//                                              @"rev" : [binary.properties objectForKey:@"_rev"]
-//                                              }
-//                                      }
-//                              };
-//                            CBLDocument *doc = [[CCDBManager sharedInstance].database createDocument];
-//                            [doc putProperties:fileContents error:&error];
-//                            
-//                            if (error) {
-//#warning HANDLE ERROR
-//                                NSLog(@"ERROR %@", error);
-//                            }
-//
-//                        });
+                    if ([[result valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypePhoto]) {
+                        NSLog(@"ASSET %@", result);
+                        
+                        ALAssetRepresentation *representation = result.defaultRepresentation;
+                        NSString *filename = representation.filename;
+                        NSData *imageData = UIImageJPEGRepresentation([UIImage imageWithCGImage:representation.fullResolutionImage], 1.0);
+                        
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            NSError *error;
+                            NSDictionary *binaryContents = @{@"docType" : @"Binary"};
+                            CBLDocument *binary = [[CCDBManager sharedInstance].database createDocument];
+                            [binary putProperties:binaryContents error:&error];
+                            CBLUnsavedRevision *rev = [binary newRevision];
+                            
+                            
+                            [rev setAttachmentNamed:@"file"
+                                    withContentType:@"image/jpeg"
+                                            content:imageData];
+                            CBLSavedRevision *savedRev = [rev save:&error];
+                            
+                            NSString *path = [NSString stringWithFormat:@"/%@",[[NSUserDefaults standardUserDefaults]
+                                objectForKey:[ccRemoteLoginKey copy]]];
+                            
+                            NSDictionary *fileContents =
+                            @{@"name" : filename,
+                              @"path" : path,
+                              @"docType" : @"File",
+                              @"binary" : @{
+                                      @"file" : @{
+                                              @"id" : [savedRev.properties objectForKey:@"_id"],
+                                              @"rev" : [savedRev.properties objectForKey:@"_rev"]
+                                              }
+                                      }
+                              };
+                            
+                            CBLDocument *doc = [[CCDBManager sharedInstance].database createDocument];
+                            [doc putProperties:fileContents error:&error];
+                            
+                            if (error) {
+#warning HANDLE ERROR
+                                NSLog(@"ERROR %@", error);
+                            } else {
+                                // Start a one shot replication to push the binary to cozy
+                                CBLReplication *rep = [[CCDBManager sharedInstance] setupFileReplicationForBinaryID:[savedRev.properties objectForKey:@"_id"] pull:NO];
+                                [rep addObserver:self forKeyPath:@"completedChangesCount" options:0 context:NULL];
+                            }
+
+                        });
                     }
                 }];
             }
@@ -138,6 +147,35 @@
 #warning HANDLE ERROR
             NSLog(@"ERROR %@", error);
         }];
+}
+
+#pragma mark - Replication Monitoring
+
+- (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
+                         change:(NSDictionary *)change context:(void *)context
+{
+    if ([object isKindOfClass:[CBLReplication class]]) {
+        CBLReplication *rep = (CBLReplication *)object;
+        // PUSH
+        if (rep.changesCount > 0 && rep.completedChangesCount < rep.changesCount) {
+            NSLog(@"BIN PUSH REPLICATION COMPLETION : %f%%",
+                      floorf((rep.completedChangesCount /
+                              (float)rep.changesCount)*100));
+        } else {
+            NSLog(@"BIN PUSH REPLICATION COMPLETION DONE");
+            [rep removeObserver:self forKeyPath:@"completedChangesCount"];
+            for (NSString *binID in rep.documentIDs) {
+                NSError *error;
+                CBLDocument *binary = [[CCDBManager sharedInstance].database documentWithID:binID];
+                [binary purgeDocument:&error];
+                
+                if (error) {
+#warning HANDLE ERROR
+                    NSLog(@"ERROR %@", error);
+                }
+            }
+        }
+    }
 }
 
 @end

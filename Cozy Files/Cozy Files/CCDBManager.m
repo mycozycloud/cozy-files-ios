@@ -173,16 +173,18 @@ static const NSString *ccDBName = @"cozyios";
 }
 
 - (CBLReplication *)setupFileReplicationForBinaryID:(NSString *)binaryID
+    pull:(BOOL)isPull
 {
-    // Set Pull replication, not continuous but persistent
-    CBLReplication *binPull = [self.database createPullReplication:self.pull.remoteURL];
-    [binPull setDocumentIDs:@[binaryID]];
-    binPull.continuous = NO;
+    // Set replication, not continuous
+    CBLReplication *binRep = isPull ? [self.database createPullReplication:self.pull.remoteURL] :
+        [self.database createPushReplication:self.push.remoteURL];
+    [binRep setDocumentIDs:@[binaryID]];
+    binRep.continuous = NO;
     
     // Start replication
-    [binPull start];
+    [binRep start];
     
-    return binPull;
+    return binRep;
 }
 
 #pragma mark - Replication Monitoring

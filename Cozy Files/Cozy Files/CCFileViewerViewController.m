@@ -90,7 +90,8 @@
 #warning - TODO ERROR
         }
     
-        self.pull = [[CCDBManager sharedInstance] setupFileReplicationForBinaryID:binaryID];
+        self.pull = [[CCDBManager sharedInstance] setupFileReplicationForBinaryID:binaryID
+                                                                             pull:YES];
         
         // Pull monitoring
         [self.pull addObserver:self forKeyPath:@"completedChangesCount" options:0 context:NULL];
@@ -163,14 +164,13 @@
     // Get attachments
     CBLAttachment *att = [[binary.currentRevision attachments] firstObject];
     
-    NSString *extension = [[self.title componentsSeparatedByString:@"."] lastObject];
+    NSString *contentType = [[att.contentType componentsSeparatedByString:@"/"] firstObject];
     
     // Display content based on file extension
-    if ([extension isEqualToString:@"png"]
-        || [extension isEqualToString:@"jpg"]) {
+    if ([contentType isEqualToString:@"image"]) {
         [self.imgView setImage:[UIImage imageWithData:att.content]];
         self.imgView.hidden = NO;
-    } else if ([extension isEqualToString:@"txt"]) {
+    } else if ([contentType isEqualToString:@"text"]) {
         [self.txtView setText:[[NSString alloc] initWithData:att.content
                                         encoding:NSUTF8StringEncoding]];
         self.txtView.hidden = NO;

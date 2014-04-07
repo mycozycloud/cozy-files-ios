@@ -38,10 +38,12 @@
                            remotePassword:(NSString *)remotePassword
                                  remoteID:(NSString *)remoteID;
 
-/*! Replicates a single binary document.
+/*! Replicates a single binary document from/to the cozy to/from the device.
  * \param binaryID The ID of the binary document
+ * \param isPull A boolean signaling if it is a pull or push replication
  * \returns A replication object for the binary document.
  */
-- (CBLReplication *)setupFileReplicationForBinaryID:(NSString *)binaryID;
+- (CBLReplication *)setupFileReplicationForBinaryID:(NSString *)binaryID
+                                               pull:(BOOL)isPull;
 
 @end
