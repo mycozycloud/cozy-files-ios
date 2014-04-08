@@ -19,5 +19,6 @@
 static const NSString *ccRemoteIDKey = @"cozyFilesRemoteID";
 static const NSString *ccRemoteLoginKey = @"cozyFilesRemoteLogin";
 static const NSString *ccCozyURLKey = @"cozyURL";
+static const NSString *ccLastImportDateKey = @"lastImportDate";
 
 #endif

@@ -29,12 +29,6 @@
     // Init or create the database
     [[CCDBManager sharedInstance] initDB];
     
-    // Start the photo import if the user is connected
-    if ([[NSUserDefaults standardUserDefaults]
-         objectForKey:[ccRemoteIDKey copy]]) {
-        [[CCPhotoImporter sharedInstance] start];
-    }
-    
     // Customize the appearance
     [self setAppearance];
     
@@ -77,6 +71,12 @@
      If the application was previously in the background, 
      optionally refresh the user interface.
      */
+    
+    // Start the photo import if the user is connected
+    if ([[NSUserDefaults standardUserDefaults]
+         objectForKey:[ccRemoteIDKey copy]]) {
+        [[CCPhotoImporter sharedInstance] start];
+    }
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application

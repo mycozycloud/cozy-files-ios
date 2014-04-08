@@ -16,7 +16,7 @@
 
 @interface CCPhotoImporter ()
 
-/*! Accesses the photos taken with the phone and imports to the digidisk.
+/*! Accesses the photos taken with the phone and imports them to the digidisk.
  */
 - (void)importPhotos;
 
@@ -48,9 +48,18 @@
 {
     NSLog(@"START IMPORT");
     
+    // Initialize the date reference to old times if it does not already exist
+    // It will be needed for comparison with creation dates of assets
+    // in order to import only those which were not already imported
+    if (![[NSUserDefaults standardUserDefaults] objectForKey:[ccLastImportDateKey copy]]) {
+        [[NSUserDefaults standardUserDefaults] setObject:[NSDate dateWithTimeIntervalSince1970:0] forKey:[ccLastImportDateKey copy]];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    
     switch ([ALAssetsLibrary authorizationStatus]) {
         case ALAuthorizationStatusAuthorized:
             NSLog(@"AUTHORIZED PHOTO IMPORT");
+            // Start import since it is already authorized
             [self importPhotos];
             break;
         case ALAuthorizationStatusNotDetermined: {
@@ -59,9 +68,10 @@
             [assetsLib enumerateGroupsWithTypes:ALAssetsGroupPhotoStream
                     usingBlock:^(ALAssetsGroup *group, BOOL *stop){
                         // The user authorized access, no really need to enumerate
-                        // all groups.
+                        // all groups now.
                         *stop = YES;
-                        // And start importing photos
+                        
+                        // Start importing photos
                         [self importPhotos];
                     }
                     failureBlock:^(NSError *error){
@@ -82,42 +92,61 @@
 
 - (void)importPhotos
 {
-    NSLog(@"IMPORT IMPORT");
+    NSLog(@"IMPORT");
+    
+    // Retrieve last import date for comparison
+    NSDate *lastImportDate = [[NSUserDefaults standardUserDefaults] objectForKey:[ccLastImportDateKey copy]];
     
     ALAssetsLibrary *assetsLib = [ALAssetsLibrary new];
+    // Iterate over groups of assets
     [assetsLib enumerateGroupsWithTypes:ALAssetsGroupAll
         usingBlock:^(ALAssetsGroup *group, BOOL *stop){
-            NSLog(@"GROUP %@", group.description);
             if (group) {
+                // Filter photo only
                 [group setAssetsFilter:[ALAssetsFilter allPhotos]];
+                // Iterate over assets in group
                 [group enumerateAssetsUsingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop){
-                    if ([[result valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypePhoto]) {
+                    // Get creation date of the asset for comparison with the last import date
+                    NSDate *creationDate = [result valueForProperty:ALAssetPropertyDate];
+                    
+                    // If it is a photo created after the last import date,
+                    // then import it to the Digidisk
+                    if ([[result valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypePhoto]
+                        && [lastImportDate compare:creationDate] == NSOrderedAscending) {
                         NSLog(@"ASSET %@", result);
                         
+                        // Retrieve name and image
                         ALAssetRepresentation *representation = result.defaultRepresentation;
                         NSString *filename = representation.filename;
                         NSData *imageData = UIImageJPEGRepresentation([UIImage imageWithCGImage:representation.fullResolutionImage], 1.0);
                         
+                        // Importation to couchbase takes place on the main queue
                         dispatch_async(dispatch_get_main_queue(), ^{
                             NSError *error;
+                            
+                            // Create the binary document
                             NSDictionary *binaryContents = @{@"docType" : @"Binary"};
                             CBLDocument *binary = [[CCDBManager sharedInstance].database createDocument];
                             [binary putProperties:binaryContents error:&error];
                             CBLUnsavedRevision *rev = [binary newRevision];
                             
-                            
+                            // Set attachment to image
                             [rev setAttachmentNamed:@"file"
                                     withContentType:@"image/jpeg"
                                             content:imageData];
                             CBLSavedRevision *savedRev = [rev save:&error];
+                            CBLAttachment *att = savedRev.attachments.firstObject;
+                            
                             
                             NSString *path = [NSString stringWithFormat:@"/%@",[[NSUserDefaults standardUserDefaults]
                                 objectForKey:[ccRemoteLoginKey copy]]];
                             
+                            // Create the file document
                             NSDictionary *fileContents =
                             @{@"name" : filename,
                               @"path" : path,
                               @"docType" : @"File",
+                              @"size" : [NSNumber numberWithInt:(int)att.length],
                               @"binary" : @{
                                       @"file" : @{
                                               @"id" : [savedRev.properties objectForKey:@"_id"],
@@ -126,6 +155,8 @@
                                       }
                               };
                             
+                            
+                            
                             CBLDocument *doc = [[CCDBManager sharedInstance].database createDocument];
                             [doc putProperties:fileContents error:&error];
                             
@@ -133,7 +164,7 @@
 #warning HANDLE ERROR
                                 NSLog(@"ERROR %@", error);
                             } else {
-                                // Start a one shot replication to push the binary to cozy
+                                // Start a one shot replication to push the binary to the digidisk
                                 CBLReplication *rep = [[CCDBManager sharedInstance] setupFileReplicationForBinaryID:[savedRev.properties objectForKey:@"_id"] pull:NO];
                                 [rep addObserver:self forKeyPath:@"completedChangesCount" options:0 context:NULL];
                             }
@@ -141,6 +172,13 @@
                         });
                     }
                 }];
+            } else {
+                NSLog(@"SUPER SUPER");
+                // When iteration is over,
+                // update the last import date
+                [[NSUserDefaults standardUserDefaults] setObject:[NSDate date]
+                    forKey:[ccLastImportDateKey copy]];
+                [[NSUserDefaults standardUserDefaults] synchronize];
             }
         }
         failureBlock:^(NSError *error){
