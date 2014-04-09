@@ -172,14 +172,23 @@ static const NSString *ccDBName = @"cozyios";
     [self.push start];
 }
 
-- (CBLReplication *)setupFileReplicationForBinaryID:(NSString *)binaryID
-    pull:(BOOL)isPull
+- (CBLReplication *)setupFileReplicationForBinaryIDs:(NSArray *)binaryIDs
+        observer:(id)observer
+        pull:(BOOL)isPull
 {
     // Set replication, not continuous
     CBLReplication *binRep = isPull ? [self.database createPullReplication:self.pull.remoteURL] :
         [self.database createPushReplication:self.push.remoteURL];
-    [binRep setDocumentIDs:@[binaryID]];
+    [binRep setDocumentIDs:binaryIDs];
     binRep.continuous = NO;
+    
+    // If it is a push, allow replication only over wifi
+    binRep.network = @"WiFi";
+    
+    // Register the observer object
+    [binRep addObserver:observer forKeyPath:@"completedChangesCount"
+             options:0
+             context:NULL];
     
     // Start replication
     [binRep start];

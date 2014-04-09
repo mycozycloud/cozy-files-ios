@@ -91,11 +91,9 @@
                                                     fatal:NO];
         }
     
-        self.pull = [[CCDBManager sharedInstance] setupFileReplicationForBinaryID:binaryID
-                                                                             pull:YES];
-        
-        // Pull monitoring
-        [self.pull addObserver:self forKeyPath:@"completedChangesCount" options:0 context:NULL];
+        self.pull = [[CCDBManager sharedInstance] setupFileReplicationForBinaryIDs:@[binaryID]
+                                                            observer:self
+                                                            pull:YES];
     }
     
     // Trash button

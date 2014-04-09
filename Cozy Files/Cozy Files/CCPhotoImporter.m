@@ -96,6 +96,15 @@
 {
     NSLog(@"IMPORT");
     
+    // Restart binary push replications that were not finished
+    NSArray *binaryIDs = [[NSUserDefaults standardUserDefaults] objectForKey:[ccBinaryIDsWaitingForPush copy]];
+    if (binaryIDs && binaryIDs.count > 0) {
+        NSLog(@"BINARIES TO PUSH - %@", binaryIDs);
+        [[CCDBManager sharedInstance] setupFileReplicationForBinaryIDs:binaryIDs
+                                                              observer:self
+                                                                  pull:NO];
+    }
+    
     // Retrieve last import date for comparison
     NSDate *lastImportDate = [[NSUserDefaults standardUserDefaults] objectForKey:[ccLastImportDateKey copy]];
     
@@ -157,8 +166,6 @@
                                       }
                               };
                             
-                            
-                            
                             CBLDocument *doc = [[CCDBManager sharedInstance].database createDocument];
                             [doc putProperties:fileContents error:&error];
                             
@@ -167,16 +174,27 @@
                                     withMessage:[ccErrorPhotoImport copy]
                                                         fatal:NO];
                             } else {
+                                // Store the id of the binary in the array of binaries waiting for push
+                                NSMutableArray *binaryIDs = [[[NSUserDefaults standardUserDefaults] objectForKey:[ccBinaryIDsWaitingForPush copy]] mutableCopy];
+                                if (!binaryIDs) {
+                                    binaryIDs = [NSMutableArray new];
+                                }
+                                [binaryIDs addObject:[savedRev.properties objectForKey:@"_id"]];
+                                [[NSUserDefaults standardUserDefaults] setObject:binaryIDs forKey:[ccBinaryIDsWaitingForPush copy]];
+                                [[NSUserDefaults standardUserDefaults] synchronize];
+                                
                                 // Start a one shot replication to push the binary to the digidisk
-                                CBLReplication *rep = [[CCDBManager sharedInstance] setupFileReplicationForBinaryID:[savedRev.properties objectForKey:@"_id"] pull:NO];
-                                [rep addObserver:self forKeyPath:@"completedChangesCount" options:0 context:NULL];
+                                // that is effective only on wifi networks
+                                [[CCDBManager sharedInstance] setupFileReplicationForBinaryIDs:@[[savedRev.properties objectForKey:@"_id"]]
+                                        observer:self
+                                        pull:NO];
                             }
 
                         });
                     }
                 }];
             } else {
-                NSLog(@"SUPER SUPER");
+                NSLog(@"ITERATION OVER ASSETS IS OVER");
                 // When iteration is over,
                 // update the last import date
                 [[NSUserDefaults standardUserDefaults] setObject:[NSDate date]
@@ -209,6 +227,14 @@
             for (NSString *binID in rep.documentIDs) {
                 NSError *error;
                 CBLDocument *binary = [[CCDBManager sharedInstance].database documentWithID:binID];
+                
+                // Remove the id from the array of binaries waiting for push
+                NSMutableArray *binaryIDs = [[[NSUserDefaults standardUserDefaults] objectForKey:[ccBinaryIDsWaitingForPush copy]] mutableCopy];
+                [binaryIDs removeObject:[binary.properties objectForKey:@"_id"]];
+                [[NSUserDefaults standardUserDefaults] setObject:binaryIDs forKey:[ccBinaryIDsWaitingForPush copy]];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+                
+                // Purge the binary from the db
                 [binary purgeDocument:&error];
                 
                 if (error) {

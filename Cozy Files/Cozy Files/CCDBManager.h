@@ -39,11 +39,13 @@
                                  remoteID:(NSString *)remoteID;
 
 /*! Replicates a single binary document from/to the cozy to/from the device.
- * \param binaryID The ID of the binary document
+ * \param binaryID An array of IDs of the binary documents
+ * \param observer An object which will observe the completion of the replication
  * \param isPull A boolean signaling if it is a pull or push replication
  * \returns A replication object for the binary document.
  */
-- (CBLReplication *)setupFileReplicationForBinaryID:(NSString *)binaryID
+- (CBLReplication *)setupFileReplicationForBinaryIDs:(NSArray *)binaryIDs
+                                           observer:(id)observer
                                                pull:(BOOL)isPull;
 
 @end
