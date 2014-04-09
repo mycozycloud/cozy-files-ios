@@ -10,6 +10,7 @@
 
 #import "CCDBManager.h"
 #import "CCConstants.h"
+#import "CCErrorHandler.h"
 #import "CCPhotoImporter.h"
 
 @import AssetsLibrary;
@@ -75,18 +76,19 @@
                         [self importPhotos];
                     }
                     failureBlock:^(NSError *error){
-#warning HANDLE ERROR
                         if (error.code == ALAssetsLibraryAccessUserDeniedError) {
-                            NSLog(@"user denied access, code: %i",error.code);
+                            [[CCErrorHandler sharedInstance] presentError:error withMessage:[ccErrorPhotoAccess copy] fatal:NO];
                         }else{
-                            NSLog(@"Other error code: %i",error.code);
+                            [[CCErrorHandler sharedInstance] presentError:error withMessage:[ccErrorDefault copy] fatal:NO];
                         }
                     }];
             break;
         }
-        default:
-#warning HANDLE ERROR
+        default:{
+            NSError *error = [[NSError alloc] initWithDomain:ALAssetsLibraryErrorDomain code:ALAssetsLibraryAccessUserDeniedError userInfo:nil];
+            [[CCErrorHandler sharedInstance] presentError:error withMessage:[ccErrorDefault copy] fatal:NO];
             break;
+        }
     }
 }
 
@@ -161,8 +163,9 @@
                             [doc putProperties:fileContents error:&error];
                             
                             if (error) {
-#warning HANDLE ERROR
-                                NSLog(@"ERROR %@", error);
+                                [[CCErrorHandler sharedInstance] presentError:error
+                                    withMessage:[ccErrorPhotoImport copy]
+                                                        fatal:NO];
                             } else {
                                 // Start a one shot replication to push the binary to the digidisk
                                 CBLReplication *rep = [[CCDBManager sharedInstance] setupFileReplicationForBinaryID:[savedRev.properties objectForKey:@"_id"] pull:NO];
@@ -182,8 +185,9 @@
             }
         }
         failureBlock:^(NSError *error){
-#warning HANDLE ERROR
-            NSLog(@"ERROR %@", error);
+            [[CCErrorHandler sharedInstance] presentError:error
+                                    withMessage:[ccErrorPhotoImport copy]
+                                                    fatal:NO];
         }];
 }
 
@@ -208,8 +212,9 @@
                 [binary purgeDocument:&error];
                 
                 if (error) {
-#warning HANDLE ERROR
-                    NSLog(@"ERROR %@", error);
+                    [[CCErrorHandler sharedInstance] presentError:error
+                                            withMessage:[ccErrorDefault copy]
+                                                fatal:NO];
                 }
             }
         }

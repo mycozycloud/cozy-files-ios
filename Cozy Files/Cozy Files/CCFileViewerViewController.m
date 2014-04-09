@@ -86,8 +86,9 @@
         [binary purgeDocument:&error];
 
         if (error) {
-            NSLog(@"ERREUR - %@", error);
-#warning - TODO ERROR
+            [[CCErrorHandler sharedInstance] presentError:error
+                                    withMessage:[ccErrorDefault copy]
+                                                    fatal:NO];
         }
     
         self.pull = [[CCDBManager sharedInstance] setupFileReplicationForBinaryID:binaryID
