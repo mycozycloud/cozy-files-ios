@@ -17,9 +17,15 @@
 
 @interface CCPhotoImporter ()
 
-/*! Accesses the photos taken with the phone and imports them to the digidisk.
+/*! Accesses the photo assets taken with the phone and stores their urls and 
+ * creation date for later import.
  */
-- (void)importPhotos;
+- (void)importPhotoAssets;
+
+/*! Creates the db documents for the next photo to import and 
+ * replicates them to the digidisk.
+ */
+- (void)replicatePhoto;
 
 @end
 
@@ -61,7 +67,7 @@
         case ALAuthorizationStatusAuthorized:
             NSLog(@"AUTHORIZED PHOTO IMPORT");
             // Start import since it is already authorized
-            [self importPhotos];
+            [self importPhotoAssets];
             break;
         case ALAuthorizationStatusNotDetermined: {
             NSLog(@"AUTHORIZATION FOR PHOTO IMPORT NOT DETERMINED");
@@ -72,8 +78,8 @@
                         // all groups now.
                         *stop = YES;
                         
-                        // Start importing photos
-                        [self importPhotos];
+//                        // Start importing photos
+//                        [self importPhotoAssets];
                     }
                     failureBlock:^(NSError *error){
                         if (error.code == ALAssetsLibraryAccessUserDeniedError) {
@@ -92,18 +98,9 @@
     }
 }
 
-- (void)importPhotos
+- (void)importPhotoAssets
 {
-    NSLog(@"IMPORT");
-    
-    // Restart binary push replications that were not finished
-    NSArray *binaryIDs = [[NSUserDefaults standardUserDefaults] objectForKey:[ccBinaryIDsWaitingForPush copy]];
-    if (binaryIDs && binaryIDs.count > 0) {
-        NSLog(@"BINARIES TO PUSH - %@", binaryIDs);
-        [[CCDBManager sharedInstance] setupFileReplicationForBinaryIDs:binaryIDs
-                                                              observer:self
-                                                                  pull:NO];
-    }
+    NSLog(@"IMPORT ASSETS");
     
     // Retrieve last import date for comparison
     NSDate *lastImportDate = [[NSUserDefaults standardUserDefaults] objectForKey:[ccLastImportDateKey copy]];
@@ -117,89 +114,47 @@
                 [group setAssetsFilter:[ALAssetsFilter allPhotos]];
                 // Iterate over assets in group
                 [group enumerateAssetsUsingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop){
-                    // Get creation date of the asset for comparison with the last import date
-                    NSDate *creationDate = [result valueForProperty:ALAssetPropertyDate];
-                    
-                    // If it is a photo created after the last import date,
-                    // then import it to the Digidisk
-                    if ([[result valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypePhoto]
-                        && [lastImportDate compare:creationDate] == NSOrderedAscending) {
-                        NSLog(@"ASSET %@", result);
+                    if (result) {
+                        // Get creation date of the asset for comparison with the last import date
+                        NSDate *creationDate = [result valueForProperty:ALAssetPropertyDate];
                         
-                        // Retrieve name and image
-                        ALAssetRepresentation *representation = result.defaultRepresentation;
-                        NSString *filename = representation.filename;
-                        NSData *imageData = UIImageJPEGRepresentation([UIImage imageWithCGImage:representation.fullResolutionImage], 1.0);
-                        
-                        // Importation to couchbase takes place on the main queue
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            NSError *error;
+                        // If it is a photo created after the last import date,
+                        // then add it to the assets to replicate array
+                        if ([[result valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypePhoto]
+                            && [lastImportDate compare:creationDate] == NSOrderedAscending) {
                             
-                            // Create the binary document
-                            NSDictionary *binaryContents = @{@"docType" : @"Binary"};
-                            CBLDocument *binary = [[CCDBManager sharedInstance].database createDocument];
-                            [binary putProperties:binaryContents error:&error];
-                            CBLUnsavedRevision *rev = [binary newRevision];
-                            
-                            // Set attachment to image
-                            [rev setAttachmentNamed:@"file"
-                                    withContentType:@"image/jpeg"
-                                            content:imageData];
-                            CBLSavedRevision *savedRev = [rev save:&error];
-                            CBLAttachment *att = savedRev.attachments.firstObject;
-                            
-                            
-                            NSString *path = [NSString stringWithFormat:@"/%@",[[NSUserDefaults standardUserDefaults]
-                                objectForKey:[ccRemoteLoginKey copy]]];
-                            
-                            // Create the file document
-                            NSDictionary *fileContents =
-                            @{@"name" : filename,
-                              @"path" : path,
-                              @"docType" : @"File",
-                              @"size" : [NSNumber numberWithInt:(int)att.length],
-                              @"binary" : @{
-                                      @"file" : @{
-                                              @"id" : [savedRev.properties objectForKey:@"_id"],
-                                              @"rev" : [savedRev.properties objectForKey:@"_rev"]
-                                              }
-                                      }
-                              };
-                            
-                            CBLDocument *doc = [[CCDBManager sharedInstance].database createDocument];
-                            [doc putProperties:fileContents error:&error];
-                            
-                            if (error) {
-                                [[CCErrorHandler sharedInstance] presentError:error
-                                    withMessage:[ccErrorPhotoImport copy]
-                                                        fatal:NO];
-                            } else {
-                                // Store the id of the binary in the array of binaries waiting for push
-                                NSMutableArray *binaryIDs = [[[NSUserDefaults standardUserDefaults] objectForKey:[ccBinaryIDsWaitingForPush copy]] mutableCopy];
-                                if (!binaryIDs) {
-                                    binaryIDs = [NSMutableArray new];
-                                }
-                                [binaryIDs addObject:[savedRev.properties objectForKey:@"_id"]];
-                                [[NSUserDefaults standardUserDefaults] setObject:binaryIDs forKey:[ccBinaryIDsWaitingForPush copy]];
-                                [[NSUserDefaults standardUserDefaults] synchronize];
-                                
-                                // Start a one shot replication to push the binary to the digidisk
-                                // that is effective only on wifi networks
-                                [[CCDBManager sharedInstance] setupFileReplicationForBinaryIDs:@[[savedRev.properties objectForKey:@"_id"]]
-                                        observer:self
-                                        pull:NO];
+                            NSMutableArray *photos = [[[NSUserDefaults standardUserDefaults] objectForKey:[ccPhotosWaitingForImport copy]] mutableCopy];
+                            if (!photos) {
+                                photos = [NSMutableArray new];
                             }
-
-                        });
+                            [photos addObject:@{@"date":creationDate,
+                                @"url":[result.defaultRepresentation.url absoluteString]}];
+                            [[NSUserDefaults standardUserDefaults] setObject:photos
+                                    forKey:[ccPhotosWaitingForImport copy]];
+                            [[NSUserDefaults standardUserDefaults] synchronize];
+                        }
                     }
+                    
                 }];
             } else {
-                NSLog(@"ITERATION OVER ASSETS IS OVER");
+                // Sort the assets array by creation date
+                NSMutableArray *photos = [[[NSUserDefaults standardUserDefaults] objectForKey:[ccPhotosWaitingForImport copy]] mutableCopy];
+                [photos sortUsingComparator:^(id obj1, id obj2){
+                    return [[obj1 objectForKey:@"date"] compare:[obj2 objectForKey:@"date"]];
+                }];
+                [[NSUserDefaults standardUserDefaults] setObject:photos
+                                        forKey:[ccPhotosWaitingForImport copy]];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+                NSLog(@"ITERATION OVER ASSETS IS OVER - %@", photos);
+                
                 // When iteration is over,
-                // update the last import date
-                [[NSUserDefaults standardUserDefaults] setObject:[NSDate date]
+                // update the last import date to the most recent creation date
+                [[NSUserDefaults standardUserDefaults] setObject:[photos.lastObject objectForKey:@"date"]
                     forKey:[ccLastImportDateKey copy]];
                 [[NSUserDefaults standardUserDefaults] synchronize];
+                
+                // Start replicate asset to digidisk
+                [self replicatePhoto];
             }
         }
         failureBlock:^(NSError *error){
@@ -207,6 +162,103 @@
                                     withMessage:[ccErrorPhotoImport copy]
                                                     fatal:NO];
         }];
+}
+
+- (void)replicatePhoto
+{
+    NSLog(@"REPLICATE PHOTO");
+    
+    NSString *binID = [[NSUserDefaults standardUserDefaults] objectForKey:[ccBinaryWaitingForPush copy]];
+    if (binID) {
+        // There's already a binary waiting for push, so start its replication
+        NSLog(@"BIN ID : %@", binID);
+        [[CCDBManager sharedInstance] setupFileReplicationForBinaryIDs:@[binID]
+                                                              observer:self
+                                                                  pull:NO];
+    } else {
+        // Get the oldest asset and replicate it
+        NSArray *photos = [[NSUserDefaults standardUserDefaults] objectForKey:[ccPhotosWaitingForImport copy]];
+        // Retrieve asset URL
+        NSURL *assetUrl = [NSURL URLWithString:[photos.firstObject objectForKey:@"url"]];
+        ALAssetsLibrary *assetsLib = [ALAssetsLibrary new];
+        [assetsLib assetForURL:assetUrl
+                   resultBlock:^(ALAsset *asset){
+                       if (asset) {
+                           NSLog(@"ASSET %@", asset);
+                           
+                           // Retrieve name and image
+                           ALAssetRepresentation *representation = asset.defaultRepresentation;
+                           NSString *filename = representation.filename;
+                           NSData *imageData = UIImageJPEGRepresentation([UIImage imageWithCGImage:representation.fullResolutionImage], 1.0);
+                           
+                           // Importation to couchbase takes place on the main queue
+                           dispatch_async(dispatch_get_main_queue(), ^{
+                               NSError *error;
+                               
+                               // Create the binary document
+                               NSDictionary *binaryContents = @{@"docType" : @"Binary"};
+                               CBLDocument *binary = [[CCDBManager sharedInstance].database createDocument];
+                               [binary putProperties:binaryContents error:&error];
+                               CBLUnsavedRevision *rev = [binary newRevision];
+                               
+                               // Set attachment to image
+                               [rev setAttachmentNamed:@"file"
+                                       withContentType:@"image/jpeg"
+                                               content:imageData];
+                               CBLSavedRevision *savedRev = [rev save:&error];
+                               CBLAttachment *att = savedRev.attachments.firstObject;
+                               
+                               
+                               NSString *path = [NSString stringWithFormat:@"/%@",[[NSUserDefaults standardUserDefaults]
+                                                                                   objectForKey:[ccRemoteLoginKey copy]]];
+                               
+                               // Create the file document
+                               NSDictionary *fileContents =
+                               @{@"name" : filename,
+                                 @"path" : path,
+                                 @"docType" : @"File",
+                                 @"size" : [NSNumber numberWithInt:(int)att.length],
+                                 @"binary" : @{
+                                         @"file" : @{
+                                                 @"id" : [savedRev.properties objectForKey:@"_id"],
+                                                 @"rev" : [savedRev.properties objectForKey:@"_rev"]
+                                                 }
+                                         }
+                                 };
+                               
+                               CBLDocument *doc = [[CCDBManager sharedInstance].database createDocument];
+                               [doc putProperties:fileContents error:&error];
+                               
+                               if (error) {
+                                   [[CCErrorHandler sharedInstance] presentError:error
+                                                                     withMessage:[ccErrorPhotoImport copy]
+                                                                           fatal:NO];
+                               } else {
+                                   // Store the id of the binary waiting for push
+                                   [[NSUserDefaults standardUserDefaults] setObject:[savedRev.properties objectForKey:@"_id"] forKey:[ccBinaryWaitingForPush copy]];
+                                   [[NSUserDefaults standardUserDefaults] synchronize];
+                                   
+                                   // Start a one shot replication to push the binary to the digidisk
+                                   // that is effective only on wifi networks
+                                   [[CCDBManager sharedInstance] setupFileReplicationForBinaryIDs:@[[savedRev.properties objectForKey:@"_id"]]
+                                                                                         observer:self
+                                                                                             pull:NO];
+                               }
+                               
+                           });
+                           
+                           
+                           
+                       }
+                   }
+                  failureBlock:^(NSError *error){
+                      [[CCErrorHandler sharedInstance] presentError:error
+                                                        withMessage:[ccErrorPhotoImport copy]
+                                                              fatal:NO];
+                  }
+         ];
+
+    }
 }
 
 #pragma mark - Replication Monitoring
@@ -224,25 +276,31 @@
         } else {
             NSLog(@"BIN PUSH REPLICATION COMPLETION DONE");
             [rep removeObserver:self forKeyPath:@"completedChangesCount"];
-            for (NSString *binID in rep.documentIDs) {
-                NSError *error;
-                CBLDocument *binary = [[CCDBManager sharedInstance].database documentWithID:binID];
+            NSString *binID = rep.documentIDs.firstObject;
+            NSError *error;
+            CBLDocument *binary = [[CCDBManager sharedInstance].database documentWithID:binID];
                 
-                // Remove the id from the array of binaries waiting for push
-                NSMutableArray *binaryIDs = [[[NSUserDefaults standardUserDefaults] objectForKey:[ccBinaryIDsWaitingForPush copy]] mutableCopy];
-                [binaryIDs removeObject:[binary.properties objectForKey:@"_id"]];
-                [[NSUserDefaults standardUserDefaults] setObject:binaryIDs forKey:[ccBinaryIDsWaitingForPush copy]];
-                [[NSUserDefaults standardUserDefaults] synchronize];
+            // Remove the id from waiting for push storage and
+            // asset from the ones waiting for import
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:[ccBinaryWaitingForPush copy]];
+            NSMutableArray *photos = [[[NSUserDefaults standardUserDefaults] objectForKey:[ccPhotosWaitingForImport copy]] mutableCopy];
+            [photos removeObjectAtIndex:0];
+            [[NSUserDefaults standardUserDefaults] setObject:photos
+                forKey:[ccPhotosWaitingForImport copy]];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            
+            // Purge the binary from the db
+            [binary purgeDocument:&error];
                 
-                // Purge the binary from the db
-                [binary purgeDocument:&error];
-                
-                if (error) {
-                    [[CCErrorHandler sharedInstance] presentError:error
-                                            withMessage:[ccErrorDefault copy]
-                                                fatal:NO];
-                }
+            if (error) {
+                [[CCErrorHandler sharedInstance] presentError:error
+                        withMessage:[ccErrorDefault copy]
+                                    fatal:NO];
+            } else {
+                // Continue importing photos
+                [self replicatePhoto];
             }
+
         }
     }
 }
