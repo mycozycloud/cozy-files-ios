@@ -76,10 +76,8 @@
                     usingBlock:^(ALAssetsGroup *group, BOOL *stop){
                         // The user authorized access, no really need to enumerate
                         // all groups now.
+                        // Plus the app will be restarted.
                         *stop = YES;
-                        
-//                        // Start importing photos
-//                        [self importPhotoAssets];
                     }
                     failureBlock:^(NSError *error){
                         if (error.code == ALAssetsLibraryAccessUserDeniedError) {
@@ -178,6 +176,11 @@
     } else {
         // Get the oldest asset and replicate it
         NSArray *photos = [[NSUserDefaults standardUserDefaults] objectForKey:[ccPhotosWaitingForImport copy]];
+        if (photos.count == 0) {
+            // No more asset to import
+            NSLog(@"NO MORE ASSET TO IMPORT");
+            return;
+        }
         // Retrieve asset URL
         NSURL *assetUrl = [NSURL URLWithString:[photos.firstObject objectForKey:@"url"]];
         ALAssetsLibrary *assetsLib = [ALAssetsLibrary new];
@@ -238,6 +241,12 @@
                                    [[NSUserDefaults standardUserDefaults] setObject:[savedRev.properties objectForKey:@"_id"] forKey:[ccBinaryWaitingForPush copy]];
                                    [[NSUserDefaults standardUserDefaults] synchronize];
                                    
+                                   // Remove the asset from storage
+                                   NSMutableArray *photos = [[[NSUserDefaults standardUserDefaults] objectForKey:[ccPhotosWaitingForImport copy]] mutableCopy];
+                                   [photos removeObjectAtIndex:0];
+                                   [[NSUserDefaults standardUserDefaults] setObject:photos
+                                            forKey:[ccPhotosWaitingForImport copy]];
+                                   
                                    // Start a one shot replication to push the binary to the digidisk
                                    // that is effective only on wifi networks
                                    [[CCDBManager sharedInstance] setupFileReplicationForBinaryIDs:@[[savedRev.properties objectForKey:@"_id"]]
@@ -274,33 +283,28 @@
                       floorf((rep.completedChangesCount /
                               (float)rep.changesCount)*100));
         } else {
-            NSLog(@"BIN PUSH REPLICATION COMPLETION DONE");
-            [rep removeObserver:self forKeyPath:@"completedChangesCount"];
             NSString *binID = rep.documentIDs.firstObject;
+            [rep removeObserver:self forKeyPath:@"completedChangesCount"];
+            NSLog(@"BIN PUSH REPLICATION COMPLETION DONE FOR %@", binID);
+            
             NSError *error;
             CBLDocument *binary = [[CCDBManager sharedInstance].database documentWithID:binID];
-                
-            // Remove the id from waiting for push storage and
-            // asset from the ones waiting for import
+            
+            // Remove the id from waiting for push storage
             [[NSUserDefaults standardUserDefaults] removeObjectForKey:[ccBinaryWaitingForPush copy]];
-            NSMutableArray *photos = [[[NSUserDefaults standardUserDefaults] objectForKey:[ccPhotosWaitingForImport copy]] mutableCopy];
-            [photos removeObjectAtIndex:0];
-            [[NSUserDefaults standardUserDefaults] setObject:photos
-                forKey:[ccPhotosWaitingForImport copy]];
             [[NSUserDefaults standardUserDefaults] synchronize];
             
             // Purge the binary from the db
             [binary purgeDocument:&error];
-                
+            
             if (error) {
                 [[CCErrorHandler sharedInstance] presentError:error
-                        withMessage:[ccErrorDefault copy]
-                                    fatal:NO];
+                                                  withMessage:[ccErrorDefault copy]
+                                                        fatal:NO];
             } else {
                 // Continue importing photos
                 [self replicatePhoto];
             }
-
         }
     }
 }
