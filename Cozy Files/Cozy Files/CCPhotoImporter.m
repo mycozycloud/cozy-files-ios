@@ -84,7 +84,9 @@
         NSURL *cozyURL = [NSURL URLWithString:cozyURLString];
         self.networkReach = [Reachability reachabilityWithHostname:cozyURL.host];
         [self.networkReach startNotifier];
-     }
+    } else if ([self.networkReach isReachableViaWiFi]) {
+        [self checkAuthorizationForImport];
+    }
  }
 
 - (void)reachabilityChanged:(NSNotification *)notification
