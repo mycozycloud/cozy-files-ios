@@ -182,13 +182,13 @@ static const NSString *ccDBName = @"cozyios";
     [binRep setDocumentIDs:binaryIDs];
     binRep.continuous = NO;
     
-    // If it is a push, allow replication only over wifi
-    binRep.network = @"WiFi";
-    
     // Register the observer object
     [binRep addObserver:observer forKeyPath:@"completedChangesCount"
              options:0
              context:NULL];
+    [binRep addObserver:observer forKeyPath:@"changesCount"
+                options:0
+                context:NULL];
     
     // Start replication
     [binRep start];

@@ -180,7 +180,8 @@
                                     remotePassword:[resp valueForKey:@"password"]
                                             remoteID:[resp valueForKey:@"id"]];
                                 
-                                [[CCPhotoImporter sharedInstance] start];
+                                // Start reachability monitoring
+                                [[CCPhotoImporter sharedInstance] startWifiReachabilityMonitoring];
                                 
                                 [self dismissViewControllerAnimated:YES
                                                          completion:nil];

@@ -125,6 +125,7 @@
     }
     
     [self.pull removeObserver:self forKeyPath:@"completedChangesCount"];
+    [self.pull removeObserver:self forKeyPath:@"changesCount"];
 }
 
 - (void)didReceiveMemoryWarning

@@ -12,6 +12,7 @@
 #import "CCConstants.h"
 #import "CCErrorHandler.h"
 #import "CCPhotoImporter.h"
+#import "Reachability.h"
 
 @import AssetsLibrary;
 
@@ -27,10 +28,23 @@
  */
 - (void)replicatePhoto;
 
+/*! Tracks when a push replication is happening.
+ */
+@property (assign, nonatomic) BOOL isPushing;
+
+/*! Tracks the reachability of the cozy via Wifi.
+ */
+@property (strong, nonatomic) Reachability *networkReach;
+
+/*! Handles the change of reachability.
+ */
+- (void)reachabilityChanged:(NSNotification *)notification;
+
 @end
 
 @implementation CCPhotoImporter
 
+#pragma mark - Singleton
 /*
  * Singleton
  */
@@ -46,14 +60,47 @@
     // Use GCD to execute only once the block which initializes the instance
     dispatch_once(&oncePredicate, ^{
         _sharedInstance = [CCPhotoImporter new];
+        _sharedInstance.isPushing = NO;
     });
     
     return _sharedInstance;
 }
 
-- (void)start
+#pragma mark - Reachability
+
+- (void)startWifiReachabilityMonitoring
 {
-    NSLog(@"START IMPORT");
+    NSLog(@"MONITORING REACHABILITY");
+    
+    if (!self.networkReach) {
+        NSLog(@"INIT MONITORING");
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+            selector:@selector(reachabilityChanged:)
+            name:kReachabilityChangedNotification
+            object:nil];
+        
+        NSString *cozyURLString = [[NSUserDefaults standardUserDefaults] objectForKey:[ccCozyURLKey copy]];
+        NSURL *cozyURL = [NSURL URLWithString:cozyURLString];
+        self.networkReach = [Reachability reachabilityWithHostname:cozyURL.host];
+        [self.networkReach startNotifier];
+     }
+ }
+
+- (void)reachabilityChanged:(NSNotification *)notification
+{
+    if (notification.object == self.networkReach
+        && [self.networkReach isReachableViaWiFi]) {
+        NSLog(@"REACHABLE VIA WIFI");
+        [self checkAuthorizationForImport];
+    }
+}
+
+#pragma mark - Import
+
+- (void)checkAuthorizationForImport
+{
+    NSLog(@"CHECK AND START IMPORT");
     
     // Initialize the date reference to old times if it does not already exist
     // It will be needed for comparison with creation dates of assets
@@ -76,7 +123,8 @@
                     usingBlock:^(ALAssetsGroup *group, BOOL *stop){
                         // The user authorized access, no really need to enumerate
                         // all groups now.
-                        // Plus the app will be restarted.
+                        // Plus the app will be restarted with working reachability
+                        // monitoring this time.
                         *stop = YES;
                     }
                     failureBlock:^(NSError *error){
@@ -164,6 +212,12 @@
 
 - (void)replicatePhoto
 {
+    if (self.isPushing
+        || ![self.networkReach isReachableViaWiFi]) {
+        // return if already replicating or no Wifi
+        return;
+    }
+    
     NSLog(@"REPLICATE PHOTO");
     
     NSString *binID = [[NSUserDefaults standardUserDefaults] objectForKey:[ccBinaryWaitingForPush copy]];
@@ -237,6 +291,9 @@
                                                                      withMessage:[ccErrorPhotoImport copy]
                                                                            fatal:NO];
                                } else {
+                                   // Store before removing for not forgetting about this asset in case of
+                                   // brutal app termination
+                                   
                                    // Store the id of the binary waiting for push
                                    [[NSUserDefaults standardUserDefaults] setObject:[savedRev.properties objectForKey:@"_id"] forKey:[ccBinaryWaitingForPush copy]];
                                    [[NSUserDefaults standardUserDefaults] synchronize];
@@ -246,6 +303,9 @@
                                    [photos removeObjectAtIndex:0];
                                    [[NSUserDefaults standardUserDefaults] setObject:photos
                                             forKey:[ccPhotosWaitingForImport copy]];
+                                   
+                                   // Track that replication is going on
+                                   self.isPushing = YES;
                                    
                                    // Start a one shot replication to push the binary to the digidisk
                                    // that is effective only on wifi networks
@@ -284,7 +344,6 @@
                               (float)rep.changesCount)*100));
         } else {
             NSString *binID = rep.documentIDs.firstObject;
-            [rep removeObserver:self forKeyPath:@"completedChangesCount"];
             NSLog(@"BIN PUSH REPLICATION COMPLETION DONE FOR %@", binID);
             
             NSError *error;
@@ -297,11 +356,17 @@
             // Purge the binary from the db
             [binary purgeDocument:&error];
             
+            [rep removeObserver:self forKeyPath:@"completedChangesCount"];
+            [rep removeObserver:self forKeyPath:@"changesCount"];
+            
             if (error) {
                 [[CCErrorHandler sharedInstance] presentError:error
                                                   withMessage:[ccErrorDefault copy]
                                                         fatal:NO];
             } else {
+                // Not replicating anymore
+                self.isPushing = NO;
+                
                 // Continue importing photos
                 [self replicatePhoto];
             }

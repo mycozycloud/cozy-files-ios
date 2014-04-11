@@ -15,8 +15,12 @@
  */
 + (CCPhotoImporter *)sharedInstance;
 
-/*! Starts the photo import.
+/*! Checks that the user authorized access to the photos and starts the photo import.
  */
-- (void)start;
+- (void)checkAuthorizationForImport;
+
+/*! Initializes the monitoring of the reachability of the cozy via Wifi.
+ */
+- (void)startWifiReachabilityMonitoring;
 
 @end
