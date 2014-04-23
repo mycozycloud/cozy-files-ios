@@ -107,7 +107,9 @@
     // Initialize the date reference to old times if it does not already exist
     // It will be needed for comparison with creation dates of assets
     // in order to import only those which were not already imported
-    if (![[NSUserDefaults standardUserDefaults] objectForKey:[ccLastImportDateKey copy]]) {
+    NSDate *lastImportDate = [[NSUserDefaults standardUserDefaults] objectForKey:[ccLastImportDateKey copy]];
+    NSLog(@"LASTIMPORTDATE : %@", lastImportDate);
+    if (!lastImportDate) {
         [[NSUserDefaults standardUserDefaults] setObject:[NSDate dateWithTimeIntervalSince1970:0] forKey:[ccLastImportDateKey copy]];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
@@ -173,14 +175,15 @@
                         if ([[result valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypePhoto]
                             && [lastImportDate compare:creationDate] == NSOrderedAscending) {
                             
-                            NSMutableArray *photos = [[[NSUserDefaults standardUserDefaults] objectForKey:[ccPhotosWaitingForImport copy]] mutableCopy];
+                            NSMutableArray *photos = [[[NSUserDefaults standardUserDefaults] objectForKey:[ccPhotosWaitingForImportKey copy]] mutableCopy];
+                            
                             if (!photos) {
                                 photos = [NSMutableArray new];
                             }
                             [photos addObject:@{@"date":creationDate,
                                 @"url":[result.defaultRepresentation.url absoluteString]}];
                             [[NSUserDefaults standardUserDefaults] setObject:photos
-                                    forKey:[ccPhotosWaitingForImport copy]];
+                                    forKey:[ccPhotosWaitingForImportKey copy]];
                             [[NSUserDefaults standardUserDefaults] synchronize];
                         }
                     }
@@ -188,21 +191,23 @@
                 }];
             } else {
                 // Sort the assets array by creation date
-                NSMutableArray *photos = [[[NSUserDefaults standardUserDefaults] objectForKey:[ccPhotosWaitingForImport copy]] mutableCopy];
-                [photos sortUsingComparator:^(id obj1, id obj2){
-                    return [[obj1 objectForKey:@"date"] compare:[obj2 objectForKey:@"date"]];
-                }];
-                [[NSUserDefaults standardUserDefaults] setObject:photos
-                                        forKey:[ccPhotosWaitingForImport copy]];
-                [[NSUserDefaults standardUserDefaults] synchronize];
-                NSLog(@"ITERATION OVER ASSETS IS OVER - %@", photos);
-                
-                // When iteration is over,
-                // update the last import date to the most recent creation date
-                [[NSUserDefaults standardUserDefaults] setObject:[photos.lastObject objectForKey:@"date"]
-                    forKey:[ccLastImportDateKey copy]];
-                [[NSUserDefaults standardUserDefaults] synchronize];
-                
+                NSMutableArray *photos = [[[NSUserDefaults standardUserDefaults] objectForKey:[ccPhotosWaitingForImportKey copy]] mutableCopy];
+                if (photos.count > 0) {
+                    [photos sortUsingComparator:^(id obj1, id obj2){
+                        return [[obj1 objectForKey:@"date"] compare:[obj2 objectForKey:@"date"]];
+                    }];
+                    [[NSUserDefaults standardUserDefaults] setObject:photos
+                                                              forKey:[ccPhotosWaitingForImportKey copy]];
+                    [[NSUserDefaults standardUserDefaults] synchronize];
+                    NSLog(@"ITERATION OVER ASSETS IS OVER - %@", photos);
+                    
+                    // When iteration is over,
+                    // update the last import date to the most recent creation date
+                    [[NSUserDefaults standardUserDefaults] setObject:[[photos.lastObject objectForKey:@"date"] copy]
+                                                              forKey:[ccLastImportDateKey copy]];
+                    [[NSUserDefaults standardUserDefaults] synchronize];
+                }
+            
                 // Start replicate asset to digidisk
                 [self replicatePhoto];
             }
@@ -224,7 +229,7 @@
     
     NSLog(@"REPLICATE PHOTO");
     
-    NSString *binID = [[NSUserDefaults standardUserDefaults] objectForKey:[ccBinaryWaitingForPush copy]];
+    NSString *binID = [[NSUserDefaults standardUserDefaults] objectForKey:[ccBinaryWaitingForPushKey copy]];
     if (binID) {
         // There's already a binary waiting for push, so start its replication
         NSLog(@"BIN ID : %@", binID);
@@ -233,7 +238,7 @@
                                                                   pull:NO];
     } else {
         // Get the oldest asset and replicate it
-        NSArray *photos = [[NSUserDefaults standardUserDefaults] objectForKey:[ccPhotosWaitingForImport copy]];
+        NSArray *photos = [[NSUserDefaults standardUserDefaults] objectForKey:[ccPhotosWaitingForImportKey copy]];
         if (photos.count == 0) {
             // No more asset to import
             NSLog(@"NO MORE ASSET TO IMPORT");
@@ -299,13 +304,13 @@
                                    // brutal app termination
                                    
                                    // Store the id of the binary waiting for push
-                                   [[NSUserDefaults standardUserDefaults] setObject:[savedRev.properties objectForKey:@"_id"] forKey:[ccBinaryWaitingForPush copy]];
+                                   [[NSUserDefaults standardUserDefaults] setObject:[savedRev.properties objectForKey:@"_id"] forKey:[ccBinaryWaitingForPushKey copy]];
                                    
                                    // Remove the asset from storage
-                                   NSMutableArray *photos = [[[NSUserDefaults standardUserDefaults] objectForKey:[ccPhotosWaitingForImport copy]] mutableCopy];
+                                   NSMutableArray *photos = [[[NSUserDefaults standardUserDefaults] objectForKey:[ccPhotosWaitingForImportKey copy]] mutableCopy];
                                    [photos removeObjectAtIndex:0];
                                    [[NSUserDefaults standardUserDefaults] setObject:photos
-                                            forKey:[ccPhotosWaitingForImport copy]];
+                                            forKey:[ccPhotosWaitingForImportKey copy]];
                                    [[NSUserDefaults standardUserDefaults] synchronize];
                                    
                                    // Track that replication is going on
@@ -327,10 +332,10 @@
                            // The asset was not found, which means that the user
                            // deleted it before it was imported.
                            // So remove its url from storage and replicate the next one.
-                           NSMutableArray *photos = [[[NSUserDefaults standardUserDefaults] objectForKey:[ccPhotosWaitingForImport copy]] mutableCopy];
+                           NSMutableArray *photos = [[[NSUserDefaults standardUserDefaults] objectForKey:[ccPhotosWaitingForImportKey copy]] mutableCopy];
                            [photos removeObjectAtIndex:0];
                            [[NSUserDefaults standardUserDefaults] setObject:photos
-                                        forKey:[ccPhotosWaitingForImport copy]];
+                                        forKey:[ccPhotosWaitingForImportKey copy]];
                            [[NSUserDefaults standardUserDefaults] synchronize];
                            
                            [self replicatePhoto];
@@ -366,7 +371,7 @@
             CBLDocument *binary = [[CCDBManager sharedInstance].database documentWithID:binID];
             
             // Remove the id from waiting for push storage
-            [[NSUserDefaults standardUserDefaults] removeObjectForKey:[ccBinaryWaitingForPush copy]];
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:[ccBinaryWaitingForPushKey copy]];
             [[NSUserDefaults standardUserDefaults] synchronize];
             
             // Purge the binary from the db

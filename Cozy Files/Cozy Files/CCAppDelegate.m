@@ -55,6 +55,9 @@
     If your application supports background execution, this method is called 
      instead of applicationWillTerminate: when the user quits.
      */
+    
+    // For safety
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
