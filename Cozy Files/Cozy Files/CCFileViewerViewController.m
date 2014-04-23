@@ -19,6 +19,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *imgView;
 @property (weak, nonatomic) IBOutlet UITextView *txtView;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *trashButton;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicatorView;
 
 @property (strong, nonatomic) CBLReplication *pull;
 
@@ -81,6 +82,7 @@
         NSLog(@"BINARY IS HERE");
         [self displayDataWithBinary:binary];
     } else { // It doesn't exist or has changed, so setup the replication to get the binary
+        [self.activityIndicatorView startAnimating];
         NSLog(@"SETUP BINARY REPLICATION : %@", binaryID);
         NSError *error;
         [binary purgeDocument:&error];
@@ -151,6 +153,7 @@
         } else {
             NSLog(@"BINARY REPLICATION DONE");
             [self.progressView setHidden:YES];
+            [self.activityIndicatorView stopAnimating];
             // Display the data
             CBLDocument *doc = [[CCDBManager sharedInstance].database
                                 documentWithID:self.pull.documentIDs.firstObject];

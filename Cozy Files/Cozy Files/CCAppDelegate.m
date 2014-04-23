@@ -91,12 +91,22 @@
 
 - (void)setAppearance
 {
+    // StatusBar
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    
+    // NavigationBar
+    [[UINavigationBar appearance] setBackgroundColor:kBlue];
+    [[UINavigationBar appearance] setBarTintColor:kBlue];
+    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
+    [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor whiteColor]}];
+
+    
     // TextFields
     [[UITextField appearance] setTextColor:kYellow];
     [[UITextField appearance] setTintColor:kYellow];
     
     // ProgressBar
-    [[UIProgressView appearance] setProgressTintColor:kBlue];
+    [[UIProgressView appearance] setProgressTintColor:kYellow];
 }
 
 

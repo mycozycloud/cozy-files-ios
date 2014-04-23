@@ -76,11 +76,14 @@ UISearchBarDelegate, CBLUITableDelegate, UIAlertViewDelegate, UIActionSheetDeleg
         self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     }
     
+    // NavigationBar
+    self.navigationController.navigationBar.translucent = NO;
+    
     // Title
     if (self.path) {
         self.title = [[self.path componentsSeparatedByString:@"/"] lastObject];
     } else {
-        self.title = @"Fichiers";
+        self.title = @"Digidisk";
     }
     
     // TableView and TableSource setup
@@ -91,6 +94,7 @@ UISearchBarDelegate, CBLUITableDelegate, UIAlertViewDelegate, UIActionSheetDeleg
     self.tableSource.query = query;
     self.tableSource.tableView = self.tableView;
     self.tableSource.labelProperty = @"name";
+    self.tableSource.deletionAllowed = NO; // no editing is allowed for now
     self.tableView.dataSource = self.tableSource;
     self.tableView.delegate = self;
     
@@ -102,7 +106,6 @@ UISearchBarDelegate, CBLUITableDelegate, UIAlertViewDelegate, UIActionSheetDeleg
     [self.rootButton setTarget:self];
     [self.rootButton setAction:@selector(goBackToRoot)];
     if (!self.path) {
-#warning For now, till I find a better UX idea
         self.rootButton.enabled = NO;
     }
     
@@ -115,6 +118,14 @@ UISearchBarDelegate, CBLUITableDelegate, UIAlertViewDelegate, UIActionSheetDeleg
     
     // Search
     self.searchBar.delegate = self;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    // StatusBar
+    [UIApplication sharedApplication].statusBarHidden = NO;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -171,7 +182,7 @@ UISearchBarDelegate, CBLUITableDelegate, UIAlertViewDelegate, UIActionSheetDeleg
     }
 }
 
-#pragma mark - TableView Delegate
+#pragma mark - TableView Delegate and Datasource
 
 - (void)tableView:(UITableView *)tableView
 didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -202,11 +213,18 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 - (void)couchTableSource:(CBLUITableSource *)source willUseCell:(UITableViewCell *)cell forRow:(CBLQueryRow *)row
 {
     CBLDocument *doc = row.value;
+    
     if ([[doc valueForKey:@"docType"] isEqualToString:@"Folder"]) {
-        [cell.imageView setImage:[UIImage imageNamed:@"folder"]];
+        if ([[doc valueForKey:@"path"] isEqualToString:@""]) {
+            [cell.imageView setImage:[UIImage imageNamed:@"device"]];
+        } else {
+            [cell.imageView setImage:[UIImage imageNamed:@"folder"]];
+        }
     } else if ([[doc valueForKey:@"docType"] isEqualToString:@"File"]) {
         [cell.imageView setImage:[UIImage imageNamed:@"file"]];
     }
+    
+    cell.textLabel.textColor = [UIColor grayColor];
 }
 
 - (bool)couchTableSource:(CBLUITableSource *)source deleteRow:(CBLQueryRow *)row

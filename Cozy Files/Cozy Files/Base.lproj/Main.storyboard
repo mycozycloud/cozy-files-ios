@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="443-tG-uOj">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="443-tG-uOj">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
@@ -16,29 +16,51 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <progressView hidden="YES" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" fixedFrame="YES" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="c3e-Rv-URn">
-                                <rect key="frame" x="0.0" y="65" width="320" height="2"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </progressView>
-                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6iW-dl-JLI">
-                                <rect key="frame" x="0.0" y="66" width="320" height="502"/>
+                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="6iW-dl-JLI">
+                                <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
-                            <textView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lJX-Y4-EEF">
-                                <rect key="frame" x="0.0" y="66" width="320" height="502"/>
+                            <textView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lJX-Y4-EEF">
+                                <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="LcN-Tu-oYu">
+                                <rect key="frame" x="150" y="274" width="20" height="20"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </activityIndicatorView>
+                            <progressView hidden="YES" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progressViewStyle="bar" progress="0.050000000000000003" translatesAutoresizingMaskIntoConstraints="NO" id="c3e-Rv-URn">
+                                <rect key="frame" x="0.0" y="64" width="320" height="3"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="320" id="tcs-zA-wOm"/>
+                                </constraints>
+                            </progressView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="6iW-dl-JLI" secondAttribute="trailing" id="33a-ab-Ofh"/>
+                            <constraint firstAttribute="centerX" secondItem="LcN-Tu-oYu" secondAttribute="centerX" id="PAV-Ge-pS4"/>
+                            <constraint firstItem="uXF-uk-kGy" firstAttribute="top" secondItem="lJX-Y4-EEF" secondAttribute="bottom" id="RPz-kI-GVd"/>
+                            <constraint firstItem="6iW-dl-JLI" firstAttribute="leading" secondItem="6bE-Wk-WAx" secondAttribute="leading" id="SWu-EP-dWl"/>
+                            <constraint firstAttribute="centerX" secondItem="c3e-Rv-URn" secondAttribute="centerX" id="Xou-IU-i2x"/>
+                            <constraint firstItem="lJX-Y4-EEF" firstAttribute="top" secondItem="Yex-SX-CH4" secondAttribute="bottom" id="d1d-6i-sYM"/>
+                            <constraint firstItem="uXF-uk-kGy" firstAttribute="top" secondItem="6iW-dl-JLI" secondAttribute="bottom" id="h2k-7c-Yh0"/>
+                            <constraint firstItem="lJX-Y4-EEF" firstAttribute="leading" secondItem="6bE-Wk-WAx" secondAttribute="leading" id="ovD-ip-QUC"/>
+                            <constraint firstItem="c3e-Rv-URn" firstAttribute="top" secondItem="Yex-SX-CH4" secondAttribute="bottom" id="tZH-u9-XSZ"/>
+                            <constraint firstAttribute="trailing" secondItem="lJX-Y4-EEF" secondAttribute="trailing" id="vsN-5s-0uw"/>
+                            <constraint firstItem="6iW-dl-JLI" firstAttribute="top" secondItem="Yex-SX-CH4" secondAttribute="bottom" id="xbl-oj-dIu"/>
+                            <constraint firstAttribute="centerY" secondItem="LcN-Tu-oYu" secondAttribute="centerY" id="z21-f1-Vmj"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="9oq-K7-fIm">
                         <barButtonItem key="rightBarButtonItem" systemItem="trash" id="uC9-Uv-hbQ"/>
                     </navigationItem>
                     <connections>
+                        <outlet property="activityIndicatorView" destination="LcN-Tu-oYu" id="YNN-c8-Gfc"/>
                         <outlet property="imgView" destination="6iW-dl-JLI" id="KGW-yX-ppT"/>
                         <outlet property="progressView" destination="c3e-Rv-URn" id="R4i-dg-8wU"/>
                         <outlet property="trashButton" destination="uC9-Uv-hbQ" id="fx4-Ee-EB2"/>
@@ -175,8 +197,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelectionDuringEditing="YES" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="897-if-Ecd">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="524"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelectionDuringEditing="YES" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="897-if-Ecd">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <searchBar key="tableHeaderView" contentMode="redraw" searchBarStyle="minimal" placeholder="Rechercher un élément" id="Kbg-kx-DnY">
@@ -204,32 +226,32 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
-                            <progressView hidden="YES" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" fixedFrame="YES" progressViewStyle="bar" progress="0.050000000000000003" translatesAutoresizingMaskIntoConstraints="NO" id="U67-mn-ydG">
+                            <progressView hidden="YES" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progressViewStyle="bar" progress="0.050000000000000003" translatesAutoresizingMaskIntoConstraints="NO" id="U67-mn-ydG">
                                 <rect key="frame" x="0.0" y="64" width="320" height="3"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="320" id="gL5-bt-Abg"/>
+                                </constraints>
                             </progressView>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gql-dw-QIu">
-                                <rect key="frame" x="0.0" y="524" width="320" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                <items>
-                                    <barButtonItem title="Menu" id="DGb-8x-S7x"/>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="QFI-Lp-ibQ"/>
-                                    <barButtonItem title="Racine" id="18i-Dg-bVv"/>
-                                </items>
-                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="897-if-Ecd" firstAttribute="leading" secondItem="xhk-BP-keq" secondAttribute="leading" id="D7x-5w-LM9"/>
+                            <constraint firstItem="U67-mn-ydG" firstAttribute="top" secondItem="ikf-Vp-HTb" secondAttribute="bottom" id="EuP-tT-ssu"/>
+                            <constraint firstItem="897-if-Ecd" firstAttribute="top" secondItem="xhk-BP-keq" secondAttribute="top" id="KdM-Sj-Su2"/>
+                            <constraint firstAttribute="centerX" secondItem="U67-mn-ydG" secondAttribute="centerX" id="aYp-j4-0Uy"/>
+                            <constraint firstItem="KKB-xc-YvG" firstAttribute="top" secondItem="897-if-Ecd" secondAttribute="bottom" id="pwY-Ck-gxD"/>
+                            <constraint firstAttribute="trailing" secondItem="897-if-Ecd" secondAttribute="trailing" id="rit-VA-JBF"/>
+                        </constraints>
                     </view>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Fichiers" id="E4I-KR-TVR">
-                        <barButtonItem key="rightBarButtonItem" title="Modifier" id="QeG-nH-eGo"/>
+                        <barButtonItem key="rightBarButtonItem" image="trombone" id="49X-ie-u2Z"/>
                     </navigationItem>
-                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <nil key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="actionButton" destination="QeG-nH-eGo" id="b2r-iA-kXl"/>
-                        <outlet property="menuButton" destination="DGb-8x-S7x" id="ifr-gS-Iap"/>
                         <outlet property="progressView" destination="U67-mn-ydG" id="veE-f7-5kY"/>
-                        <outlet property="rootButton" destination="18i-Dg-bVv" id="uH1-My-SX7"/>
+                        <outlet property="rootButton" destination="49X-ie-u2Z" id="3RD-aV-GsR"/>
                         <outlet property="searchBar" destination="Kbg-kx-DnY" id="Y5g-Dz-gSO"/>
                         <outlet property="searchDisplayController" destination="bhD-IM-145" id="Di3-fe-Vuh"/>
                         <outlet property="tableView" destination="897-if-Ecd" id="rgS-OU-Muf"/>
@@ -290,14 +312,14 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Fichiers" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="iIB-cb-1uO">
-                                            <rect key="frame" x="49" y="0.0" width="256" height="43"/>
+                                            <rect key="frame" x="55" y="0.0" width="250" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" image="file" id="sak-Ef-4rC">
-                                            <rect key="frame" x="15" y="9" width="19" height="24"/>
+                                            <rect key="frame" x="15" y="7" width="25" height="28"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </imageView>
                                     </subviews>
@@ -481,8 +503,8 @@
     </scenes>
     <resources>
         <image name="cogwheel" width="24" height="24"/>
-        <image name="file" width="19" height="24"/>
-        <image name="trombone" width="80" height="80"/>
+        <image name="file" width="25" height="28"/>
+        <image name="trombone" width="40" height="40"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>

@@ -59,6 +59,14 @@
     [self setAppearance];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    // StatusBar
+    [UIApplication sharedApplication].statusBarHidden = YES;
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

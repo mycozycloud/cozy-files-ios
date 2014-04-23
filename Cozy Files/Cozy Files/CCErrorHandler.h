@@ -11,7 +11,7 @@
 // Error messages
 static const NSString *ccErrorDefault =  @"Une erreur s'est produite";
 static const NSString *ccErrorDBAccess =  @"L'app n'a pas pu accéder à la base de données";
-static const NSString *ccErrorPhotoAccess =  @"Vous devez autoriser l'app à accéder à vos photos dans les paramètres de confidentialité de votre iPhone";
+static const NSString *ccErrorPhotoAccess =  @"Vous devez autoriser l'app à accéder à vos photos dans les paramètres de confidentialité de votre iPhone si vous souhaitez les synchroniser";
 static const NSString *ccErrorPhotoImport =  @"Une erreur s'est produite pendant l'import des photos";
 
 @interface CCErrorHandler : NSObject <UIAlertViewDelegate>
