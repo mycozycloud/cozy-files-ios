@@ -300,13 +300,13 @@
                                    
                                    // Store the id of the binary waiting for push
                                    [[NSUserDefaults standardUserDefaults] setObject:[savedRev.properties objectForKey:@"_id"] forKey:[ccBinaryWaitingForPush copy]];
-                                   [[NSUserDefaults standardUserDefaults] synchronize];
                                    
                                    // Remove the asset from storage
                                    NSMutableArray *photos = [[[NSUserDefaults standardUserDefaults] objectForKey:[ccPhotosWaitingForImport copy]] mutableCopy];
                                    [photos removeObjectAtIndex:0];
                                    [[NSUserDefaults standardUserDefaults] setObject:photos
                                             forKey:[ccPhotosWaitingForImport copy]];
+                                   [[NSUserDefaults standardUserDefaults] synchronize];
                                    
                                    // Track that replication is going on
                                    self.isPushing = YES;
@@ -322,6 +322,18 @@
                            
                            
                            
+                       } else {
+                           NSLog(@"ASSET NOT FOUND");
+                           // The asset was not found, which means that the user
+                           // deleted it before it was imported.
+                           // So remove its url from storage and replicate the next one.
+                           NSMutableArray *photos = [[[NSUserDefaults standardUserDefaults] objectForKey:[ccPhotosWaitingForImport copy]] mutableCopy];
+                           [photos removeObjectAtIndex:0];
+                           [[NSUserDefaults standardUserDefaults] setObject:photos
+                                        forKey:[ccPhotosWaitingForImport copy]];
+                           [[NSUserDefaults standardUserDefaults] synchronize];
+                           
+                           [self replicatePhoto];
                        }
                    }
                   failureBlock:^(NSError *error){
