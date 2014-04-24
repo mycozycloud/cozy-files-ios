@@ -16,6 +16,10 @@
 
 @import AssetsLibrary;
 
+static const NSString *ccLastImportDateKey = @"lastImportDate";
+static const NSString *ccPhotosWaitingForImportKey = @"photosWaitingForImport";
+static const NSString *ccBinaryWaitingForPushKey = @"binaryWaitingForPush";
+
 @interface CCPhotoImporter ()
 
 /*! Accesses the photo assets taken with the phone and stores their urls and 
@@ -368,15 +372,18 @@
             NSLog(@"BIN PUSH REPLICATION COMPLETION DONE FOR %@", binID);
             
             NSError *error;
-            CBLDocument *binary = [[CCDBManager sharedInstance].database documentWithID:binID];
+            CBLDocument *binary = [[CCDBManager sharedInstance].database existingDocumentWithID:binID];
             
             // Remove the id from waiting for push storage
             [[NSUserDefaults standardUserDefaults] removeObjectForKey:[ccBinaryWaitingForPushKey copy]];
             [[NSUserDefaults standardUserDefaults] synchronize];
             
             // Purge the binary from the db
-            [binary purgeDocument:&error];
-            
+            BOOL purged = [binary purgeDocument:&error];
+            if (purged) {
+                NSLog(@"PURGED BIN %@", binID);
+            }
+                        
             [rep removeObserver:self forKeyPath:@"completedChangesCount"];
             [rep removeObserver:self forKeyPath:@"changesCount"];
             

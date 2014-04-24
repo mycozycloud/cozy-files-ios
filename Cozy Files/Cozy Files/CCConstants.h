@@ -19,8 +19,5 @@
 static const NSString *ccRemoteIDKey = @"cozyFilesRemoteID";
 static const NSString *ccRemoteLoginKey = @"cozyFilesRemoteLogin";
 static const NSString *ccCozyURLKey = @"cozyURL";
-static const NSString *ccLastImportDateKey = @"lastImportDate";
-static const NSString *ccPhotosWaitingForImportKey = @"photosWaitingForImport";
-static const NSString *ccBinaryWaitingForPushKey = @"binaryWaitingForPush";
 
 #endif

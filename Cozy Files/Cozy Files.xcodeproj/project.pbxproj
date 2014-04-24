@@ -37,6 +37,7 @@
 		5C8F84F118E2DC9000FD19FB /* CCDBManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C8F84F018E2DC9000FD19FB /* CCDBManager.m */; };
 		5C9BE6C9182D293000FF5388 /* CCFileViewerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C9BE6C8182D293000FF5388 /* CCFileViewerViewController.m */; };
 		5C9D285C1820114400CA3A7C /* CCFileNavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C9D285B1820114400CA3A7C /* CCFileNavigationViewController.m */; };
+		5CC87DC4190962650007368C /* CCCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CC87DC3190962650007368C /* CCCacheManager.m */; };
 		5CE23ADA182A50C100A1D5D8 /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CE23AD9182A50C100A1D5D8 /* SWRevealViewController.m */; };
 		5CE23ADE182A547E00A1D5D8 /* CCMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CE23ADD182A547E00A1D5D8 /* CCMenuViewController.m */; };
 		5CE23AE1182A6BA500A1D5D8 /* CCConfigurationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CE23AE0182A6BA500A1D5D8 /* CCConfigurationViewController.m */; };
@@ -98,6 +99,8 @@
 		5C9BE6C8182D293000FF5388 /* CCFileViewerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCFileViewerViewController.m; sourceTree = "<group>"; };
 		5C9D285A1820114400CA3A7C /* CCFileNavigationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCFileNavigationViewController.h; sourceTree = "<group>"; };
 		5C9D285B1820114400CA3A7C /* CCFileNavigationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCFileNavigationViewController.m; sourceTree = "<group>"; };
+		5CC87DC2190962650007368C /* CCCacheManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCCacheManager.h; sourceTree = "<group>"; };
+		5CC87DC3190962650007368C /* CCCacheManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCCacheManager.m; sourceTree = "<group>"; };
 		5CE23AD8182A50C100A1D5D8 /* SWRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWRevealViewController.h; sourceTree = "<group>"; };
 		5CE23AD9182A50C100A1D5D8 /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWRevealViewController.m; sourceTree = "<group>"; };
 		5CE23ADC182A547E00A1D5D8 /* CCMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCMenuViewController.h; sourceTree = "<group>"; };
@@ -257,6 +260,8 @@
 				5C8F84F018E2DC9000FD19FB /* CCDBManager.m */,
 				5C68B6CF18E59172004F5392 /* CCPhotoImporter.h */,
 				5C68B6D018E59172004F5392 /* CCPhotoImporter.m */,
+				5CC87DC2190962650007368C /* CCCacheManager.h */,
+				5CC87DC3190962650007368C /* CCCacheManager.m */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -368,6 +373,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5CC87DC4190962650007368C /* CCCacheManager.m in Sources */,
 				5C9D285C1820114400CA3A7C /* CCFileNavigationViewController.m in Sources */,
 				5C7768D118E1D8F6000EBE47 /* CCErrorHandler.m in Sources */,
 				5C4F82EF1818125700CCA08E /* CCAppDelegate.m in Sources */,

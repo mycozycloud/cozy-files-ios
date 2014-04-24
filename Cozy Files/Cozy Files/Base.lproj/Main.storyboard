@@ -16,7 +16,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="6iW-dl-JLI">
+                            <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="6iW-dl-JLI">
                                 <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
@@ -57,13 +57,13 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="9oq-K7-fIm">
-                        <barButtonItem key="rightBarButtonItem" systemItem="trash" id="uC9-Uv-hbQ"/>
+                        <barButtonItem key="rightBarButtonItem" image="trombone" id="sy4-Gv-yML"/>
                     </navigationItem>
                     <connections>
                         <outlet property="activityIndicatorView" destination="LcN-Tu-oYu" id="YNN-c8-Gfc"/>
                         <outlet property="imgView" destination="6iW-dl-JLI" id="KGW-yX-ppT"/>
                         <outlet property="progressView" destination="c3e-Rv-URn" id="R4i-dg-8wU"/>
-                        <outlet property="trashButton" destination="uC9-Uv-hbQ" id="fx4-Ee-EB2"/>
+                        <outlet property="rootButton" destination="sy4-Gv-yML" id="Lg1-MS-Qlf"/>
                         <outlet property="txtView" destination="lJX-Y4-EEF" id="axs-U3-PAJ"/>
                     </connections>
                 </viewController>
@@ -133,7 +133,7 @@
                                     <action selector="okPressed:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="Xce-Ig-oF5"/>
                                 </connections>
                             </button>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="url du cozy" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="X8v-ci-sfQ">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="url du digidisk" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="X8v-ci-sfQ">
                                 <rect key="frame" x="20" y="130" width="280" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>

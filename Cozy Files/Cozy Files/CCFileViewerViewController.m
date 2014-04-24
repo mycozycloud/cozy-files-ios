@@ -10,6 +10,7 @@
 
 #import "CCErrorHandler.h"
 #import "CCDBManager.h"
+#import "CCCacheManager.h"
 #import "CCFileViewerViewController.h"
 
 
@@ -18,7 +19,7 @@
 @property (weak, nonatomic) IBOutlet UIProgressView *progressView;
 @property (weak, nonatomic) IBOutlet UIImageView *imgView;
 @property (weak, nonatomic) IBOutlet UITextView *txtView;
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *trashButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *rootButton;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicatorView;
 
 @property (strong, nonatomic) CBLReplication *pull;
@@ -29,11 +30,9 @@
  */
 - (void)displayDataWithBinary:(CBLDocument *)binary;
 
-/*! Sets the property isToRemove to YES and pops the view controller which
- * purges the binary document.
+/*! Pops back to the root navigation controller.
  */
-- (void)removeBinary;
-@property (assign, nonatomic) BOOL isToRemove;
+- (void)goBackToRoot;
 @end
 
 @implementation CCFileViewerViewController
@@ -60,10 +59,8 @@
     [self.imgView setHidden:YES];
     [self.txtView setHidden:YES];
     
-    self.isToRemove = NO;
-    
     // First, get the File document
-    CBLDocument *file = [[CCDBManager sharedInstance].database documentWithID:self.fileID];
+    CBLDocument *file = [[CCDBManager sharedInstance].database existingDocumentWithID:self.fileID];
     
     // Set the title
     self.title = [file.properties valueForKey:@"name"];
@@ -71,12 +68,12 @@
     // Then, check whether the binary exists locally and has changed
     NSString *binaryID = [[[file.properties valueForKey:@"binary"]
                            valueForKey:@"file"] valueForKey:@"id"];
-    CBLDocument *binary = [[CCDBManager sharedInstance].database documentWithID:binaryID];
+    CBLDocument *binary = [[CCDBManager sharedInstance].database existingDocumentWithID:binaryID];
     
     NSString *fileBinaryRev = [[[file.properties valueForKey:@"binary"]
                                valueForKey:@"file"] valueForKey:@"rev"];
     
-    NSLog(@"%@ - %@", fileBinaryRev, binary.currentRevisionID);
+    NSLog(@"%@ - %@ - %@", fileBinaryRev, binary.currentRevisionID, binary);
     
     if ([binary.currentRevisionID isEqualToString:fileBinaryRev]) { // It exists and hasn't changed, so setup the view with the data
         NSLog(@"BINARY IS HERE");
@@ -84,50 +81,15 @@
     } else { // It doesn't exist or has changed, so setup the replication to get the binary
         [self.activityIndicatorView startAnimating];
         NSLog(@"SETUP BINARY REPLICATION : %@", binaryID);
-        NSError *error;
-        [binary purgeDocument:&error];
-
-        if (error) {
-            [[CCErrorHandler sharedInstance] presentError:error
-                                    withMessage:[ccErrorDefault copy]
-                                                    fatal:NO];
-        }
     
         self.pull = [[CCDBManager sharedInstance] setupFileReplicationForBinaryIDs:@[binaryID]
                                                             observer:self
                                                             pull:YES];
     }
     
-    // Trash button
-    [self.trashButton setTarget:self];
-    [self.trashButton setAction:@selector(removeBinary)];
-    
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-    if (self.isToRemove) { // Purge the binary when the view disappeared
-        NSError *error;
-        
-        [self.pull stop];
-        
-        CBLDocument *file = [[CCDBManager sharedInstance].database documentWithID:self.fileID];
-        
-        NSString *binaryID = [[[file.properties valueForKey:@"binary"]
-                               valueForKey:@"file"] valueForKey:@"id"];
-        CBLDocument *binary = [[CCDBManager sharedInstance].database documentWithID:binaryID];
-        
-        [binary purgeDocument:&error];
-        
-        if (error) {
-            [[CCErrorHandler sharedInstance] presentError:error
-                withMessage:[ccErrorDefault copy]
-                fatal:NO];
-        }
-    }
-    
-    [self.pull removeObserver:self forKeyPath:@"completedChangesCount"];
-    [self.pull removeObserver:self forKeyPath:@"changesCount"];
+    // Root button
+    [self.rootButton setTarget:self];
+    [self.rootButton setAction:@selector(goBackToRoot)];
 }
 
 - (void)didReceiveMemoryWarning
@@ -156,8 +118,14 @@
             [self.activityIndicatorView stopAnimating];
             // Display the data
             CBLDocument *doc = [[CCDBManager sharedInstance].database
-                                documentWithID:self.pull.documentIDs.firstObject];
+                                existingDocumentWithID:self.pull.documentIDs.firstObject];
             [self displayDataWithBinary:doc];
+            
+            // Add to the cache
+            [[CCCacheManager sharedInstance] addBinaryToCacheForFileID:self.fileID];
+            
+            [self.pull removeObserver:self forKeyPath:@"completedChangesCount"];
+            [self.pull removeObserver:self forKeyPath:@"changesCount"];
         }
     }
 }
@@ -181,11 +149,9 @@
         
 }
 
-- (void)removeBinary
+- (void)goBackToRoot
 {
-    self.isToRemove = YES;
-    
-    [self.navigationController popViewControllerAnimated:YES];
+    [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 @end
