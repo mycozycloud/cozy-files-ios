@@ -13,7 +13,7 @@
 #import "CCConstants.h"
 #import "CCErrorHandler.h"
 
-static const int maxSize = 5000000; // in bytes
+static const int maxSize = 50000000; // in bytes
 static const NSString *ccBinaryCacheKey = @"binaryCache";
 
 @implementation CCCacheManager
