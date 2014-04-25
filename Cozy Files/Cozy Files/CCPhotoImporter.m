@@ -259,7 +259,9 @@ static const NSString *ccBinaryWaitingForPushKey = @"binaryWaitingForPush";
                            // Retrieve name and image
                            ALAssetRepresentation *representation = asset.defaultRepresentation;
                            NSString *filename = representation.filename;
-                           NSData *imageData = UIImageJPEGRepresentation([UIImage imageWithCGImage:representation.fullResolutionImage], 1.0);
+                           NSData *imageData = UIImageJPEGRepresentation([UIImage imageWithCGImage:representation.fullResolutionImage
+                                                    scale:representation.scale
+                                                    orientation:(UIImageOrientation)representation.orientation], 1.0);
                            
                            // Importation to couchbase takes place on the main queue
                            dispatch_async(dispatch_get_main_queue(), ^{
