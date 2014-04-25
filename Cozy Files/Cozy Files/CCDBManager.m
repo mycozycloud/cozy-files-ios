@@ -56,6 +56,7 @@ static const NSString *ccDBName = @"cozyios";
                     withMessage:[ccErrorDBAccess copy]
                     fatal:YES];
     } else { // Ok then set the filters, the views and validation functions
+        [self.database setMaxRevTreeDepth:0]; // For compaction
         [self setDbFunctions];
     }
 }
@@ -201,23 +202,23 @@ static const NSString *ccDBName = @"cozyios";
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
                          change:(NSDictionary *)change context:(void *)context
 {
-    // PULL
-    if (object == self.pull && self.pull.changesCount > 0) {
-        if (self.pull.completedChangesCount < self.pull.changesCount) {
-            NSLog(@"PULL REPLICATION COMPLETION : %f%%",
-                  floorf((self.pull.completedChangesCount /
-                          (float)self.pull.changesCount)*100));
-        }
-    }
-    
-    // PUSH
-    if (object == self.push && self.push.changesCount > 0) {
-        if (self.push.completedChangesCount < self.push.changesCount) {
-            NSLog(@"PUSH REPLICATION COMPLETION : %f%%",
-                  floorf((self.push.completedChangesCount /
-                          (float)self.push.changesCount)*100));
-        }
-    }
+//    // PULL
+//    if (object == self.pull && self.pull.changesCount > 0) {
+//        if (self.pull.completedChangesCount < self.pull.changesCount) {
+//            NSLog(@"PULL REPLICATION COMPLETION : %f%%",
+//                  floorf((self.pull.completedChangesCount /
+//                          (float)self.pull.changesCount)*100));
+//        }
+//    }
+//    
+//    // PUSH
+//    if (object == self.push && self.push.changesCount > 0) {
+//        if (self.push.completedChangesCount < self.push.changesCount) {
+//            NSLog(@"PUSH REPLICATION COMPLETION : %f%%",
+//                  floorf((self.push.completedChangesCount /
+//                          (float)self.push.changesCount)*100));
+//        }
+//    }
 }
 
 
