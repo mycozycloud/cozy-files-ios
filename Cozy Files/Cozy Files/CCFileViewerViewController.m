@@ -8,6 +8,7 @@
 
 #import <CouchbaseLite/CouchbaseLite.h>
 
+#import "CCConstants.h"
 #import "CCErrorHandler.h"
 #import "CCDBManager.h"
 #import "CCCacheManager.h"
@@ -22,7 +23,12 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *rootButton;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicatorView;
 
-@property (strong, nonatomic) CBLReplication *pull;
+/*! Creates a local binary document and gets the associated attachment from the remote database.
+ * \param binaryID The id of the binary document
+ * \param binaryRev The _rev of the binary document, from the remote db point of view,
+ *    and stored in the currentRev field. The binary document will locally have another _rev.
+ */
+- (void)fetchBinaryDocForID:(NSString *)binaryID andRev:(NSString *)binaryRev;
 
 /*! Gets the binary file attachment and displays the content according to the
  * file extension.
@@ -33,6 +39,8 @@
 /*! Pops back to the root navigation controller.
  */
 - (void)goBackToRoot;
+
+
 @end
 
 @implementation CCFileViewerViewController
@@ -73,18 +81,18 @@
     NSString *fileBinaryRev = [[[file.properties valueForKey:@"binary"]
                                valueForKey:@"file"] valueForKey:@"rev"];
     
-    NSLog(@"%@ - %@ - %@", fileBinaryRev, binary.currentRevisionID, binary);
+    NSLog(@"%@ - %@ - %@", fileBinaryRev, binary.currentRevisionID, [binary.properties objectForKey:@"currentRev"]);
     
-    if ([binary.currentRevisionID isEqualToString:fileBinaryRev]) { // It exists and hasn't changed, so setup the view with the data
+    if ([binary.currentRevisionID isEqualToString:fileBinaryRev]
+        || [[binary.properties objectForKey:@"currentRev"] isEqualToString:fileBinaryRev]) {
+        // It exists and hasn't changed, so setup the view with the data
         NSLog(@"BINARY IS HERE");
         [self displayDataWithBinary:binary];
     } else { // It doesn't exist or has changed, so setup the replication to get the binary
         [self.activityIndicatorView startAnimating];
         NSLog(@"SETUP BINARY REPLICATION : %@", binaryID);
-    
-        self.pull = [[CCDBManager sharedInstance] setupFileReplicationForBinaryIDs:@[binaryID]
-                                                            observer:self
-                                                            pull:YES];
+        
+        [self fetchBinaryDocForID:binaryID andRev:fileBinaryRev];
     }
     
     // Root button
@@ -100,38 +108,70 @@
 
 #pragma mark - Cutsom
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
-                        change:(NSDictionary *)change context:(void *)context
+- (void)fetchBinaryDocForID:(NSString *)binaryID andRev:(NSString *)binaryRev
 {
-    NSLog(@"MONITORING BINARY REPLICATION");
+    // Credentials for Basic auth
+    NSURLCredential *cred = [[[NSURLCredentialStorage sharedCredentialStorage].allCredentials objectForKey:[NSURLCredentialStorage sharedCredentialStorage].allCredentials.allKeys.firstObject] objectForKey:[[NSUserDefaults standardUserDefaults] objectForKey:[ccRemoteLoginKey copy]]];
+    NSString *login = [[NSUserDefaults standardUserDefaults] objectForKey:[ccRemoteLoginKey copy]];
+    NSString *base64Auth = [[[NSString stringWithFormat:@"%@:%@", login, [cred password]]
+                             dataUsingEncoding:NSUTF8StringEncoding]
+                            base64EncodedStringWithOptions:0];
+    NSString *authValue = [NSString stringWithFormat:@"Basic %@", base64Auth];
     
-    if (object == self.pull) {
-        NSLog(@"BINARY LOADING...");
-        unsigned completed = self.pull.completedChangesCount;
-        unsigned total = self.pull.changesCount;
-        if (total > 0 && completed < total) {
-            [self.progressView setHidden:NO];
-            [self.progressView setProgress: (completed / (float)total)];
-        } else {
-            NSLog(@"BINARY REPLICATION DONE");
-            [self.progressView setHidden:YES];
-            [self.activityIndicatorView stopAnimating];
-            // Display the data
-            CBLDocument *doc = [[CCDBManager sharedInstance].database
-                                existingDocumentWithID:self.pull.documentIDs.firstObject];
-            [self displayDataWithBinary:doc];
-            
-            // Add to the cache
-            [[CCCacheManager sharedInstance] addBinaryToCacheForFileID:self.fileID];
-            
-            [self.pull removeObserver:self forKeyPath:@"completedChangesCount"];
-            [self.pull removeObserver:self forKeyPath:@"changesCount"];
-        }
-    }
+    NSString *cozyURLString = [[NSUserDefaults standardUserDefaults] objectForKey:[ccCozyURLKey copy]];
+    NSURL *cozyURL = [NSURL URLWithString:cozyURLString];
+    
+    // Request for the attachment
+    NSURL *attachReqURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://%@/cozy/%@/file", cozyURL.host, binaryID]];
+    
+    // Preparing the request
+    NSMutableURLRequest *attachReq = [NSMutableURLRequest requestWithURL:attachReqURL];
+    [attachReq setHTTPMethod:@"GET"];
+    [attachReq setValue:authValue forHTTPHeaderField:@"Authorization"];
+    
+    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+    config.URLCredentialStorage = [NSURLCredentialStorage sharedCredentialStorage];
+    [config setAllowsCellularAccess:YES];
+    [config setHTTPAdditionalHeaders:@{@"Authorization": authValue}];
+    
+    // Create the session with the configuration
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
+    [[session dataTaskWithRequest:attachReq
+                completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
+                    if (error) {
+                        NSLog(@"ERROR WHILE FETCHING BINARY ATTACHMENT %@", error);
+                    } else {
+                        NSHTTPURLResponse *httpRes = (NSHTTPURLResponse *)response;
+                        NSString *contentType = [httpRes.allHeaderFields objectForKey:@"Content-Type"];
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            NSError *error;
+                            // Create the local binary document, with a custom revision
+                            CBLDocument *binary = [[CCDBManager sharedInstance].database documentWithID:binaryID];
+                            [binary putProperties:@{@"docType":@"Binary",
+                                                    @"currentRev":binaryRev}
+                                            error:&error];
+                            // Add attachment
+                            CBLUnsavedRevision *newRev = [binary newRevision];
+                            [newRev setAttachmentNamed:@"file" withContentType:contentType content:data];
+                            [newRev save:&error];
+                            
+                            if (error) {
+                                NSLog(@"ERROR WHILE SAVING BINARY ATTACHMENT %@", error);
+                            } else {
+                                // Display the data
+                                [self displayDataWithBinary:binary];
+                                
+                                // Add to the cache
+                                [[CCCacheManager sharedInstance] addBinaryToCacheForFileID:self.fileID];
+                            }
+                        });
+                    }
+                }] resume];
 }
 
 - (void)displayDataWithBinary:(CBLDocument *)binary
 {
+    [self.activityIndicatorView stopAnimating];
     // Get attachments
     CBLAttachment *att = [[binary.currentRevision attachments] firstObject];
     
