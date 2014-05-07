@@ -94,14 +94,15 @@
 
 - (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler
 {
+    NSLog(@"CHALLENGE RECEIVED");
     if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
         if ([[[challenge.protectionSpace.host componentsSeparatedByString:@"."]
               objectAtIndex:1] isEqualToString:@"digidisk"]) {
             
             // Remove old certificates
             NSMutableDictionary* dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:(__bridge id)kSecClassCertificate, (__bridge id)kSecClass, nil];
-            OSStatus result = SecItemDelete((__bridge CFDictionaryRef) dict);
-            if (result == errSecSuccess) {
+            OSStatus resStatus = SecItemDelete((__bridge CFDictionaryRef) dict);
+            if (resStatus == errSecSuccess || resStatus == errSecItemNotFound) {
                 // Set exceptions for the server
                 SecTrustRef servTrust = challenge.protectionSpace.serverTrust;
                 bool exceptionsOk = SecTrustSetExceptions(servTrust, SecTrustCopyExceptions(servTrust));
@@ -131,6 +132,8 @@
                         CFRelease(servCert);
                     }
                 }
+            } else {
+                NSLog(@"ERROR WHILE REMOVING OLD CERTIFICATES %d", (int)resStatus);
             }
             
             // Continue by trusting the server

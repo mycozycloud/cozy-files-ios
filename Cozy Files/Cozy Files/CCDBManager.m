@@ -149,46 +149,51 @@ static const NSString *ccDBName = @"cozyios";
 
 - (void)initReplications
 {
-    // Retrieve digidisk certificate
-    NSDictionary *query = [NSDictionary dictionaryWithObjectsAndKeys:
-                           (__bridge id)(kSecClassCertificate), kSecClass,
-                           kCFBooleanTrue, kSecReturnRef,
-                           kSecMatchLimitOne, kSecMatchLimit,
-                           nil];
-    SecCertificateRef cert = nil;
-    OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, ((CFTypeRef *)&cert));
-    if (status == errSecSuccess) {
-        NSLog(@"CERTIFICATE %@", cert);
-        // Authorize the digidisk for replication
-        [CBLReplication setAnchorCerts:[NSArray arrayWithObjects:(__bridge id)(cert), nil] onlyThese:NO];
-        CFRelease(cert);
-        
-        // Retrieve preferences
-        NSString *remoteID = [[NSUserDefaults standardUserDefaults] objectForKey:[ccRemoteIDKey copy]];
-        NSURL *cozyURL = [NSURL URLWithString:[[NSUserDefaults standardUserDefaults] objectForKey:[ccCozyURLKey copy]]];
-        
-        NSURL *newCozyURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://%@/cozy", cozyURL.host]];
-        
-        // Create the replications
-        self.pull = [self.database createPullReplication:newCozyURL];
-        self.pull.continuous = YES;
-        
-        self.push = [self.database createPushReplication:newCozyURL];
-        self.push.continuous = YES;
-        
-        // Set the filter
-        self.pull.filter = [NSString stringWithFormat:@"%@/filter", remoteID];
-        self.push.filter = @"filter";
-        
-        // Monitor the progress
-        [self.pull addObserver:self forKeyPath:@"completedChangesCount" options:0 context:NULL];
-        [self.push addObserver:self forKeyPath:@"completedChangesCount" options:0 context:NULL];
-        
-        // Start the replications
-        [self.pull start];
-        [self.push start];
-    } else {
-        [[CCErrorHandler sharedInstance] presentError:nil withMessage:[ccErrorCertificate copy] fatal:NO];
+    // Retrieve preferences
+    NSString *remoteID = [[NSUserDefaults standardUserDefaults] objectForKey:[ccRemoteIDKey copy]];
+    NSURL *cozyURL = [NSURL URLWithString:[[NSUserDefaults standardUserDefaults] objectForKey:[ccCozyURLKey copy]]];
+    
+    if (remoteID && cozyURL) {
+        // Retrieve digidisk certificate
+        NSDictionary *query = [NSDictionary dictionaryWithObjectsAndKeys:
+                               (__bridge id)(kSecClassCertificate), kSecClass,
+                               kCFBooleanTrue, kSecReturnRef,
+                               kSecMatchLimitOne, kSecMatchLimit,
+                               nil];
+        SecCertificateRef cert = nil;
+        OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, ((CFTypeRef *)&cert));
+        if (status == errSecSuccess) {
+            NSLog(@"CERTIFICATE %@", cert);
+            // Authorize the digidisk for replication
+            [CBLReplication setAnchorCerts:[NSArray arrayWithObjects:(__bridge id)(cert), nil] onlyThese:NO];
+            CFRelease(cert);
+            
+            
+            
+            NSURL *newCozyURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://%@/cozy", cozyURL.host]];
+            
+            // Create the replications
+            self.pull = [self.database createPullReplication:newCozyURL];
+            self.pull.continuous = YES;
+            
+            self.push = [self.database createPushReplication:newCozyURL];
+            self.push.continuous = YES;
+            
+            // Set the filter
+            self.pull.filter = [NSString stringWithFormat:@"%@/filter", remoteID];
+            self.push.filter = @"filter";
+            
+            // Monitor the progress
+            [self.pull addObserver:self forKeyPath:@"completedChangesCount" options:0 context:NULL];
+            [self.push addObserver:self forKeyPath:@"completedChangesCount" options:0 context:NULL];
+            
+            // Start the replications
+            [self.pull start];
+            [self.push start];
+        } else {
+            NSLog(@"MISSING CERTIFICATE");
+            [[CCErrorHandler sharedInstance] presentError:nil withMessage:[ccErrorCertificate copy] fatal:NO];
+        }
     }
 }
 
