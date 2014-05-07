@@ -6,13 +6,15 @@
 //  Copyright (c) 2013 CozyCloud. All rights reserved.
 //
 
+@import Security;
+
 #import "CCConstants.h"
 #import "CCErrorHandler.h"
 #import "CCDBManager.h"
 #import "CCPhotoImporter.h"
 #import "CCConnectionViewController.h"
 
-@interface CCConnectionViewController () <UITextFieldDelegate>
+@interface CCConnectionViewController () <UITextFieldDelegate, NSURLSessionDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextField *cozyUrlTextField;
 @property (weak, nonatomic) IBOutlet UITextField *cozyMDPTextField;
@@ -88,6 +90,56 @@
     return YES;
 }
 
+#pragma mark - NSURLSession Delegate
+
+- (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler
+{
+    if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
+        if ([[[challenge.protectionSpace.host componentsSeparatedByString:@"."]
+              objectAtIndex:1] isEqualToString:@"digidisk"]) {
+            
+            // Remove old certificates
+            NSMutableDictionary* dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:(__bridge id)kSecClassCertificate, (__bridge id)kSecClass, nil];
+            OSStatus result = SecItemDelete((__bridge CFDictionaryRef) dict);
+            if (result == errSecSuccess) {
+                // Set exceptions for the server
+                SecTrustRef servTrust = challenge.protectionSpace.serverTrust;
+                bool exceptionsOk = SecTrustSetExceptions(servTrust, SecTrustCopyExceptions(servTrust));
+                if (exceptionsOk) {
+                    // Evaluate trust
+                    SecTrustResultType result;
+                    SecTrustEvaluate(servTrust, &result);
+                    if (result == kSecTrustResultProceed) {
+                        // Get the new certificate and save it to the keychain
+                        CFIndex nbCerts = SecTrustGetCertificateCount(servTrust);
+                        SecCertificateRef servCert = SecTrustGetCertificateAtIndex(servTrust, nbCerts-1);
+                        NSLog(@"SERVER CERTIFICATE %@", servCert);
+                        NSDictionary* dict = [NSDictionary dictionaryWithObjectsAndKeys:
+                                              (__bridge id)(kSecClassCertificate), kSecClass,
+                                              servCert, kSecValueRef,
+                                              nil];
+                        OSStatus status = SecItemAdd((__bridge CFDictionaryRef)dict, NULL);
+                        
+                        if (status == errSecSuccess || status == errSecDuplicateItem) {
+                            NSLog(@"SUCCESS SAVING CERTIFICATE");
+                        } else {
+                            NSLog(@"ERROR SAVING CERTIFICATE");
+                            [[CCErrorHandler sharedInstance] presentError:nil withMessage:[ccErrorCertificate copy] fatal:NO];
+                        }
+                        
+                        CFRelease(servTrust);
+                        CFRelease(servCert);
+                    }
+                }
+            }
+            
+            // Continue by trusting the server
+            NSURLCredential *credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
+			completionHandler (NSURLSessionAuthChallengeUseCredential, credential);
+        }
+    }
+}
+
 #pragma mark - Custom
 
 - (IBAction)okPressed:(id)sender
@@ -144,7 +196,7 @@
             @"Authorization": authValue
         }];
         // Create the session with the configuration
-        NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
+        NSURLSession *session = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
         // Send the post request
         [[session uploadTaskWithRequest:request fromData:postData
             completionHandler:

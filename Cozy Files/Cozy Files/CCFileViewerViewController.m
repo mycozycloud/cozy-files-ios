@@ -15,7 +15,7 @@
 #import "CCFileViewerViewController.h"
 
 
-@interface CCFileViewerViewController ()
+@interface CCFileViewerViewController () <NSURLSessionDelegate>
 
 @property (weak, nonatomic) IBOutlet UIProgressView *progressView;
 @property (weak, nonatomic) IBOutlet UIImageView *imgView;
@@ -106,6 +106,21 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - NSURLSession Delegate
+
+- (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler
+{
+    if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
+        if ([[[challenge.protectionSpace.host componentsSeparatedByString:@"."]
+              objectAtIndex:1] isEqualToString:@"digidisk"]) {
+            
+            // Continue by trusting the server
+            NSURLCredential *credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
+			completionHandler (NSURLSessionAuthChallengeUseCredential, credential);
+        }
+    }
+}
+
 #pragma mark - Cutsom
 
 - (void)fetchBinaryDocForID:(NSString *)binaryID andRev:(NSString *)binaryRev
@@ -135,7 +150,7 @@
     [config setHTTPAdditionalHeaders:@{@"Authorization": authValue}];
     
     // Create the session with the configuration
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
     [[session dataTaskWithRequest:attachReq
                 completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
                     if (error) {

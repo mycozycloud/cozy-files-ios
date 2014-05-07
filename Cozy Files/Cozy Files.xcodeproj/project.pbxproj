@@ -116,13 +116,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5C4F8318181813AB00CCA08E /* Security.framework in Frameworks */,
 				5C68B6D318E597A5004F5392 /* AssetsLibrary.framework in Frameworks */,
 				5C7768CC18E1A260000EBE47 /* CouchbaseLite.framework in Frameworks */,
 				5C7768CA18E1A252000EBE47 /* CouchbaseLite.framework in Frameworks */,
 				5C4F831E181813D000CCA08E /* libz.dylib in Frameworks */,
 				5C4F831C181813C400CCA08E /* libsqlite3.dylib in Frameworks */,
 				5C4F831A181813B900CCA08E /* SystemConfiguration.framework in Frameworks */,
-				5C4F8318181813AB00CCA08E /* Security.framework in Frameworks */,
 				5C4F8316181813A400CCA08E /* CFNetwork.framework in Frameworks */,
 				5C4F82E11818125700CCA08E /* CoreGraphics.framework in Frameworks */,
 				5C4F82E31818125700CCA08E /* UIKit.framework in Frameworks */,
@@ -515,6 +515,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -537,6 +538,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
