@@ -227,11 +227,17 @@ static const NSString *ccDBName = @"cozyios";
                          change:(NSDictionary *)change context:(void *)context
 {
     // PULL
-    if (object == self.pull && self.pull.changesCount > 0) {
-        if (self.pull.completedChangesCount < self.pull.changesCount) {
-            NSLog(@"PULL REPLICATION COMPLETION : %f%%",
-                  floorf((self.pull.completedChangesCount /
-                          (float)self.pull.changesCount)*100));
+    if (object == self.pull) {
+        if (self.pull.changesCount > 0) {
+            if (self.pull.completedChangesCount < self.pull.changesCount) {
+                NSLog(@"PULL REPLICATION COMPLETION : %f%%",
+                    floorf((self.pull.completedChangesCount /
+                        (float)self.pull.changesCount)*100));
+            } else if (self.pull.completedChangesCount == self.pull.changesCount) {
+                NSLog(@"PULL REPLICATION DONE");
+            }
+        } else {
+            NSLog(@"PULL REPLICATION DONE");
         }
     }
     

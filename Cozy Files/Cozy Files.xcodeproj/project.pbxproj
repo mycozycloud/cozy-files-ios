@@ -31,13 +31,12 @@
 		5C68B6D118E59172004F5392 /* CCPhotoImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C68B6D018E59172004F5392 /* CCPhotoImporter.m */; };
 		5C68B6D318E597A5004F5392 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C68B6D218E597A5004F5392 /* AssetsLibrary.framework */; };
 		5C6E961318F818C600369F7D /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C6E961218F818C600369F7D /* Reachability.m */; };
-		5C7768CA18E1A252000EBE47 /* CouchbaseLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C7768C818E19CC7000EBE47 /* CouchbaseLite.framework */; };
-		5C7768CC18E1A260000EBE47 /* CouchbaseLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C7768CB18E1A260000EBE47 /* CouchbaseLite.framework */; };
 		5C7768D118E1D8F6000EBE47 /* CCErrorHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7768D018E1D8F6000EBE47 /* CCErrorHandler.m */; };
 		5C8F84F118E2DC9000FD19FB /* CCDBManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C8F84F018E2DC9000FD19FB /* CCDBManager.m */; };
 		5C9BE6C9182D293000FF5388 /* CCFileViewerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C9BE6C8182D293000FF5388 /* CCFileViewerViewController.m */; };
 		5C9D285C1820114400CA3A7C /* CCFileNavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C9D285B1820114400CA3A7C /* CCFileNavigationViewController.m */; };
 		5CC87DC4190962650007368C /* CCCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CC87DC3190962650007368C /* CCCacheManager.m */; };
+		5CCE5C18191CFA350072DA7F /* CouchbaseLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C7768C818E19CC7000EBE47 /* CouchbaseLite.framework */; };
 		5CE23ADA182A50C100A1D5D8 /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CE23AD9182A50C100A1D5D8 /* SWRevealViewController.m */; };
 		5CE23ADE182A547E00A1D5D8 /* CCMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CE23ADD182A547E00A1D5D8 /* CCMenuViewController.m */; };
 		5CE23AE1182A6BA500A1D5D8 /* CCConfigurationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CE23AE0182A6BA500A1D5D8 /* CCConfigurationViewController.m */; };
@@ -116,10 +115,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5CCE5C18191CFA350072DA7F /* CouchbaseLite.framework in Frameworks */,
 				5C4F8318181813AB00CCA08E /* Security.framework in Frameworks */,
 				5C68B6D318E597A5004F5392 /* AssetsLibrary.framework in Frameworks */,
-				5C7768CC18E1A260000EBE47 /* CouchbaseLite.framework in Frameworks */,
-				5C7768CA18E1A252000EBE47 /* CouchbaseLite.framework in Frameworks */,
 				5C4F831E181813D000CCA08E /* libz.dylib in Frameworks */,
 				5C4F831C181813C400CCA08E /* libsqlite3.dylib in Frameworks */,
 				5C4F831A181813B900CCA08E /* SystemConfiguration.framework in Frameworks */,
