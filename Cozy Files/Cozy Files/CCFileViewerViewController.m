@@ -156,30 +156,43 @@
                     if (error) {
                         NSLog(@"ERROR WHILE FETCHING BINARY ATTACHMENT %@", error);
                     } else {
-                        NSHTTPURLResponse *httpRes = (NSHTTPURLResponse *)response;
-                        NSString *contentType = [httpRes.allHeaderFields objectForKey:@"Content-Type"];
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            NSError *error;
-                            // Create the local binary document, with a custom revision
-                            CBLDocument *binary = [[CCDBManager sharedInstance].database documentWithID:binaryID];
-                            [binary putProperties:@{@"docType":@"Binary",
-                                                    @"currentRev":binaryRev}
-                                            error:&error];
-                            // Add attachment
-                            CBLUnsavedRevision *newRev = [binary newRevision];
-                            [newRev setAttachmentNamed:@"file" withContentType:contentType content:data];
-                            [newRev save:&error];
-                            
-                            if (error) {
-                                NSLog(@"ERROR WHILE SAVING BINARY ATTACHMENT %@", error);
-                            } else {
-                                // Display the data
-                                [self displayDataWithBinary:binary];
+                        // Check that it's not a JSON file with a "missing message"
+                        NSDictionary *resp = [NSJSONSerialization
+                                              JSONObjectWithData:data
+                                              options:0
+                                              error:&error];
+                        if (!error
+                            && [[resp objectForKey:@"error"] isEqualToString:@"not_found"]
+                            && [[resp objectForKey:@"reason"] isEqualToString:@"missing"]) {
+                            // Retry
+                            [self fetchBinaryDocForID:binaryID andRev:binaryRev];
+                        } else {
+                            // It is a valid attachment
+                            NSHTTPURLResponse *httpRes = (NSHTTPURLResponse *)response;
+                            NSString *contentType = [httpRes.allHeaderFields objectForKey:@"Content-Type"];
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                NSError *error;
+                                // Create the local binary document, with a custom revision
+                                CBLDocument *binary = [[CCDBManager sharedInstance].database documentWithID:binaryID];
+                                [binary putProperties:@{@"docType":@"Binary",
+                                                        @"currentRev":binaryRev}
+                                                error:&error];
+                                // Add attachment
+                                CBLUnsavedRevision *newRev = [binary newRevision];
+                                [newRev setAttachmentNamed:@"file" withContentType:contentType content:data];
+                                [newRev save:&error];
                                 
-                                // Add to the cache
-                                [[CCCacheManager sharedInstance] addBinaryToCacheForFileID:self.fileID];
-                            }
-                        });
+                                if (error) {
+                                    NSLog(@"ERROR WHILE SAVING BINARY ATTACHMENT %@", error);
+                                } else {
+                                    // Display the data
+                                    [self displayDataWithBinary:binary];
+                                    
+                                    // Add to the cache
+                                    [[CCCacheManager sharedInstance] addBinaryToCacheForFileID:self.fileID];
+                                }
+                            });
+                        }
                     }
                 }] resume];
 }
