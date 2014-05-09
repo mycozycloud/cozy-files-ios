@@ -88,7 +88,6 @@
 		5C6E961118F818C600369F7D /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		5C6E961218F818C600369F7D /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		5C7768C818E19CC7000EBE47 /* CouchbaseLite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CouchbaseLite.framework; path = "../../../utils/objective-c/couchbase-lite-community-ios_1.0-beta3/CouchbaseLite.framework"; sourceTree = "<group>"; };
-		5C7768CB18E1A260000EBE47 /* CouchbaseLite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CouchbaseLite.framework; path = "../../../utils/objective-c/couchbase-lite-community-ios_1.0-beta3/64bit/CouchbaseLite.framework"; sourceTree = "<group>"; };
 		5C7768CF18E1D8F6000EBE47 /* CCErrorHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCErrorHandler.h; sourceTree = "<group>"; };
 		5C7768D018E1D8F6000EBE47 /* CCErrorHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCErrorHandler.m; sourceTree = "<group>"; };
 		5C7768D218E1E148000EBE47 /* CCConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCConstants.h; sourceTree = "<group>"; };
@@ -164,7 +163,6 @@
 			isa = PBXGroup;
 			children = (
 				5C68B6D218E597A5004F5392 /* AssetsLibrary.framework */,
-				5C7768CB18E1A260000EBE47 /* CouchbaseLite.framework */,
 				5C7768C818E19CC7000EBE47 /* CouchbaseLite.framework */,
 				5C4F831D181813D000CCA08E /* libz.dylib */,
 				5C4F831B181813C400CCA08E /* libsqlite3.dylib */,

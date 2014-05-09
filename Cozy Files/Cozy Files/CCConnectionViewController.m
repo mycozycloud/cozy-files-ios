@@ -128,8 +128,9 @@
                             [[CCErrorHandler sharedInstance] presentError:nil withMessage:[ccErrorCertificate copy] fatal:NO];
                         }
                         
-                        CFRelease(servTrust);
-                        CFRelease(servCert);
+                        // These calls actually make the app crash...
+//                        CFRelease(servTrust);
+//                        CFRelease(servCert);
                     }
                 }
             } else {
