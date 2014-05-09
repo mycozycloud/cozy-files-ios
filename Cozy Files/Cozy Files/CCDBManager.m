@@ -166,9 +166,8 @@ static const NSString *ccDBName = @"cozyios";
             NSLog(@"CERTIFICATE %@", cert);
             // Authorize the digidisk for replication
             [CBLReplication setAnchorCerts:[NSArray arrayWithObjects:(__bridge id)(cert), nil] onlyThese:NO];
-            CFRelease(cert);
-            
-            
+            // In case of, do not release cert
+//            CFRelease(cert);
             
             NSURL *newCozyURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://%@/cozy", cozyURL.host]];
             
