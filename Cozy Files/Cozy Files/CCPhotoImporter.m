@@ -161,6 +161,9 @@ static const NSString *ccBinaryWaitingForPushKey = @"binaryWaitingForPush";
     // Retrieve last import date for comparison
     NSDate *lastImportDate = [[NSUserDefaults standardUserDefaults] objectForKey:[ccLastImportDateKey copy]];
     
+    // Disable shared stream asset retrieval to avoid duplicates
+    [ALAssetsLibrary disableSharedPhotoStreamsSupport];
+    
     ALAssetsLibrary *assetsLib = [ALAssetsLibrary new];
     // Iterate over groups of assets
     [assetsLib enumerateGroupsWithTypes:ALAssetsGroupAll
