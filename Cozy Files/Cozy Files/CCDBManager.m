@@ -154,18 +154,18 @@ static const NSString *ccDBName = @"cozyios";
     NSURL *cozyURL = [NSURL URLWithString:[[NSUserDefaults standardUserDefaults] objectForKey:[ccCozyURLKey copy]]];
     
     if (remoteID && cozyURL) {
-        // Retrieve digidisk certificate
-        NSDictionary *query = [NSDictionary dictionaryWithObjectsAndKeys:
-                               (__bridge id)(kSecClassCertificate), kSecClass,
-                               kCFBooleanTrue, kSecReturnRef,
-                               kSecMatchLimitOne, kSecMatchLimit,
-                               nil];
-        SecCertificateRef cert = nil;
-        OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, ((CFTypeRef *)&cert));
-        if (status == errSecSuccess) {
-            NSLog(@"CERTIFICATE %@", cert);
-            // Authorize the digidisk for replication
-            [CBLReplication setAnchorCerts:[NSArray arrayWithObjects:(__bridge id)(cert), nil] onlyThese:NO];
+//        // Retrieve digidisk certificate
+//        NSDictionary *query = [NSDictionary dictionaryWithObjectsAndKeys:
+//                               (__bridge id)(kSecClassCertificate), kSecClass,
+//                               kCFBooleanTrue, kSecReturnRef,
+//                               kSecMatchLimitOne, kSecMatchLimit,
+//                               nil];
+//        SecCertificateRef cert = nil;
+//        OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, ((CFTypeRef *)&cert));
+//        if (status == errSecSuccess) {
+//            NSLog(@"CERTIFICATE %@", cert);
+//            // Authorize the digidisk for replication
+//            [CBLReplication setAnchorCerts:[NSArray arrayWithObjects:(__bridge id)(cert), nil] onlyThese:NO];
             // In case of, do not release cert
 //            CFRelease(cert);
             
@@ -189,10 +189,10 @@ static const NSString *ccDBName = @"cozyios";
             // Start the replications
             [self.pull start];
             [self.push start];
-        } else {
-            NSLog(@"MISSING CERTIFICATE");
-            [[CCErrorHandler sharedInstance] presentError:nil withMessage:[ccErrorCertificate copy] fatal:NO];
-        }
+//        } else {
+//            NSLog(@"MISSING CERTIFICATE");
+//            [[CCErrorHandler sharedInstance] presentError:nil withMessage:[ccErrorCertificate copy] fatal:NO];
+//        }
     }
 }
 

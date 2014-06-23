@@ -92,57 +92,57 @@
 
 #pragma mark - NSURLSession Delegate
 
-- (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler
-{
-    NSLog(@"CHALLENGE RECEIVED");
-    if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
-        if ([[[challenge.protectionSpace.host componentsSeparatedByString:@"."]
-              objectAtIndex:1] isEqualToString:@"digidisk"]) {
-            
-            // Remove old certificates
-            NSMutableDictionary* dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:(__bridge id)kSecClassCertificate, (__bridge id)kSecClass, nil];
-            OSStatus resStatus = SecItemDelete((__bridge CFDictionaryRef) dict);
-            if (resStatus == errSecSuccess || resStatus == errSecItemNotFound) {
-                // Set exceptions for the server
-                SecTrustRef servTrust = challenge.protectionSpace.serverTrust;
-                bool exceptionsOk = SecTrustSetExceptions(servTrust, SecTrustCopyExceptions(servTrust));
-                if (exceptionsOk) {
-                    // Evaluate trust
-                    SecTrustResultType result;
-                    SecTrustEvaluate(servTrust, &result);
-                    if (result == kSecTrustResultProceed) {
-                        // Get the new certificate and save it to the keychain
-                        CFIndex nbCerts = SecTrustGetCertificateCount(servTrust);
-                        SecCertificateRef servCert = SecTrustGetCertificateAtIndex(servTrust, nbCerts-1);
-                        NSLog(@"SERVER CERTIFICATE %@", servCert);
-                        NSDictionary* dict = [NSDictionary dictionaryWithObjectsAndKeys:
-                                              (__bridge id)(kSecClassCertificate), kSecClass,
-                                              servCert, kSecValueRef,
-                                              nil];
-                        OSStatus status = SecItemAdd((__bridge CFDictionaryRef)dict, NULL);
-                        
-                        if (status == errSecSuccess || status == errSecDuplicateItem) {
-                            NSLog(@"SUCCESS SAVING CERTIFICATE");
-                        } else {
-                            NSLog(@"ERROR SAVING CERTIFICATE");
-                            [[CCErrorHandler sharedInstance] presentError:nil withMessage:[ccErrorCertificate copy] fatal:NO];
-                        }
-                        
-                        // These calls actually make the app crash...
-//                        CFRelease(servTrust);
-//                        CFRelease(servCert);
-                    }
-                }
-            } else {
-                NSLog(@"ERROR WHILE REMOVING OLD CERTIFICATES %d", (int)resStatus);
-            }
-            
-            // Continue by trusting the server
-            NSURLCredential *credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
-			completionHandler (NSURLSessionAuthChallengeUseCredential, credential);
-        }
-    }
-}
+//- (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler
+//{
+//    NSLog(@"CHALLENGE RECEIVED");
+//    if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
+//        if ([[[challenge.protectionSpace.host componentsSeparatedByString:@"."]
+//              objectAtIndex:1] isEqualToString:@"digidisk"]) {
+//            
+//            // Remove old certificates
+//            NSMutableDictionary* dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:(__bridge id)kSecClassCertificate, (__bridge id)kSecClass, nil];
+//            OSStatus resStatus = SecItemDelete((__bridge CFDictionaryRef) dict);
+//            if (resStatus == errSecSuccess || resStatus == errSecItemNotFound) {
+//                // Set exceptions for the server
+//                SecTrustRef servTrust = challenge.protectionSpace.serverTrust;
+//                bool exceptionsOk = SecTrustSetExceptions(servTrust, SecTrustCopyExceptions(servTrust));
+//                if (exceptionsOk) {
+//                    // Evaluate trust
+//                    SecTrustResultType result;
+//                    SecTrustEvaluate(servTrust, &result);
+//                    if (result == kSecTrustResultProceed) {
+//                        // Get the new certificate and save it to the keychain
+//                        CFIndex nbCerts = SecTrustGetCertificateCount(servTrust);
+//                        SecCertificateRef servCert = SecTrustGetCertificateAtIndex(servTrust, nbCerts-1);
+//                        NSLog(@"SERVER CERTIFICATE %@", servCert);
+//                        NSDictionary* dict = [NSDictionary dictionaryWithObjectsAndKeys:
+//                                              (__bridge id)(kSecClassCertificate), kSecClass,
+//                                              servCert, kSecValueRef,
+//                                              nil];
+//                        OSStatus status = SecItemAdd((__bridge CFDictionaryRef)dict, NULL);
+//                        
+//                        if (status == errSecSuccess || status == errSecDuplicateItem) {
+//                            NSLog(@"SUCCESS SAVING CERTIFICATE");
+//                        } else {
+//                            NSLog(@"ERROR SAVING CERTIFICATE");
+//                            [[CCErrorHandler sharedInstance] presentError:nil withMessage:[ccErrorCertificate copy] fatal:NO];
+//                        }
+//                        
+//                        // These calls actually make the app crash...
+////                        CFRelease(servTrust);
+////                        CFRelease(servCert);
+//                    }
+//                }
+//            } else {
+//                NSLog(@"ERROR WHILE REMOVING OLD CERTIFICATES %d", (int)resStatus);
+//            }
+//            
+//            // Continue by trusting the server
+//            NSURLCredential *credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
+//			completionHandler (NSURLSessionAuthChallengeUseCredential, credential);
+//        }
+//    }
+//}
 
 #pragma mark - Custom
 
@@ -191,7 +191,7 @@
 
         [request setValue:authValue forHTTPHeaderField:@"Authorization"];
         
-        // Prepare the cofiguration for the session
+        // Prepare the configuration for the session
         NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
         [config setAllowsCellularAccess:YES];
         [config setHTTPAdditionalHeaders:@{
